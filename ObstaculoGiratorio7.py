@@ -10,10 +10,10 @@ class gir_obstacle(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.live = 6        
-        self.image = pg.Surface((10,100))
-        pg.draw.rect(self.image, BLUE, (0,0,10,100))
+        self.image = pg.Surface((10, 100))
+        pg.draw.rect(self.image, BLUE, (0, 0, 10, 100))
         self.image.set_colorkey(BLACK)
-        self.rect = self.image.get_rect(center = (80, 300))
+        self.rect = self.image.get_rect(center=(80, 300))
         self.mask = pg.mask.from_surface(self.image)
         self.image_orig = self.image
         self.counter = 0
@@ -22,7 +22,7 @@ class gir_obstacle(pg.sprite.Sprite):
     def update(self):        
         if not self.crash:
             if self.counter <= 360:
-                self.image = pg.transform.rotate(self.image_orig, 8 * self.counter)
+                self.image = pg.transform.rotate(self.image_orig, 2 * self.counter)
                 self.image.set_colorkey(BLACK)
                 self.rect = self.image.get_rect(center=self.rect.center)
                 self.mask = pg.mask.from_surface(self.image)                          
@@ -318,7 +318,7 @@ class sword(pg.sprite.Sprite):
                 self.rect.center = player.rect.center  
                 Rhand.rect.center = player.rect.center
                 self.hittin = False
-        else:
+        elif not self.hittin:
             self.dis_max = 0
             self.rect.center = player.rect.center  
             Rhand.rect.center = player.rect.center
@@ -403,11 +403,16 @@ all_sprites.add(girator)
 # FUNCION COLISION ESPADA
 ###########################################################
 
+
 def isClash(angle_grad, signo, angle):
+    #  Metodo para depurar la colision en movimiento.
+    #  Como dos objetos en "movimiento" pueden superponerse sin llegar a colisionar
+    #  hacemos un pequenno barrido de los angulos para ver si se encuentran.
     i = 8
-    for i in range(8,0,-1):
-        Rhand.angle = angle - angle_grad + signo * (espada.chargecount - i) * 90 / 30
-        espada.angle = angle - angle_grad + signo * (espada.chargecount - i) * 90 / 30
+    for i in range(8, 0, -1):
+        #  TODO si el objeto es pequenno puede fallar.
+        Rhand.angle = angle - angle_grad + signo * (espada.chargecount - i) * 3
+        espada.angle = angle - angle_grad + signo * (espada.chargecount - i) * 3
         espada.image = pg.transform.rotate(espada.image_orig, espada.angle)
         espada.rect = espada.image.get_rect(center = player.rect.center)
         espada.mask = pg.mask.from_surface(espada.image)                  
