@@ -297,6 +297,8 @@ class sword(pg.sprite.Sprite):
         self.clashright = False
         self.last_angle = self.angle
         self.clash_count = 0
+        self.cdcount = 0
+        self.cd = False
 
     def update(self):
         self.image = pg.transform.rotate(self.image_orig, self.angle)
@@ -360,11 +362,18 @@ class sword(pg.sprite.Sprite):
                     pass
                 else:
                     block.live -= 1
+            
+        if self.slashleft or self.slashright or self.hittin:
+            self.cd = True
+        if self.cd and self.cdcount <= 60:
+            self.cdcount += 1
+        else:
+            self.cd = False
+            self.cdcount = 0
                 
 ##############################################################################
 # INICIACION DE VARIABLES
 ##############################################################################
-
 CBASE = (255,255,255)
 CPLAYER = (255,228,181)
 BLACK = (0,0,0)
@@ -403,7 +412,6 @@ all_sprites.add(girator)
 ###########################################################
 # FUNCION COLISION ESPADA
 ###########################################################
-
 def isClash(angle_grad, signo, angle):
     #  Metodo para depurar la colision en movimiento.
     #  Como dos objetos en "movimiento" pueden superponerse sin llegar a colisionar
@@ -503,7 +511,6 @@ while run:
 ######################################################################
 # ROTACIÓN + COMIENZO ESPADAZO 
 ######################################################################
-        
         ######################################################################
         # HITO PARA EVITAR DIVISION ENTRE INFINITO
         ######################################################################
@@ -517,12 +524,12 @@ while run:
             if cos > 0:
                 player.angle = 270 - angle_grad
                 Lhand.angle = 270 - angle_grad
-                if button[2] != 0 and not espada.swingleft:
+                if button[2] != 0 and not espada.swingleft and not espada.cd:
                     espada.leftbut = 1                                        
                     espada.swingright = True
                     Rhand.angle = 270 - angle_grad - 90
                     espada.angle = 270 - angle_grad - 90  
-                elif button[0] != 0 and not espada.swingright:
+                elif button[0] != 0 and not espada.swingright and not espada.cd:
                     espada.leftbut = 0           
                     espada.swingleft = True
                     Rhand.angle = 270 - angle_grad + 90
@@ -532,7 +539,7 @@ while run:
                     espada.swingleft = False
                     Rhand.angle = 270 - angle_grad
                     espada.angle = 270 - angle_grad   
-                    if button[1] != 0 and not espada.swingright and not espada.swingleft:
+                    if button[1] != 0 and not espada.swingright and not espada.swingleft and not espada.cd:
                             espada.hittin = True
                             espada.xthrow = xcursor
                             espada.ythrow = ycursor
@@ -543,12 +550,12 @@ while run:
             elif cos < 0:
                 player.angle = 90 - angle_grad
                 Lhand.angle = 90 - angle_grad
-                if button[2] != 0 and not espada.swingleft:
+                if button[2] != 0 and not espada.swingleft and not espada.cd:
                     espada.leftbut = 1                    
                     espada.swingright = True                
                     Rhand.angle = 90 - angle_grad - 90
                     espada.angle = 90 - angle_grad - 90  
-                elif button[0] != 0 and not espada.swingright:
+                elif button[0] != 0 and not espada.swingright and not espada.cd:
                     espada.leftbut = 0           
                     espada.swingleft = True
                     Rhand.angle = 90 - angle_grad + 90
@@ -558,7 +565,7 @@ while run:
                     espada.swingleft = False
                     Rhand.angle = 90 - angle_grad
                     espada.angle = 90 - angle_grad
-                    if button[1] != 0 and not espada.swingright and not espada.swingleft:
+                    if button[1] != 0 and not espada.swingright and not espada.swingleft and not espada.cd:
                             espada.hittin = True
                             espada.xthrow = xcursor
                             espada.ythrow = ycursor
@@ -568,16 +575,16 @@ while run:
         ######################################################################
         elif cos == 0 and sen < 0:
             angle_grad = 0
-            if button[2] != 0 and not espada.swingleft:
+            if button[2] != 0 and not espada.swingleft and not espada.cd:
                 espada.leftbut = 1
                 espada.swingright = True 
-            elif button[0] != 0 and not espada.swingright:
+            elif button[0] != 0 and not espada.swingright and not espada.cd:
                 espada.leftbut = 0                           
                 espada.swingleft = True
             else:
                 espada.swingright = False
                 espada.swingleft = False
-                if button[1] != 0 and not espada.swingright and not espada.swingleft:
+                if button[1] != 0 and not espada.swingright and not espada.swingleft and not espada.cd:
                         espada.hittin = True
                         espada.xthrow = xcursor
                         espada.ythrow = ycursor
@@ -587,16 +594,16 @@ while run:
         ######################################################################
         elif cos == 0 and sen > 0:
             angle_grad = 180
-            if button[2] != 0 and not espada.swingleft:
+            if button[2] != 0 and not espada.swingleft and not espada.cd:
                 espada.leftbut = 1                                   
                 espada.swingright = True 
-            elif button[0] != 0 and not espada.swingright:
+            elif button[0] != 0 and not espada.swingright and not espada.cd:
                 espada.leftbut = 0                          
                 espada.swingleft = True                
             else:
                 espada.swingright = False
                 espada.swingleft = False
-                if button[1] != 0 and not espada.swingright and not espada.swingleft:
+                if button[1] != 0 and not espada.swingright and not espada.swingleft and not espada.cd:
                         espada.hittin = True
                         espada.xthrow = xcursor
                         espada.ythrow = ycursor
@@ -778,7 +785,6 @@ while run:
                 Rhand.angle = 0 - espada.chargecount * 90 / 30
                 espada.angle = 0 - espada.chargecount * 90 / 30
                 espada.chargecount -= isClash(angle_grad, -1, 0)    
-
             else:
                 espada.slashright = False                
                 espada.backright = True
@@ -804,7 +810,6 @@ while run:
                 Rhand.angle = 0 + espada.chargecount * 90 / 30
                 espada.angle = 0 + espada.chargecount * 90 / 30
                 espada.chargecount -= isClash(angle_grad, 1, 0) 
-
             else:
                 espada.slashleft = False                
                 espada.backleft = True
@@ -834,7 +839,6 @@ while run:
                 Rhand.angle = 180 - espada.chargecount * 90 / 30
                 espada.angle = 180 - espada.chargecount * 90 / 30
                 espada.chargecount -= isClash(angle_grad, -1, 180)   
-
             else:
                 espada.slashright = False                
                 espada.backright = True
@@ -860,7 +864,6 @@ while run:
                 Rhand.angle = 180 + espada.chargecount * 90 / 30
                 espada.angle = 180 + espada.chargecount * 90 / 30
                 espada.chargecount -= isClash(angle_grad, 1, 180)  
-
             else:
                 espada.slashleft = False                
                 espada.backleft = True
@@ -873,8 +876,13 @@ while run:
                 espada.backleft = False
                 espada.chargecount = 1
 
+    ###########################################################              
+    # ACTUALIZACION DEL DISPLAY
+    ###########################################################
+    print(espada.chargecount, espada.cdcount)
     all_sprites.update()
     bg.fill(BLACK)
     all_sprites.draw(bg)
     pg.display.update()
+    
 pg.quit()
