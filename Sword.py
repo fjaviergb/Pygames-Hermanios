@@ -62,6 +62,9 @@ class sword(pg.sprite.Sprite):
         self.slashleft = False
         self.backright= False
         self.backleft = False
+        self.cursorcount = 0
+        self.cursor_dir = 0
+        self.leftbut = 2
 
     def update(self):
         self.image = pg.transform.rotate(self.image_orig, self.angle)
@@ -92,6 +95,7 @@ all_sprites.add(Rhand)
 all_sprites.add(Lhand)
 all_sprites.add(espada)
 
+cursorcount = 0
 clock = pg.time.Clock()
 run = True
 while run:
@@ -105,21 +109,21 @@ while run:
         (xcursor, ycursor) = pg.mouse.get_pos()
         sen = ycursor - player.rect.centery
         cos = xcursor - player.rect.centerx
-        
+                        
         if cos != 0:
             angle_rad = math.atan(sen / cos)
             angle_grad = angle_rad * 360 / (2 * math.pi)
             
-            
             if cos > 0:
                 player.angle = 270 - angle_grad
                 Rhand.angle = 270 - angle_grad
-                if button[0] != 0:
-                    leftbut = 1                                        
+                if button[0] != 0 and espada.cursor_dir > 40:
+                    espada.leftbut = 1                                        
                     espada.swingright = True
                     Lhand.angle = 270 - angle_grad - 90
                     espada.angle = 270 - angle_grad - 90  
-                elif button[2] != 0:
+                elif button[0] != 0 and espada.cursor_dir < -40:
+                    espada.leftbut = 0           
                     espada.swingleft = True
                     Lhand.angle = 270 - angle_grad + 90
                     espada.angle = 270 - angle_grad + 90               
@@ -132,12 +136,13 @@ while run:
             elif cos < 0:
                 player.angle = 90 - angle_grad
                 Rhand.angle = 90 - angle_grad
-                if button[0] != 0:
-                    leftbut = 1                    
+                if button[0] != 0 and espada.cursor_dir > 40:
+                    espada.leftbut = 1                    
                     espada.swingright = True                
                     Lhand.angle = 90 - angle_grad - 90
                     espada.angle = 90 - angle_grad - 90  
-                elif button[2] != 0:
+                elif button[0] != 0 and espada.cursor_dir < -40:
+                    espada.leftbut = 0           
                     espada.swingleft = True
                     Lhand.angle = 90 - angle_grad + 90
                     espada.angle = 90 - angle_grad + 90               
@@ -150,10 +155,11 @@ while run:
         
         elif cos == 0 and sen < 0:
             angle_grad = 0
-            if button[0] != 0:
-                leftbut = 1
+            if button[0] != 0 and espada.cursor_dir > 40:
+                espada.leftbut = 1
                 espada.swingright = True 
-            elif button[2] != 0:
+            elif button[0] != 0 and espada.cursor_dir < -40:
+                espada.leftbut = 0                           
                 espada.swingleft = True
             else:
                 espada.swingright = False
@@ -161,21 +167,34 @@ while run:
         
         elif cos == 0 and sen > 0:
             angle_grad = 180
-            if button[0] != 0:
-                leftbut = 1                                   
+            if button[0] != 0 and espada.cursor_dir > 40:
+                espada.leftbut = 1                                   
                 espada.swingright = True 
-            elif button[2] != 0:
+            elif button[0] != 0 and espada.cursor_dir < -40:
+                espada.leftbut = 0                          
                 espada.swingleft = True                
             else:
                 espada.swingright = False
                 espada.swingleft = False
-        
+     
+        # SOLTAR EL RATON COMIENZA EL SLASH
         if event.type == pg.MOUSEBUTTONUP:
-            if leftbut == 1:
+            if espada.leftbut == 1:
                 espada.slashright = True
-                leftbut = 0
-            else:
+                espada.leftbut = 2
+            elif espada.leftbut == 0:
                 espada.slashleft = True
+                espada.leftbut = 2
+                
+    if espada.cursorcount == 0:
+        cursor_init = xcursor
+        espada.cursorcount += 1            
+    elif espada.cursorcount > 0 and espada.cursorcount <= 5:
+        espada.cursorcount += 1
+    elif not espada.swingright and not espada.swingleft:        
+        espada.cursor_dir = xcursor - cursor_init
+        espada.cursorcount = 0
+#    print(espada.cursor_dir, cursor_init)
 
 # ESPADAZO
     if cos < 0:
@@ -368,7 +387,7 @@ while run:
                 espada.backleft = False
                 espada.chargecount = 1
 
-    print(espada.swingright, espada.slashright, espada.backright, espada.chargecount)
+#    print(espada.swingright, espada.slashright, espada.backright, espada.chargecount)
     all_sprites.update()
     bg.fill(BLACK)
     all_sprites.draw(bg)
