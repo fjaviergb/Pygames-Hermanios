@@ -241,7 +241,7 @@ class sword(pg.sprite.Sprite):
                 self.backright = False
                 self.swingleft = False
                 self.swingright = False
-                    
+                self.chargecount = 1
 # =============================================================================
 #                 if self.last_angle > self.angle: 
 #                     self.angle += 8
@@ -287,22 +287,24 @@ all_sprites.add(wall)
 all_sprites.add(column)
 
 
-def isClash(angle_grad, signo):
-    Lhand.angle = 90 - angle_grad + signo * (espada.chargecount - 8) * 90 / 30
-    espada.angle = 90 - angle_grad + signo * (espada.chargecount - 8) * 90 / 30
-    espada.image = pg.transform.rotate(espada.image_orig, espada.angle)
-    espada.rect = espada.image.get_rect(center = player.rect.center)
-    espada.mask = pg.mask.from_surface(espada.image)                  
-    if espada.image != espada.image_orig and ((espada.slashleft and not espada.swingleft and not espada.backleft) or (espada.slashright and not espada.swingright and not espada.backright)):
+def isClash(angle_grad, signo, angle):
+    i = 8
+    for i in range(8,0,-1):
+        Lhand.angle = angle - angle_grad + signo * (espada.chargecount - i) * 90 / 30
+        espada.angle = angle - angle_grad + signo * (espada.chargecount - i) * 90 / 30
+        espada.image = pg.transform.rotate(espada.image_orig, espada.angle)
+        espada.rect = espada.image.get_rect(center = player.rect.center)
         espada.mask = pg.mask.from_surface(espada.image)                  
-        block_hit_list = pg.sprite.spritecollide(espada, obstacle_group, False)         
-        block_hit_list_masked = pg.sprite.spritecollide(espada, block_hit_list, False, pg.sprite.collide_mask)        
-        if len(block_hit_list) != 0:
-            
-            return True
-        
+        if espada.image != espada.image_orig and ((espada.slashleft and not espada.swingleft and not espada.backleft) or (espada.slashright and not espada.swingright and not espada.backright)):
+            block_hit_list = pg.sprite.spritecollide(espada, obstacle_group, False)         
+            block_hit_list_masked = pg.sprite.spritecollide(espada, block_hit_list, False, pg.sprite.collide_mask)        
+            if len(block_hit_list_masked) == 0:
+                break
+            else:
+                pass
         else:
-            return False
+            break
+    return i
 
 cursorcount = 0
 clock = pg.time.Clock()
@@ -492,14 +494,10 @@ while run:
                 espada.chargecount += 1
         elif espada.slashright and not espada.swingright and not espada.backright:
             if espada.chargecount >= espada.countlimit * -20 / 30:
-                if not isClash(angle_grad, -1):
                     Lhand.angle = 90 - angle_grad - espada.chargecount * 90 / 30
                     espada.angle = 90 - angle_grad - espada.chargecount * 90 / 30
-                    espada.chargecount -=  8
-                else:
-                    Lhand.angle = 90 - angle_grad - espada.chargecount * 90 / 30
-                    espada.angle = 90 - angle_grad - espada.chargecount * 90 / 30                    
-                    espada.chargecount -= 4
+                    espada.chargecount -= isClash(angle_grad, -1, 90)
+
             else:
                 espada.slashright = False                
                 espada.backright = True
@@ -528,14 +526,10 @@ while run:
                 espada.chargecount += 1
         elif espada.slashleft and not espada.swingleft and not espada.backleft:
             if espada.chargecount >= espada.countlimit * -20 / 30:
-                if not isClash(angle_grad, 1):
                     Lhand.angle = 90 - angle_grad + espada.chargecount * 90 / 30
                     espada.angle = 90 - angle_grad + espada.chargecount * 90 / 30
-                    espada.chargecount -=  8
-                else:
-                    Lhand.angle = 90 - angle_grad + espada.chargecount * 90 / 30
-                    espada.angle = 90 - angle_grad + espada.chargecount * 90 / 30                    
-                    espada.chargecount -= 1
+                    espada.chargecount -=  isClash(angle_grad, 1, 90)                
+
             else:
                 espada.slashleft = False                
                 espada.backleft = True
@@ -565,14 +559,10 @@ while run:
                 espada.chargecount += 1
         elif espada.slashright and not espada.swingright and not espada.backright:
             if espada.chargecount >= espada.countlimit * -20 / 30:
-                if not isClash(angle_grad, -1):
                     Lhand.angle = 270 - angle_grad - espada.chargecount * 90 / 30
                     espada.angle = 270 - angle_grad - espada.chargecount * 90 / 30
-                    espada.chargecount -=  8
-                else:
-                    Lhand.angle = 270 - angle_grad - espada.chargecount * 90 / 30
-                    espada.angle = 270 - angle_grad - espada.chargecount * 90 / 30                    
-                    espada.chargecount -= 1
+                    espada.chargecount -=  isClash(angle_grad, -1, 270)
+
             else:
                 espada.slashright = False                
                 espada.backright = True
@@ -600,14 +590,10 @@ while run:
                 espada.chargecount += 1
         elif espada.slashleft and not espada.swingleft and not espada.backleft:
             if espada.chargecount >= espada.countlimit * -20 / 30:
-                if not isClash(angle_grad, 1):
                     Lhand.angle = 270 - angle_grad + espada.chargecount * 90 / 30
                     espada.angle = 270 - angle_grad + espada.chargecount * 90 / 30
-                    espada.chargecount -=  8
-                else:
-                    Lhand.angle = 270 - angle_grad + espada.chargecount * 90 / 30
-                    espada.angle = 270 - angle_grad + espada.chargecount * 90 / 30                    
-                    espada.chargecount -= 1
+                    espada.chargecount -=  isClash(angle_grad, 1, 270)
+
             else:
                 espada.slashleft = False                
                 espada.backleft = True
@@ -640,7 +626,8 @@ while run:
             if espada.chargecount >= espada.countlimit * -20 / 30:
                 Lhand.angle = 0 - espada.chargecount * 90 / 30
                 espada.angle = 0 - espada.chargecount * 90 / 30
-                espada.chargecount -= 8    
+                espada.chargecount -= isClash(angle_grad, -1, 0)    
+
             else:
                 espada.slashright = False                
                 espada.backright = True
@@ -663,7 +650,8 @@ while run:
             if espada.chargecount >= espada.countlimit * -20 / 30:
                 Lhand.angle = 0 + espada.chargecount * 90 / 30
                 espada.angle = 0 + espada.chargecount * 90 / 30
-                espada.chargecount -= 8  
+                espada.chargecount -= isClash(angle_grad, 1, 0) 
+
             else:
                 espada.slashleft = False                
                 espada.backleft = True
@@ -688,7 +676,8 @@ while run:
             if espada.chargecount >= espada.countlimit * -20 / 30:
                 Lhand.angle = 180 - espada.chargecount * 90 / 30
                 espada.angle = 180 - espada.chargecount * 90 / 30
-                espada.chargecount -= 8    
+                espada.chargecount -= isClash(angle_grad, -1, 180)   
+
             else:
                 espada.slashright = False                
                 espada.backright = True
@@ -711,7 +700,8 @@ while run:
             if espada.chargecount >= espada.countlimit * -20 / 30:
                 Lhand.angle = 180 + espada.chargecount * 90 / 30
                 espada.angle = 180 + espada.chargecount * 90 / 30
-                espada.chargecount -= 8  
+                espada.chargecount -= isClash(angle_grad, 1, 180)  
+
             else:
                 espada.slashleft = False                
                 espada.backleft = True
