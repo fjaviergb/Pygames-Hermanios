@@ -9,6 +9,7 @@ pg.init()
 class gir_obstacle(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
+        self.live = 6        
         self.image = pg.Surface((8,100))
         pg.draw.rect(self.image, BLUE, (0,0,8,100))
         self.image.set_colorkey(BLACK)
@@ -17,7 +18,6 @@ class gir_obstacle(pg.sprite.Sprite):
         self.image_orig = self.image
         self.counter = 0
         self.crash = False
-        self.live = 3
         
     def update(self):        
         if not self.crash:
@@ -25,13 +25,16 @@ class gir_obstacle(pg.sprite.Sprite):
                 self.image = pg.transform.rotate(self.image_orig, 8 * self.counter)
                 self.image.set_colorkey(BLACK)
                 self.rect = self.image.get_rect(center=self.rect.center)
-                self.mask = pg.mask.from_surface(self.image)            
+                self.mask = pg.mask.from_surface(self.image)                          
                 self.counter += 1
             else:
                 self.counter = 0
         else:
             pass
         
+        pg.draw.rect(self.image, (RED), (10,0,60,5))
+        pg.draw.rect(self.image, (GREEN), (10,0, self.live * 10,5))                                 
+
         if self.live <= 0:
             self.image.fill(BLACK)
             self.image.set_colorkey(BLACK)
@@ -51,6 +54,9 @@ class rect_obstacle(pg.sprite.Sprite):
         self.live = 3
 
     def update(self):
+        pg.draw.rect(self.image, (RED), (10,0,30,5))
+        pg.draw.rect(self.image, (GREEN), (10,0,self.live * 10,5))
+
         if self.live <= 0:
             self.image.fill(BLACK)
             self.image.set_colorkey(BLACK)
@@ -70,6 +76,9 @@ class circle_obstacle(pg.sprite.Sprite):
         self.live = 3
 
     def update(self):
+        pg.draw.rect(self.image, (RED), (10,0,30,5))
+        pg.draw.rect(self.image, (GREEN), (10,0,self.live * 10,5))
+        
         if self.live <= 0:
             self.image.fill(BLACK)
             self.image.set_colorkey(BLACK)
