@@ -115,22 +115,7 @@ class char(pg.sprite.Sprite):
         block_hit_list_masked = pg.sprite.spritecollide(self, block_hit_list, False, pg.sprite.collide_mask)
         
         for block in block_hit_list_masked:
-            if type(block) == rect_obstacle:
-                if self.movex > 0:
-                    self.rect.right += -self.movex
-                    Rhand.rect.right += -self.movex
-                    Lhand.rect.right += -self.movex
-                    espada.rect.right += -self.movex
-                    
-                elif self.movex < 0:
-                    self.rect.left += -self.movex
-                    Rhand.rect.left += -self.movex
-                    Lhand.rect.left += -self.movex
-                    espada.rect.left += -self.movex
-                    
-                else:
-                    pass
-            else:                
+            if type(block) == circle_obstacle:                
                 if self.movex > 0 and self.rect.centery < block.rect.centery:
                     self.rect.top += -4
                     Rhand.rect.top += -4
@@ -166,6 +151,22 @@ class char(pg.sprite.Sprite):
                     Rhand.rect.left += -3
                     Lhand.rect.left += -3
                     espada.rect.left += -3
+                    
+            else:
+                if self.movex > 0:
+                    self.rect.right += -self.movex
+                    Rhand.rect.right += -self.movex
+                    Lhand.rect.right += -self.movex
+                    espada.rect.right += -self.movex
+                    
+                elif self.movex < 0:
+                    self.rect.left += -self.movex
+                    Rhand.rect.left += -self.movex
+                    Lhand.rect.left += -self.movex
+                    espada.rect.left += -self.movex
+                    
+                else:
+                    pass
                     
         ################################
         # MOVIMIENTO VERTICAL
@@ -307,6 +308,7 @@ class sword(pg.sprite.Sprite):
         self.clashleft = False
         self.clashright = False
         self.last_angle = self.angle
+        self.clash_count = 0
 
     def update(self):
         self.image = pg.transform.rotate(self.image_orig, self.angle)
@@ -327,25 +329,39 @@ class sword(pg.sprite.Sprite):
                 self.rect.center = player.rect.center  
                 self.hittin = False
         
-        if self.image != self.image_orig and ((self.slashleft and not self.swingleft and not self.backleft) or (self.slashright and not self.swingright and not self.backright)):
+        if self.image != self.image_orig and ((self.slashleft and not self.swingleft and not self.backleft) or (self.slashright and not self.swingright and not self.backright) or (self.chargecount == 31 and self.swingleft)):
             self.mask = pg.mask.from_surface(self.image)                  
             block_hit_list = pg.sprite.spritecollide(self, obstacle_group, False)        
             block_hit_list_masked = pg.sprite.spritecollide(self, block_hit_list, False, pg.sprite.collide_mask)
             for block in block_hit_list_masked:
-                self.slashleft = False                
-                self.backleft = False
-                self.slashright = False                
-                self.backright = False
-                self.swingleft = False
-                self.swingright = False
-                self.chargecount = 1
-                
+                if self.slashleft:
+                    self.clashleft = True
+                    self.clash_count = self.chargecount                    
+                    self.slashleft = False                
+                    self.backleft = False
+                    self.slashright = False                
+                    self.backright = False
+                    self.swingleft = False
+                    self.swingright = False
+                elif self.slashright:
+                    self.clashright = True
+                    self.clash_count = self.chargecount
+                    self.slashleft = False                
+                    self.backleft = False
+                    self.slashright = False                
+                    self.backright = False
+                    self.swingleft = False
+                    self.swingright = False
+                                    
                 if type(block) == gir_obstacle:
                     girator.crash = True
                 else:
                     girator.crash = False
                 
-                block.live -= 1
+                if self.chargecount == 31 and self.swingleft:
+                    pass
+                else:
+                    block.live -= 1
                 
 ##############################################################################
 # INICIACION DE VARIABLES
@@ -473,12 +489,16 @@ while run:
 ######################################################################
 # ROTACIÓN + COMIENZO ESPADAZO 
 ######################################################################
-        # >> CASO GENERICO COS != 0           
+        ######################################################################
+        # HITO PARA EVITAR DIVISION ENTRE INFINITO
+        ######################################################################
         if cos != 0:
             angle_rad = math.atan(sen / cos)
             angle_grad = angle_rad * 360 / (2 * math.pi)
             
-        # >> CASO GENERICO COS != 0, MITAD DERECHA            
+        ######################################################################
+        # CUADRANTE DERECHA
+        ######################################################################
             if cos > 0:
                 player.angle = 270 - angle_grad
                 Rhand.angle = 270 - angle_grad
@@ -505,7 +525,9 @@ while run:
                             Lhand.ythrow = ycursor                        
                             espada.ythrow = ycursor
                             
-        # >> CASO GENERICO COS != 0, MITAD IZQUIERDA                                        
+        ######################################################################
+        # CUADRANTE IZQUIERDA
+        ######################################################################
             elif cos < 0:
                 player.angle = 90 - angle_grad
                 Rhand.angle = 90 - angle_grad
@@ -532,7 +554,9 @@ while run:
                             Lhand.ythrow = ycursor                        
                             espada.ythrow = ycursor
                             
-        # >> CASO COS NULO A                                         
+        ######################################################################
+        # HITO CON DIVISION INFINITO, CUADRANTE SUPERIOR
+        ######################################################################
         elif cos == 0 and sen < 0:
             angle_grad = 0
             if button[2] != 0 and not espada.swingleft:
@@ -552,7 +576,9 @@ while run:
                         Lhand.ythrow = ycursor                        
                         espada.ythrow = ycursor
                     
-        # >> CASO COS NULO B                                                
+        ######################################################################
+        # HITO CON DIVISION INFINITO, CUADRANTE INFERIOR
+        ######################################################################
         elif cos == 0 and sen > 0:
             angle_grad = 180
             if button[2] != 0 and not espada.swingleft:
@@ -572,7 +598,9 @@ while run:
                         Lhand.ythrow = ycursor                        
                         espada.ythrow = ycursor
                             
-        # SOLTAR EL RATON COMIENZA EL SLASH
+        ######################################################################
+        # HITO COMIENZO DEL SLASH, SUELTA EL ESPADAZO
+        ######################################################################
         if event.type == pg.MOUSEBUTTONUP:
             if espada.leftbut == 1:
                 espada.slashright = True
@@ -586,8 +614,13 @@ while run:
 ###########################################################              
 # ESPADAZO
 ###########################################################
+    ###########################################################              
+    # ESPADAZO - CUADRANTE IZQUIERDO
+    ###########################################################           
     if cos < 0:
-        # ESPADAZO DESDE DERECHA
+        ###########################################################              
+        # ESPADAZO DESDE LA DERECHA
+        ###########################################################
         if espada.swingright:
             if espada.chargecount <= 30:
                 Lhand.angle = 90 - angle_grad - espada.chargecount * 90 / 30
@@ -598,7 +631,6 @@ while run:
                     Lhand.angle = 90 - angle_grad - espada.chargecount * 90 / 30
                     espada.angle = 90 - angle_grad - espada.chargecount * 90 / 30
                     espada.chargecount -= isClash(angle_grad, -1, 90)
-
             else:
                 espada.slashright = False                
                 espada.backright = True
@@ -610,16 +642,19 @@ while run:
             else:                 
                 espada.backright = False
                 espada.chargecount = 1
-
         elif espada.clashright:
-                Lhand.angle = 270 
-                espada.angle = 270
-                espada.clashright = False
-                espada.clashleft = False
+            if espada.chargecount <= espada.clash_count + 10:
+                Lhand.angle = 90 - angle_grad - espada.chargecount * 90 / 30
+                espada.angle = 90 - angle_grad - espada.chargecount * 90 / 30
+                espada.chargecount += 1
+            else:                
+                espada.clash_count = 0
                 espada.chargecount = 1
-
-                
-        # ESPADAZO DESDE IZQUIERDA                
+                espada.clashright = False
+            
+        ###########################################################              
+        # ESPADAZO DESDE LA IZQUIERDA
+        ###########################################################
         if espada.swingleft:
             if espada.chargecount <= 30:
                 Lhand.angle = 90 - angle_grad + espada.chargecount * 90 / 30
@@ -630,7 +665,6 @@ while run:
                     Lhand.angle = 90 - angle_grad + espada.chargecount * 90 / 30
                     espada.angle = 90 - angle_grad + espada.chargecount * 90 / 30
                     espada.chargecount -=  isClash(angle_grad, 1, 90)                
-
             else:
                 espada.slashleft = False                
                 espada.backleft = True
@@ -642,17 +676,23 @@ while run:
             else:                 
                 espada.backleft = False
                 espada.chargecount = 1
-
         elif espada.clashleft:
-                Lhand.angle = 90 
-                espada.angle = 90 
-                espada.clashright = False
-                espada.clashleft = False
+            if espada.chargecount <= espada.clash_count + 10:
+                Lhand.angle = 90 - angle_grad + espada.chargecount * 90 / 30
+                espada.angle = 90 - angle_grad + espada.chargecount * 90 / 30
+                espada.chargecount += 1
+            else:                
+                espada.clash_count = 0
                 espada.chargecount = 1
-
+                espada.clashleft = False
                 
+    ###########################################################              
+    # ESPADAZO - CUADRANTE DERECHO
+    ###########################################################                
     if cos > 0:
-        # ESPADAZO DESDE DERECHA        
+        ###########################################################              
+        # ESPADAZO DESDE LA DERECHA
+        ###########################################################
         if espada.swingright:
             if espada.chargecount <= 30:
                 Lhand.angle = 270 - angle_grad - espada.chargecount * 90 / 30
@@ -663,7 +703,6 @@ while run:
                     Lhand.angle = 270 - angle_grad - espada.chargecount * 90 / 30
                     espada.angle = 270 - angle_grad - espada.chargecount * 90 / 30
                     espada.chargecount -=  isClash(angle_grad, -1, 270)
-
             else:
                 espada.slashright = False                
                 espada.backright = True
@@ -675,15 +714,19 @@ while run:
             else: 
                 espada.backright = False
                 espada.chargecount = 1
-                
         elif espada.clashright:
-                Lhand.angle = 270 
-                espada.angle = 270 
-                espada.clashright = False
-                espada.clashleft = False
+            if espada.chargecount <= espada.clash_count + 10:
+                Lhand.angle = 270 - angle_grad - espada.chargecount * 90 / 30
+                espada.angle = 270 - angle_grad - espada.chargecount * 90 / 30
+                espada.chargecount += 1
+            else:                
+                espada.clash_count = 0
                 espada.chargecount = 1
+                espada.clashright = False
                 
-        # ESPADAZO DESDE IZQUIERDA
+        ###########################################################              
+        # ESPADAZO DESDE LA IZQUIERDA
+        ###########################################################
         if espada.swingleft:
             if espada.chargecount <= 30:
                 Lhand.angle = 270 - angle_grad + espada.chargecount * 90 / 30
@@ -694,7 +737,6 @@ while run:
                     Lhand.angle = 270 - angle_grad + espada.chargecount * 90 / 30
                     espada.angle = 270 - angle_grad + espada.chargecount * 90 / 30
                     espada.chargecount -=  isClash(angle_grad, 1, 270)
-
             else:
                 espada.slashleft = False                
                 espada.backleft = True
@@ -706,18 +748,23 @@ while run:
             else:                 
                 espada.backleft = False
                 espada.chargecount = 1
-                
         elif espada.clashleft:
-                Lhand.angle = 90 
-                espada.angle = 90 
-                espada.clashright = False
-                espada.clashleft = False
+            if espada.chargecount <= espada.clash_count + 10:
+                Lhand.angle = 270 - angle_grad + espada.chargecount * 90 / 30
+                espada.angle = 270 - angle_grad + espada.chargecount * 90 / 30
+                espada.chargecount += 1
+            else:                
+                espada.clash_count = 0
                 espada.chargecount = 1
+                espada.clashleft = False
 
-
-                
+    ###########################################################              
+    # ESPADAZO - VERTICAL, CUADRANTE SUPERIOR
+    ###########################################################                               
     if cos == 0 and sen < 0:       
-        # ESPADAZO DESDE DERECHA        
+        ###########################################################              
+        # ESPADAZO DESDE LA DERECHA
+        ###########################################################
         if espada.swingright:
             if espada.chargecount <= 30:
                 Lhand.angle = 0 - espada.chargecount * 90 / 30
@@ -741,7 +788,9 @@ while run:
                 espada.backright = False
                 espada.chargecount = 1
                 
-        # ESPADAZO DESDE IZQUIERDA
+        ###########################################################              
+        # ESPADAZO DESDE LA IZQUIERDA
+        ###########################################################
         if espada.swingleft:
             if espada.chargecount <= 30:
                 Lhand.angle = 0 + espada.chargecount * 90 / 30
@@ -765,9 +814,13 @@ while run:
                 espada.backleft = False
                 espada.chargecount = 1
 
-    
+    ###########################################################              
+    # ESPADAZO - VERTICAL, CUADRANTE INFERIOR
+    ###########################################################                                  
     if cos == 0 and sen > 0: 
-        # ESPADAZO DESDE DERECHA        
+        ###########################################################              
+        # ESPADAZO DESDE LA DERECHA
+        ###########################################################
         if espada.swingright:
             if espada.chargecount <= 30:
                 Lhand.angle = 180 - espada.chargecount * 90 / 30
@@ -791,7 +844,9 @@ while run:
                 espada.backright = False
                 espada.chargecount = 1
                 
-        # ESPADAZO DESDE IZQUIERDA               
+        ###########################################################              
+        # ESPADAZO DESDE LA IZQUIERDA
+        ###########################################################
         if espada.swingleft:
             if espada.chargecount <= 30:
                 Lhand.angle = 180 + espada.chargecount * 90 / 30
@@ -815,6 +870,7 @@ while run:
                 espada.backleft = False
                 espada.chargecount = 1
 
+    print(espada.chargecount, espada.clash_count, espada.clashleft, espada.clashright)
     all_sprites.update()
     bg.fill(BLACK)
     all_sprites.draw(bg)
