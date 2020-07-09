@@ -93,6 +93,7 @@ class sword(pg.sprite.Sprite):
         self.dis_max = 0
         self.movex = 0
         self.movey = 0
+        self.countlimit = 0
 
     def update(self):
         self.image = pg.transform.rotate(self.image_orig, self.angle)
@@ -142,7 +143,7 @@ cursorcount = 0
 clock = pg.time.Clock()
 run = True
 while run:
-    clock.tick(50)
+    clock.tick(70)
 
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -214,171 +215,119 @@ while run:
             if cos > 0:
                 player.angle = 270 - angle_grad
                 Rhand.angle = 270 - angle_grad
-                if espada.cursor_dir > 30 and sen < 0:
-                    if event.type == pg.MOUSEBUTTONDOWN:                       
-                        if event.button == 1:                    
-                            espada.leftbut = 1                                        
-                            espada.swingright = True
-                            Lhand.angle = 270 - angle_grad - 90
-                            espada.angle = 270 - angle_grad - 90  
-                elif espada.cursor_dir < -30 and sen < 0:
-                    if event.type == pg.MOUSEBUTTONDOWN:                       
-                        if event.button == 1:                    
-                            espada.leftbut = 0           
-                            espada.swingleft = True
-                            Lhand.angle = 270 - angle_grad + 90
-                            espada.angle = 270 - angle_grad + 90   
-                elif espada.cursor_dir > 30 and sen > 0:
-                    if event.type == pg.MOUSEBUTTONDOWN:                       
-                        if event.button == 1:                    
-                            espada.leftbut = 0                    
-                            espada.swingleft = True                
-                            Lhand.angle = 270 - angle_grad + 90
-                            espada.angle = 270 - angle_grad + 90  
-                elif espada.cursor_dir < -30 and sen > 0:
-                    if event.type == pg.MOUSEBUTTONDOWN:                       
-                        if event.button == 1:                    
-                            espada.leftbut = 1                    
-                            espada.swingright = True                
-                            Lhand.angle = 270 - angle_grad - 90
-                            espada.angle = 270 - angle_grad - 90                                             
+                if button[2] != 0 and not espada.swingleft:
+                    espada.leftbut = 1                                        
+                    espada.swingright = True
+                    Lhand.angle = 270 - angle_grad - 90
+                    espada.angle = 270 - angle_grad - 90  
+                elif button[0] != 0 and not espada.swingright:
+                    espada.leftbut = 0           
+                    espada.swingleft = True
+                    Lhand.angle = 270 - angle_grad + 90
+                    espada.angle = 270 - angle_grad + 90   
                 else:
                     espada.swingright = False 
                     espada.swingleft = False
                     Lhand.angle = 270 - angle_grad
                     espada.angle = 270 - angle_grad   
-                    if not (espada.swingright and espada.swingleft):
-                        if espada.cursor_dir < 20 and espada.cursor_dir > -20:
-                            if event.type == pg.MOUSEBUTTONDOWN:   
-                                if event.button == 1:                           
-                                    Lhand.hittin = True
-                                    espada.hittin = True
-                                    Lhand.xthrow = xcursor
-                                    espada.xthrow = xcursor
-                                    Lhand.ythrow = ycursor                        
-                                    espada.ythrow = ycursor
+                    if button[1] != 0 and not espada.swingright and not espada.swingleft:
+                            Lhand.hittin = True
+                            espada.hittin = True
+                            Lhand.xthrow = xcursor
+                            espada.xthrow = xcursor
+                            Lhand.ythrow = ycursor                        
+                            espada.ythrow = ycursor
                             
         # >> CASO GENERICO COS != 0, MITAD IZQUIERDA                                        
             elif cos < 0:
                 player.angle = 90 - angle_grad
                 Rhand.angle = 90 - angle_grad
-                if espada.cursor_dir > 30 and sen < 0:
-                    if event.type == pg.MOUSEBUTTONDOWN:                       
-                        if event.button == 1:                    
-                            espada.leftbut = 1                    
-                            espada.swingright = True                
-                            Lhand.angle = 90 - angle_grad - 90
-                            espada.angle = 90 - angle_grad - 90  
-                elif espada.cursor_dir < -30 and sen < 0:
-                    if event.type == pg.MOUSEBUTTONDOWN:                       
-                        if event.button == 1:                    
-                            espada.leftbut = 0           
-                            espada.swingleft = True
-                            Lhand.angle = 90 - angle_grad + 90
-                            espada.angle = 90 - angle_grad + 90            
-                elif espada.cursor_dir > 30 and sen > 0:
-                    if event.type == pg.MOUSEBUTTONDOWN:                       
-                        if event.button == 1:                    
-                            espada.leftbut = 0                    
-                            espada.swingleft = True                
-                            Lhand.angle = 90 - angle_grad + 90
-                            espada.angle = 90 - angle_grad + 90  
-                elif espada.cursor_dir < -30 and sen > 0:
-                    if event.type == pg.MOUSEBUTTONDOWN:                       
-                        if event.button == 1:                    
-                            espada.leftbut = 1                    
-                            espada.swingright = True                
-                            Lhand.angle = 90 - angle_grad - 90
-                            espada.angle = 90 - angle_grad - 90                         
+                if button[2] != 0 and not espada.swingleft:
+                    espada.leftbut = 1                    
+                    espada.swingright = True                
+                    Lhand.angle = 90 - angle_grad - 90
+                    espada.angle = 90 - angle_grad - 90  
+                elif button[0] != 0 and not espada.swingright:
+                    espada.leftbut = 0           
+                    espada.swingleft = True
+                    Lhand.angle = 90 - angle_grad + 90
+                    espada.angle = 90 - angle_grad + 90            
                 else:
                     espada.swingright = False
                     espada.swingleft = False
                     Lhand.angle = 90 - angle_grad
                     espada.angle = 90 - angle_grad
-                    if not (espada.swingright and espada.swingleft):
-                        if espada.cursor_dir < 20 and espada.cursor_dir > -20:
-                            if event.type == pg.MOUSEBUTTONDOWN:   
-                                if event.button == 1:                           
-                                    Lhand.hittin = True
-                                    espada.hittin = True
-                                    Lhand.xthrow = xcursor
-                                    espada.xthrow = xcursor
-                                    Lhand.ythrow = ycursor                        
-                                    espada.ythrow = ycursor
+                    if button[1] != 0 and not espada.swingright and not espada.swingleft:
+                            Lhand.hittin = True
+                            espada.hittin = True
+                            Lhand.xthrow = xcursor
+                            espada.xthrow = xcursor
+                            Lhand.ythrow = ycursor                        
+                            espada.ythrow = ycursor
                             
         # >> CASO COS NULO A                                         
         elif cos == 0 and sen < 0:
             angle_grad = 0
-            if espada.cursor_dir > 30:
-                if event.type == pg.MOUSEBUTTONDOWN:                       
-                    if event.button == 1:                    
-                        espada.leftbut = 1
-                        espada.swingright = True 
-            elif espada.cursor_dir < -30:
-                if event.type == pg.MOUSEBUTTONDOWN:                       
-                    if event.button == 1:                    
-                        espada.leftbut = 0                           
-                        espada.swingleft = True
+            if button[2] != 0 and not espada.swingleft:
+                espada.leftbut = 1
+                espada.swingright = True 
+            elif button[0] != 0 and not espada.swingright:
+                espada.leftbut = 0                           
+                espada.swingleft = True
             else:
                 espada.swingright = False
                 espada.swingleft = False
-                if not (espada.swingright and espada.swingleft):
-                    if espada.cursor_dir < 20 and espada.cursor_dir > -20:
-                        if event.type == pg.MOUSEBUTTONDOWN:   
-                            if event.button == 1:                           
-                                Lhand.hittin = True
-                                espada.hittin = True
-                                Lhand.xthrow = xcursor
-                                espada.xthrow = xcursor
-                                Lhand.ythrow = ycursor                        
-                                espada.ythrow = ycursor
-                        
+                if button[1] != 0 and not espada.swingright and not espada.swingleft:
+                        Lhand.hittin = True
+                        espada.hittin = True
+                        Lhand.xthrow = xcursor
+                        espada.xthrow = xcursor
+                        Lhand.ythrow = ycursor                        
+                        espada.ythrow = ycursor
+                    
         # >> CASO COS NULO B                                                
         elif cos == 0 and sen > 0:
             angle_grad = 180
-            if espada.cursor_dir > 30:
-                if event.type == pg.MOUSEBUTTONDOWN:                       
-                    if event.button == 1:                    
-                        espada.leftbut = 1                                   
-                        espada.swingright = True 
-            elif button[0] != 0 and espada.cursor_dir < -30:
-                if event.type == pg.MOUSEBUTTONDOWN:                       
-                    if event.button == 1:                    
-                        espada.leftbut = 0                          
-                        espada.swingleft = True                
+            if button[2] != 0 and not espada.swingleft:
+                espada.leftbut = 1                                   
+                espada.swingright = True 
+            elif button[0] != 0 and not espada.swingright:
+                espada.leftbut = 0                          
+                espada.swingleft = True                
             else:
                 espada.swingright = False
                 espada.swingleft = False
-                if not (espada.swingright and espada.swingleft):
-                    if espada.cursor_dir < 20 and espada.cursor_dir > -20:
-                        if event.type == pg.MOUSEBUTTONDOWN:   
-                            if event.button == 1:                           
-                                Lhand.hittin = True
-                                espada.hittin = True
-                                Lhand.xthrow = xcursor
-                                espada.xthrow = xcursor
-                                Lhand.ythrow = ycursor                        
-                                espada.ythrow = ycursor
+                if button[1] != 0 and not espada.swingright and not espada.swingleft:
+                        Lhand.hittin = True
+                        espada.hittin = True
+                        Lhand.xthrow = xcursor
+                        espada.xthrow = xcursor
+                        Lhand.ythrow = ycursor                        
+                        espada.ythrow = ycursor
                             
         # SOLTAR EL RATON COMIENZA EL SLASH
         if event.type == pg.MOUSEBUTTONUP:
             if espada.leftbut == 1:
                 espada.slashright = True
+                espada.countlimit = espada.chargecount
                 espada.leftbut = 2
             elif espada.leftbut == 0:
                 espada.slashleft = True
+                espada.countlimit = espada.chargecount                
                 espada.leftbut = 2
                 
-    # ORIENTACIÓN DEL ESPADAZO
-    if espada.cursorcount == 0:
-        cursor_init = xcursor
-        espada.cursorcount += 1            
-    elif espada.cursorcount > 0 and espada.cursorcount <= 2:
-        espada.cursorcount += 1
-    elif not espada.swingright and not espada.swingleft:        
-        espada.cursor_dir = xcursor - cursor_init
-        espada.cursorcount = 0
-
+# =============================================================================
+#     # ORIENTACIÓN DEL ESPADAZO
+#     if espada.cursorcount == 0:
+#         cursor_init = xcursor
+#         espada.cursorcount += 1            
+#     elif espada.cursorcount > 0 and espada.cursorcount <= 2:
+#         espada.cursorcount += 1
+#     elif not espada.swingright and not espada.swingleft:        
+#         espada.cursor_dir = xcursor - cursor_init
+#         espada.cursorcount = 0
+# 
+# =============================================================================
 # ESPADAZO
     if cos < 0:
         # ESPADAZO DESDE DERECHA
@@ -388,7 +337,7 @@ while run:
                 espada.angle = 90 - angle_grad - espada.chargecount * 90 / 30
                 espada.chargecount += 1
         elif espada.slashright and not espada.swingright and not espada.backright:
-            if espada.chargecount >= -20:
+            if espada.chargecount >= espada.countlimit * -20 / 30:
                 Lhand.angle = 90 - angle_grad - espada.chargecount * 90 / 30
                 espada.angle = 90 - angle_grad - espada.chargecount * 90 / 30
                 espada.chargecount -= 8  
@@ -411,7 +360,7 @@ while run:
                 espada.angle = 90 - angle_grad + espada.chargecount * 90 / 30
                 espada.chargecount += 1
         elif espada.slashleft and not espada.swingleft and not espada.backleft:
-            if espada.chargecount >= -20:
+            if espada.chargecount >= espada.countlimit * -20 / 30:
                 Lhand.angle = 90 - angle_grad + espada.chargecount * 90 / 30
                 espada.angle = 90 - angle_grad + espada.chargecount * 90 / 30
                 espada.chargecount -= 8  
@@ -435,7 +384,7 @@ while run:
                 espada.angle = 270 - angle_grad - espada.chargecount * 90 / 30
                 espada.chargecount += 1
         elif espada.slashright and not espada.swingright and not espada.backright:
-            if espada.chargecount >= -20:
+            if espada.chargecount >= espada.countlimit * -20 / 30:
                 Lhand.angle = 270 - angle_grad - espada.chargecount * 90 / 30
                 espada.angle = 270 - angle_grad - espada.chargecount * 90 / 30
                 espada.chargecount -= 8    
@@ -458,7 +407,7 @@ while run:
                 espada.angle = 270 - angle_grad + espada.chargecount * 90 / 30
                 espada.chargecount += 1
         elif espada.slashleft and not espada.swingleft and not espada.backleft:
-            if espada.chargecount >= -20:
+            if espada.chargecount >= espada.countlimit * -20 / 30:
                 Lhand.angle = 270 - angle_grad + espada.chargecount * 90 / 30
                 espada.angle = 270 - angle_grad + espada.chargecount * 90 / 30
                 espada.chargecount -= 8  
@@ -483,7 +432,7 @@ while run:
                 espada.angle = 0 - espada.chargecount * 90 / 30
                 espada.chargecount += 1
         elif espada.slashright and not espada.swingright and not espada.backright:
-            if espada.chargecount >= -20:
+            if espada.chargecount >= espada.countlimit * -20 / 30:
                 Lhand.angle = 0 - espada.chargecount * 90 / 30
                 espada.angle = 0 - espada.chargecount * 90 / 30
                 espada.chargecount -= 8    
@@ -506,7 +455,7 @@ while run:
                 espada.angle = 0 + espada.chargecount * 90 / 30
                 espada.chargecount += 1
         elif espada.slashleft and not espada.swingleft and not espada.backleft:
-            if espada.chargecount >= -20:
+            if espada.chargecount >= espada.countlimit * -20 / 30:
                 Lhand.angle = 0 + espada.chargecount * 90 / 30
                 espada.angle = 0 + espada.chargecount * 90 / 30
                 espada.chargecount -= 8  
@@ -531,7 +480,7 @@ while run:
                 espada.angle = 180 - espada.chargecount * 90 / 30
                 espada.chargecount += 1
         elif espada.slashright and not espada.swingright and not espada.backright:
-            if espada.chargecount >= -20:
+            if espada.chargecount >= espada.countlimit * -20 / 30:
                 Lhand.angle = 180 - espada.chargecount * 90 / 30
                 espada.angle = 180 - espada.chargecount * 90 / 30
                 espada.chargecount -= 8    
@@ -554,7 +503,7 @@ while run:
                 espada.angle = 180 + espada.chargecount * 90 / 30
                 espada.chargecount += 1
         elif espada.slashleft and not espada.swingleft and not espada.backleft:
-            if espada.chargecount >= -20:
+            if espada.chargecount >= espada.countlimit * -20 / 30:
                 Lhand.angle = 180 + espada.chargecount * 90 / 30
                 espada.angle = 180 + espada.chargecount * 90 / 30
                 espada.chargecount -= 8  
