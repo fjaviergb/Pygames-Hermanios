@@ -9,7 +9,7 @@ pg.init()
 class gir_obstacle(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pg.Surface((5,100))
+        self.image = pg.Surface((8,100))
         pg.draw.rect(self.image, BLUE, (0,0,8,100))
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect(center = (80, 300))
@@ -17,8 +17,9 @@ class gir_obstacle(pg.sprite.Sprite):
         self.image_orig = self.image
         self.counter = 0
         self.crash = False
+        self.live = 3
         
-    def update(self):
+    def update(self):        
         if not self.crash:
             if self.counter <= 360:
                 self.image = pg.transform.rotate(self.image_orig, 8 * self.counter)
@@ -30,7 +31,12 @@ class gir_obstacle(pg.sprite.Sprite):
                 self.counter = 0
         else:
             pass
-
+        
+        if self.live <= 0:
+            self.image.fill(BLACK)
+            self.image.set_colorkey(BLACK)
+            obstacle_group.remove(self)
+            
 ##################################################################
 # CLASE OBSTÁCULO RECTANGULAR
 ##################################################################
@@ -42,6 +48,13 @@ class rect_obstacle(pg.sprite.Sprite):
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect(center = (75,50))
         self.mask = pg.mask.from_surface(self.image)
+        self.live = 3
+
+    def update(self):
+        if self.live <= 0:
+            self.image.fill(BLACK)
+            self.image.set_colorkey(BLACK)
+            obstacle_group.remove(self)
 
 ##################################################################
 # CLASE OBSTÁCULO CIRCULAR
@@ -54,7 +67,14 @@ class circle_obstacle(pg.sprite.Sprite):
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect(center = (350,150))
         self.mask = pg.mask.from_surface(self.image)
+        self.live = 3
 
+    def update(self):
+        if self.live <= 0:
+            self.image.fill(BLACK)
+            self.image.set_colorkey(BLACK)
+            obstacle_group.remove(self)
+    
 ##################################################################
 # CLASE CUERPO
 ##################################################################
@@ -289,6 +309,8 @@ class sword(pg.sprite.Sprite):
                     girator.crash = True
                 else:
                     girator.crash = False
+                
+                block.live -= 1
                 
 ##############################################################################
 # INICIACION DE VARIABLES
