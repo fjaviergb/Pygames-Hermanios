@@ -56,10 +56,12 @@ class sword(pg.sprite.Sprite):
         self.angle = 0
         self.angle_change = 45
         self.chargecount = 1
-        self.swing = False
-        self.slash = False
-        self.side = 0
-        self.back= False
+        self.swingright = False
+        self.swingleft = False
+        self.slashright = False
+        self.slashleft = False
+        self.backright= False
+        self.backleft = False
 
     def update(self):
         self.image = pg.transform.rotate(self.image_orig, self.angle)
@@ -113,11 +115,17 @@ while run:
                 player.angle = 270 - angle_grad
                 Rhand.angle = 270 - angle_grad
                 if button[0] != 0:
-                    espada.swing = True
+                    leftbut = 1                                        
+                    espada.swingright = True
                     Lhand.angle = 270 - angle_grad - 90
-                    espada.angle = 270 - angle_grad - 90          
+                    espada.angle = 270 - angle_grad - 90  
+                elif button[2] != 0:
+                    espada.swingleft = True
+                    Lhand.angle = 270 - angle_grad + 90
+                    espada.angle = 270 - angle_grad + 90               
                 else:
-                    espada.swing = False 
+                    espada.swingright = False 
+                    espada.swingleft = False
                     Lhand.angle = 270 - angle_grad
                     espada.angle = 270 - angle_grad                                 
                     
@@ -125,125 +133,242 @@ while run:
                 player.angle = 90 - angle_grad
                 Rhand.angle = 90 - angle_grad
                 if button[0] != 0:
-                    espada.swing = True                
+                    leftbut = 1                    
+                    espada.swingright = True                
                     Lhand.angle = 90 - angle_grad - 90
-                    espada.angle = 90 - angle_grad - 90          
+                    espada.angle = 90 - angle_grad - 90  
+                elif button[2] != 0:
+                    espada.swingleft = True
+                    Lhand.angle = 90 - angle_grad + 90
+                    espada.angle = 90 - angle_grad + 90               
+                    
                 else:
-                    espada.swing = False
+                    espada.swingright = False
+                    espada.swingleft = False
                     Lhand.angle = 90 - angle_grad
                     espada.angle = 90 - angle_grad
         
         elif cos == 0 and sen < 0:
             angle_grad = 0
             if button[0] != 0:
-                espada.swing = True 
+                leftbut = 1
+                espada.swingright = True 
+            elif button[2] != 0:
+                espada.swingleft = True
             else:
-                espada.swing = False
+                espada.swingright = False
+                espada.swingleft = False
         
         elif cos == 0 and sen > 0:
             angle_grad = 180
             if button[0] != 0:
-                espada.swing = True 
+                leftbut = 1                                   
+                espada.swingright = True 
+            elif button[2] != 0:
+                espada.swingleft = True                
             else:
-                espada.swing = False
+                espada.swingright = False
+                espada.swingleft = False
         
         if event.type == pg.MOUSEBUTTONUP:
-            espada.slash = True
-    
-    
+            if leftbut == 1:
+                espada.slashright = True
+                leftbut = 0
+            else:
+                espada.slashleft = True
+
+# ESPADAZO
     if cos < 0:
-        if espada.swing:
+        # ESPADAZO DESDE DERECHA
+        if espada.swingright:
             if espada.chargecount <= 30:
                 Lhand.angle = 90 - angle_grad - espada.chargecount * 90 / 30
                 espada.angle = 90 - angle_grad - espada.chargecount * 90 / 30
                 espada.chargecount += 1
-        elif espada.slash and not espada.swing and not espada.back:
+        elif espada.slashright and not espada.swingright and not espada.backright:
             if espada.chargecount >= -20:
                 Lhand.angle = 90 - angle_grad - espada.chargecount * 90 / 30
                 espada.angle = 90 - angle_grad - espada.chargecount * 90 / 30
                 espada.chargecount -= 8  
             else:
-                espada.slash = False                
-                espada.back = True
-        elif espada.back:
+                espada.slashright = False                
+                espada.backright = True
+        elif espada.backright:
             if espada.chargecount <= 1:
                 Lhand.angle = 90 - angle_grad - espada.chargecount * 90 / 30
                 espada.angle = 90 - angle_grad - espada.chargecount * 90 / 30
                 espada.chargecount += 1    
             else:                 
-                espada.back = False
+                espada.backright = False
+                espada.chargecount = 1
+                
+        # ESPADAZO DESDE IZQUIERDA                
+        if espada.swingleft:
+            if espada.chargecount <= 30:
+                Lhand.angle = 90 - angle_grad + espada.chargecount * 90 / 30
+                espada.angle = 90 - angle_grad + espada.chargecount * 90 / 30
+                espada.chargecount += 1
+        elif espada.slashleft and not espada.swingleft and not espada.backleft:
+            if espada.chargecount >= -20:
+                Lhand.angle = 90 - angle_grad + espada.chargecount * 90 / 30
+                espada.angle = 90 - angle_grad + espada.chargecount * 90 / 30
+                espada.chargecount -= 8  
+            else:
+                espada.slashleft = False                
+                espada.backleft = True
+        elif espada.backleft:
+            if espada.chargecount <= 1:
+                Lhand.angle = 90 - angle_grad + espada.chargecount * 90 / 30
+                espada.angle = 90 - angle_grad + espada.chargecount * 90 / 30
+                espada.chargecount += 1    
+            else:                 
+                espada.backleft = False
                 espada.chargecount = 1
                 
     if cos > 0:
-        if espada.swing:
+        # ESPADAZO DESDE DERECHA        
+        if espada.swingright:
             if espada.chargecount <= 30:
                 Lhand.angle = 270 - angle_grad - espada.chargecount * 90 / 30
                 espada.angle = 270 - angle_grad - espada.chargecount * 90 / 30
                 espada.chargecount += 1
-        elif espada.slash and not espada.swing and not espada.back:
+        elif espada.slashright and not espada.swingright and not espada.backright:
             if espada.chargecount >= -20:
                 Lhand.angle = 270 - angle_grad - espada.chargecount * 90 / 30
                 espada.angle = 270 - angle_grad - espada.chargecount * 90 / 30
                 espada.chargecount -= 8    
             else:
-                espada.slash = False                
-                espada.back = True
-        elif espada.back:
+                espada.slashright = False                
+                espada.backright = True
+        elif espada.backright:
             if espada.chargecount <= 1:
                 Lhand.angle = 270 - angle_grad - espada.chargecount * 90 / 30
                 espada.angle = 270 - angle_grad - espada.chargecount * 90 / 30
                 espada.chargecount += 1    
             else: 
-                espada.back = False
+                espada.backright = False
+                espada.chargecount = 1
+                
+        # ESPADAZO DESDE IZQUIERDA
+        if espada.swingleft:
+            if espada.chargecount <= 30:
+                Lhand.angle = 270 - angle_grad + espada.chargecount * 90 / 30
+                espada.angle = 270 - angle_grad + espada.chargecount * 90 / 30
+                espada.chargecount += 1
+        elif espada.slashleft and not espada.swingleft and not espada.backleft:
+            if espada.chargecount >= -20:
+                Lhand.angle = 270 - angle_grad + espada.chargecount * 90 / 30
+                espada.angle = 270 - angle_grad + espada.chargecount * 90 / 30
+                espada.chargecount -= 8  
+            else:
+                espada.slashleft = False                
+                espada.backleft = True
+        elif espada.backleft:
+            if espada.chargecount <= 1:
+                Lhand.angle = 270 - angle_grad + espada.chargecount * 90 / 30
+                espada.angle = 270 - angle_grad + espada.chargecount * 90 / 30
+                espada.chargecount += 1    
+            else:                 
+                espada.backleft = False
                 espada.chargecount = 1
 
     if cos == 0 and sen < 0:
-        if espada.swing:
+        
+        # ESPADAZO DESDE DERECHA        
+        if espada.swingright:
             if espada.chargecount <= 30:
                 Lhand.angle = 0 - espada.chargecount * 90 / 30
                 espada.angle = 0 - espada.chargecount * 90 / 30
                 espada.chargecount += 1
-        elif espada.slash and not espada.swing and not espada.back:
+        elif espada.slashright and not espada.swingright and not espada.backright:
             if espada.chargecount >= -20:
                 Lhand.angle = 0 - espada.chargecount * 90 / 30
                 espada.angle = 0 - espada.chargecount * 90 / 30
                 espada.chargecount -= 8    
             else:
-                espada.slash = False                
-                espada.back = True
-        elif espada.back:
+                espada.slashright = False                
+                espada.backright = True
+        elif espada.backright:
             if espada.chargecount <= 1:
                 Lhand.angle = 0 - espada.chargecount * 90 / 30
                 espada.angle = 0 - espada.chargecount * 90 / 30
                 espada.chargecount += 1    
             else: 
-                espada.back = False
+                espada.backright = False
+                espada.chargecount = 1
+                
+        # ESPADAZO DESDE IZQUIERDA
+        if espada.swingleft:
+            if espada.chargecount <= 30:
+                Lhand.angle = 0 + espada.chargecount * 90 / 30
+                espada.angle = 0 + espada.chargecount * 90 / 30
+                espada.chargecount += 1
+        elif espada.slashleft and not espada.swingleft and not espada.backleft:
+            if espada.chargecount >= -20:
+                Lhand.angle = 0 + espada.chargecount * 90 / 30
+                espada.angle = 0 + espada.chargecount * 90 / 30
+                espada.chargecount -= 8  
+            else:
+                espada.slashleft = False                
+                espada.backleft = True
+        elif espada.backleft:
+            if espada.chargecount <= 1:
+                Lhand.angle = 0 + espada.chargecount * 90 / 30
+                espada.angle = 0 + espada.chargecount * 90 / 30
+                espada.chargecount += 1    
+            else:                 
+                espada.backleft = False
                 espada.chargecount = 1
     
     if cos == 0 and sen > 0:
-        if espada.swing:
+        
+        # ESPADAZO DESDE DERECHA        
+        if espada.swingright:
             if espada.chargecount <= 30:
                 Lhand.angle = 180 - espada.chargecount * 90 / 30
                 espada.angle = 180 - espada.chargecount * 90 / 30
                 espada.chargecount += 1
-        elif espada.slash and not espada.swing and not espada.back:
+        elif espada.slashright and not espada.swingright and not espada.backright:
             if espada.chargecount >= -20:
                 Lhand.angle = 180 - espada.chargecount * 90 / 30
                 espada.angle = 180 - espada.chargecount * 90 / 30
                 espada.chargecount -= 8    
             else:
-                espada.slash = False                
-                espada.back = True
-        elif espada.back:
+                espada.slashright = False                
+                espada.backright = True
+        elif espada.backright:
             if espada.chargecount <= 1:
                 Lhand.angle = 180 - espada.chargecount * 90 / 30
                 espada.angle = 180 - espada.chargecount * 90 / 30
                 espada.chargecount += 1    
             else: 
-                espada.back = False
+                espada.backright = False
+                espada.chargecount = 1
+                
+        # ESPADAZO DESDE IZQUIERDA               
+        if espada.swingleft:
+            if espada.chargecount <= 30:
+                Lhand.angle = 180 + espada.chargecount * 90 / 30
+                espada.angle = 180 + espada.chargecount * 90 / 30
+                espada.chargecount += 1
+        elif espada.slashleft and not espada.swingleft and not espada.backleft:
+            if espada.chargecount >= -20:
+                Lhand.angle = 180 + espada.chargecount * 90 / 30
+                espada.angle = 180 + espada.chargecount * 90 / 30
+                espada.chargecount -= 8  
+            else:
+                espada.slashleft = False                
+                espada.backleft = True
+        elif espada.backleft:
+            if espada.chargecount <= 1:
+                Lhand.angle = 180 + espada.chargecount * 90 / 30
+                espada.angle = 180 + espada.chargecount * 90 / 30
+                espada.chargecount += 1    
+            else:                 
+                espada.backleft = False
                 espada.chargecount = 1
 
-    print(espada.swing, espada.slash, espada.back, espada.chargecount)
+    print(espada.swingright, espada.slashright, espada.backright, espada.chargecount)
     all_sprites.update()
     bg.fill(BLACK)
     all_sprites.draw(bg)
