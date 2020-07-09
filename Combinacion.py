@@ -43,7 +43,6 @@ class char(pg.sprite.Sprite):
         self.rect.x += self.movex
         block_hit_list = pg.sprite.spritecollide(self, obstacle_group, False)
         block_hit_list_masked = pg.sprite.spritecollide(self, block_hit_list, False, pg.sprite.collide_mask)
-        print(block_hit_list_masked)
         
         for block in block_hit_list_masked:
             if type(block) == rect_obstacle:
@@ -180,13 +179,13 @@ class hand(pg.sprite.Sprite):
                 self.dis_max = 0
                 self.rect.center = player.rect.center  
                 self.hittin = False
-
+                
 
 class sword(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pg.Surface((50,120))
-        pg.draw.line(self.image, RED, (43,35), (50,0), 5)
+        pg.draw.rect(self.image, RED, (40,0,5,50))
         self.rect = self.image.get_rect(center = (150,150))
         self.image.set_colorkey(BLACK)        
         self.mask = pg.mask.from_surface(self.image)        
@@ -227,7 +226,23 @@ class sword(pg.sprite.Sprite):
                 self.dis_max = 0
                 self.rect.center = player.rect.center  
                 self.hittin = False
-
+        
+        if self.image != self.image_orig and ((self.slashleft and not self.swingleft and not self.backleft) or (self.slashright and not self.swingright and not self.backright)):
+            self.mask = pg.mask.from_surface(self.image)                  
+            block_hit_list = pg.sprite.spritecollide(self, obstacle_group, False)        
+            block_hit_list_masked = pg.sprite.spritecollide(self, block_hit_list, False, pg.sprite.collide_mask)
+            print(block_hit_list_masked)
+            
+            for block in block_hit_list_masked:
+                if self.slashleft and not self.swingleft and not self.backleft:                
+                    self.slashleft = False                
+                    self.backleft = False
+                    print('Chocando')
+                elif self.slashright and not self.swingright and not self.backright:
+                    self.slashright = False                
+                    self.backright = False
+                    print('Chocando')
+                
 
 CBASE = (255,255,255)
 CPLAYER = (255,228,181)
@@ -265,7 +280,7 @@ cursorcount = 0
 clock = pg.time.Clock()
 run = True
 while run:
-    clock.tick(70)
+    clock.tick(100)
 
     for event in pg.event.get():
         if event.type == pg.QUIT:
