@@ -133,11 +133,19 @@ while run:
                     Lhand.angle = 90 - angle_grad
                     espada.angle = 90 - angle_grad
         
-        elif cos == 0 and sen > 0:
+        elif cos == 0 and sen < 0:
             angle_grad = 0
+            if button[0] != 0:
+                espada.swing = True 
+            else:
+                espada.swing = False
         
-        elif cos == 0 and sen <0:
+        elif cos == 0 and sen > 0:
             angle_grad = 180
+            if button[0] != 0:
+                espada.swing = True 
+            else:
+                espada.swing = False
         
         if event.type == pg.MOUSEBUTTONUP:
             espada.slash = True
@@ -189,8 +197,53 @@ while run:
                 espada.back = False
                 espada.chargecount = 1
 
+    if cos == 0 and sen < 0:
+        if espada.swing:
+            if espada.chargecount <= 30:
+                Lhand.angle = 0 - espada.chargecount * 90 / 30
+                espada.angle = 0 - espada.chargecount * 90 / 30
+                espada.chargecount += 1
+        elif espada.slash and not espada.swing and not espada.back:
+            if espada.chargecount >= -20:
+                Lhand.angle = 0 - espada.chargecount * 90 / 30
+                espada.angle = 0 - espada.chargecount * 90 / 30
+                espada.chargecount -= 8    
+            else:
+                espada.slash = False                
+                espada.back = True
+        elif espada.back:
+            if espada.chargecount <= 1:
+                Lhand.angle = 0 - espada.chargecount * 90 / 30
+                espada.angle = 0 - espada.chargecount * 90 / 30
+                espada.chargecount += 1    
+            else: 
+                espada.back = False
+                espada.chargecount = 1
+    
+    if cos == 0 and sen > 0:
+        if espada.swing:
+            if espada.chargecount <= 30:
+                Lhand.angle = 180 - espada.chargecount * 90 / 30
+                espada.angle = 180 - espada.chargecount * 90 / 30
+                espada.chargecount += 1
+        elif espada.slash and not espada.swing and not espada.back:
+            if espada.chargecount >= -20:
+                Lhand.angle = 180 - espada.chargecount * 90 / 30
+                espada.angle = 180 - espada.chargecount * 90 / 30
+                espada.chargecount -= 8    
+            else:
+                espada.slash = False                
+                espada.back = True
+        elif espada.back:
+            if espada.chargecount <= 1:
+                Lhand.angle = 180 - espada.chargecount * 90 / 30
+                espada.angle = 180 - espada.chargecount * 90 / 30
+                espada.chargecount += 1    
+            else: 
+                espada.back = False
+                espada.chargecount = 1
 
-    print(espada.swing, espada.slash, espada.back)
+    print(espada.swing, espada.slash, espada.back, espada.chargecount)
     all_sprites.update()
     bg.fill(BLACK)
     all_sprites.draw(bg)
