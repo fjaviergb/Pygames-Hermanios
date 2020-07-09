@@ -64,15 +64,15 @@ class body(pg.sprite.Sprite):
         ######################################################################
             if cos > 0:
                 self.angle = 270 - angle_grad    
-                if button[2] != 0 and not self.swingleft:
+                if button[2] != 0 and not self.swingleft and not self.swingright and not self.slashleft and not self.slashright and not self.backleft and not self.backright:
                     self.hitorient = 1                                        
                     self.swingright = True
                     self.anglehit = 270 - angle_grad - 90
-                elif button[0] != 0 and not self.swingright:
+                elif button[0] != 0 and not self.swingleft and not self.swingright and not self.slashleft and not self.slashright and not self.backleft and not self.backright:
                     self.hitorient = 0           
                     self.swingleft = True
                     self.anglehit = 270 - angle_grad + 90
-                else:
+                elif button[2] == 0 and button[0] == 0 and not self.swingleft and not self.swingright and not self.slashleft and not self.slashright and not self.backleft and not self.backright:
                     self.anglehit = 270 - angle_grad
                     
                 ###########################################################              
@@ -132,15 +132,15 @@ class body(pg.sprite.Sprite):
         ######################################################################
             elif cos < 0:
                 self.angle = 90 - angle_grad
-                if button[2] != 0 and not self.swingleft:
+                if button[2] != 0 and not self.swingleft and not self.swingright and not self.slashleft and not self.slashright and not self.backleft and not self.backright:
                     self.hitorient = 1                                        
                     self.swingright = True
                     self.anglehit = 90 - angle_grad - 90
-                elif button[0] != 0 and not self.swingright:
+                elif button[0] != 0 and not self.swingleft and not self.swingright and not self.slashleft and not self.slashright and not self.backleft and not self.backright:
                     self.hitorient = 0           
                     self.swingleft = True
                     self.anglehit = 90 - angle_grad + 90
-                else:
+                elif button[2] == 0 and button[0] == 0 and not self.swingleft and not self.swingright and not self.slashleft and not self.slashright and not self.backleft and not self.backright:
                     self.anglehit = 90 - angle_grad
 
                 ###########################################################              
@@ -200,10 +200,10 @@ class body(pg.sprite.Sprite):
         ######################################################################
         elif cos == 0 and sen < 0:
             self.angle = 0
-            if button[2] != 0 and not self.swingleft:
+            if button[2] != 0 and not self.swingleft and not self.swingright and not self.slashleft and not self.slashright and not self.backleft and not self.backright:
                 self.hitorient = 1                                        
                 self.swingright = True
-            elif button[0] != 0 and not self.swingright:
+            elif button[0] != 0 and not self.swingleft and not self.swingright and not self.slashleft and not self.slashright and not self.backleft and not self.backright:
                 self.hitorient = 0           
                 self.swingleft = True
 
@@ -264,10 +264,10 @@ class body(pg.sprite.Sprite):
         ######################################################################
         elif cos == 0 and sen > 0:
             self.angle = 180
-            if button[2] != 0 and not self.swingleft:
+            if button[2] != 0 and not self.swingleft and not self.swingright and not self.slashleft and not self.slashright and not self.backleft and not self.backright:
                 self.hitorient = 1                                        
                 self.swingright = True
-            elif button[0] != 0 and not self.swingright:
+            elif button[0] != 0 and not self.swingleft and not self.swingright and not self.slashleft and not self.slashright and not self.backleft and not self.backright:
                 self.hitorient = 0           
                 self.swingleft = True
 
