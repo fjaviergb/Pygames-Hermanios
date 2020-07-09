@@ -103,66 +103,45 @@ while run:
         (xcursor, ycursor) = pg.mouse.get_pos()
         sen = ycursor - player.rect.centery
         cos = xcursor - player.rect.centerx
-        if cos > 0 and sen > 0:
+        
+        if cos != 0:
             angle_rad = math.atan(sen / cos)
             angle_grad = angle_rad * 360 / (2 * math.pi)
-            player.angle = 270 - angle_grad
-            Rhand.angle = 270 - angle_grad
-            if button[0] != 0:
-                espada.swing = True
-                Lhand.angle = 270 - angle_grad - 90
-                espada.angle = 270 - angle_grad - 90          
-            else:
-                espada.swing = False 
-                Lhand.angle = 270 - angle_grad
-                espada.angle = 270 - angle_grad
-                                  
-                
-        elif cos < 0 and sen > 0:
-            angle_rad = math.atan(sen / cos)
-            angle_grad = angle_rad * 360 / (2 * math.pi)
-            player.angle = 90 - angle_grad
-            Rhand.angle = 90 - angle_grad
-            if button[0] != 0:
-                espada.swing = True                
-                Lhand.angle = 90 - angle_grad - 90
-                espada.angle = 90 - angle_grad - 90          
-            else:
-                espada.swing = False
-                Lhand.angle = 90 - angle_grad
-                espada.angle = 90 - angle_grad
-
-        elif cos < 0 and sen < 0:
-            angle_rad = math.atan(sen / cos)
-            angle_grad = angle_rad * 360 / (2 * math.pi)
-            player.angle = 90 - angle_grad
-            Rhand.angle = 90 - angle_grad            
-            if button[0] != 0:
-                espada.swing = True
-                Lhand.angle = 90 - angle_grad - 90
-                espada.angle = 90 - angle_grad - 90          
-            else:
-                espada.swing = False
-                Lhand.angle = 90 - angle_grad
-                espada.angle = 90 - angle_grad
- 
-
-        elif cos > 0 and sen < 0:
-            angle_rad = math.atan(sen / cos)
-            angle_grad = angle_rad * 360 / (2 * math.pi)
-            player.angle = 180 + (90 - angle_grad)
-            Rhand.angle = 180 + (90 - angle_grad)
-            if button[0] != 0:
-                espada.swing = True
-                Lhand.angle = 270 - angle_grad - 90
-                espada.angle = 270 - angle_grad - 90                
-            else:
-                espada.swing = False    
-                Lhand.angle = 270 - angle_grad
-                espada.angle = 270 - angle_grad
+            
+            
+            if cos > 0:
+                player.angle = 270 - angle_grad
+                Rhand.angle = 270 - angle_grad
+                if button[0] != 0:
+                    espada.swing = True
+                    Lhand.angle = 270 - angle_grad - 90
+                    espada.angle = 270 - angle_grad - 90          
+                else:
+                    espada.swing = False 
+                    Lhand.angle = 270 - angle_grad
+                    espada.angle = 270 - angle_grad                                 
+                    
+            elif cos < 0:
+                player.angle = 90 - angle_grad
+                Rhand.angle = 90 - angle_grad
+                if button[0] != 0:
+                    espada.swing = True                
+                    Lhand.angle = 90 - angle_grad - 90
+                    espada.angle = 90 - angle_grad - 90          
+                else:
+                    espada.swing = False
+                    Lhand.angle = 90 - angle_grad
+                    espada.angle = 90 - angle_grad
+        
+        elif cos == 0 and sen > 0:
+            angle_grad = 0
+        
+        elif cos == 0 and sen <0:
+            angle_grad = 180
         
         if event.type == pg.MOUSEBUTTONUP:
             espada.slash = True
+    
     
     if cos < 0:
         if espada.swing:
@@ -174,7 +153,7 @@ while run:
             if espada.chargecount >= -20:
                 Lhand.angle = 90 - angle_grad - espada.chargecount * 90 / 30
                 espada.angle = 90 - angle_grad - espada.chargecount * 90 / 30
-                espada.chargecount -= 3  
+                espada.chargecount -= 8  
             else:
                 espada.slash = False                
                 espada.back = True
@@ -209,6 +188,7 @@ while run:
             else: 
                 espada.back = False
                 espada.chargecount = 1
+
 
     print(espada.swing, espada.slash, espada.back)
     all_sprites.update()
