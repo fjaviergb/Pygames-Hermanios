@@ -97,6 +97,10 @@ class char(pg.sprite.Sprite):
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect(center=self.rect.center)
         
+        ################################
+        # MOVIMIENTO HORIZONTAL
+        ################################
+        
         self.rect.x += self.movex
         block_hit_list = pg.sprite.spritecollide(self, obstacle_group, False)
         block_hit_list_masked = pg.sprite.spritecollide(self, block_hit_list, False, pg.sprite.collide_mask)
@@ -117,47 +121,47 @@ class char(pg.sprite.Sprite):
                     
                 else:
                     pass
-            else:
-                    (self.xcol, self.ycol) = pg.sprite.collide_mask(self,block)
-                    if self.xcol != block.rect.centerx:
-                        self.ang_col_rad = math.atan((block.rect.centerx - self.ycol) / (block.rect.centery - self.xcol))
-                        self.ang_col = self.ang_col_rad * 360 / (2* math.pi)
-                        print(self.ang_col)
-                        self.rect.center = (self.rect.centerx + self.radio * math.cos(self.ang_col), self.rect.centery + self.radio * math.sin(self.ang_col))
-                        Rhand.rect.center = (self.rect.centerx + self.radio * math.cos(self.ang_col), self.rect.centery + self.radio * math.sin(self.ang_col))
-                        Lhand.rect.center = (self.rect.centerx + self.radio * math.cos(self.ang_col), self.rect.centery + self.radio * math.sin(self.ang_col))
-                        espada.rect.center = (self.rect.centerx + self.radio * math.cos(self.ang_col), self.rect.centery + self.radio * math.sin(self.ang_col))
-
+            else:                
+                if self.movex > 0 and self.rect.centery < block.rect.centery:
+                    self.rect.top += -4
+                    Rhand.rect.top += -4
+                    Lhand.rect.top += -4
+                    espada.rect.top += -4
+                    
+                elif self.movex > 0 and self.rect.centery > block.rect.centery:
+                    self.rect.top += 4
+                    Rhand.rect.top += 4
+                    Lhand.rect.top += 4
+                    espada.rect.top += 4
+                    
+                elif self.movex < 0 and self.rect.centery < block.rect.centery:
+                    self.rect.bottom += -4
+                    Rhand.rect.bottom += -4
+                    Lhand.rect.bottom += -4
+                    espada.rect.bottom += -4
+                    
+                elif self.movex < 0 and self.rect.centery > block.rect.centery:
+                    self.rect.bottom += 4   
+                    Rhand.rect.bottom += 4
+                    Lhand.rect.bottom += 4
+                    espada.rect.bottom += 4
+                    
+                elif self.movex < 0 and self.rect.centery == block.rect.centery:
+                    self.rect.left += 3   
+                    Rhand.rect.left += 3
+                    Lhand.rect.left += 3
+                    espada.rect.left += 3
+                    
+                elif self.movex > 0 and self.rect.centery == block.rect.centery:
+                    self.rect.left += -3   
+                    Rhand.rect.left += -3
+                    Lhand.rect.left += -3
+                    espada.rect.left += -3
+                    
+        ################################
+        # MOVIMIENTO VERTICAL
+        ################################
                 
-# =============================================================================
-#                 if self.movex > 0 and self.rect.centery < block.rect.centery:
-#                     self.rect.top += -3
-#                     Rhand.rect.top += -3
-#                     Lhand.rect.top += -3
-#                     espada.rect.top += -3
-#                     
-#                 elif self.movex > 0 and self.rect.centery > block.rect.centery:
-#                     self.rect.top += 3
-#                     Rhand.rect.top += 3
-#                     Lhand.rect.top += 3
-#                     espada.rect.top += 3
-#                     
-#                 elif self.movex < 0 and self.rect.centery < block.rect.centery:
-#                     self.rect.bottom += -3
-#                     Rhand.rect.bottom += -3
-#                     Lhand.rect.bottom += -3
-#                     espada.rect.bottom += -3
-#                     
-#                 elif self.movex < 0 and self.rect.centery > block.rect.centery:
-#                     self.rect.bottom += 3   
-#                     Rhand.rect.bottom += 3
-#                     Lhand.rect.bottom += 3
-#                     espada.rect.bottom += 3
-#                     
-#                 else:
-#                     pass
-#                 
-# =============================================================================
         self.rect.y += self.movey
         block_hit_list = pg.sprite.spritecollide(self, obstacle_group, False)
         block_hit_list_masked = pg.sprite.spritecollide(self, block_hit_list, False, pg.sprite.collide_mask)
@@ -179,44 +183,42 @@ class char(pg.sprite.Sprite):
                     else:
                         pass
             else:
-                    (self.xcol, self.ycol) = pg.sprite.collide_mask(self,block)
-                    if self.xcol != block.rect.centerx:
-                        self.ang_col_rad = math.atan((block.rect.centerx - self.ycol) / (block.rect.centery - self.xcol))
-                        self.ang_col = self.ang_col_rad * 360 / (2* math.pi)
-                        self.rect.center = (self.rect.centerx + self.radio * math.cos(self.ang_col), self.rect.centery + self.radio * math.sin(self.ang_col))
-                        Rhand.rect.center = (self.rect.centerx + self.radio * math.cos(self.ang_col), self.rect.centery + self.radio * math.sin(self.ang_col))
-                        Lhand.rect.center = (self.rect.centerx + self.radio * math.cos(self.ang_col), self.rect.centery + self.radio * math.sin(self.ang_col))
-                        espada.rect.center = (self.rect.centerx + self.radio * math.cos(self.ang_col), self.rect.centery + self.radio * math.sin(self.ang_col))
-
-# =============================================================================
-#                     if self.movey > 0 and self.rect.centerx > block.rect.centerx:
-#                         self.rect.right += 3
-#                         Rhand.rect.right += 3
-#                         Lhand.rect.right += 3
-#                         espada.rect.right += 3
-#                         
-#                     elif self.movey > 0 and self.rect.centerx < block.rect.centerx:
-#                         self.rect.right += -3 
-#                         Rhand.rect.right += -3
-#                         Lhand.rect.right += -3
-#                         espada.rect.right += -3
-#                         
-#                     elif self.movey < 0 and self.rect.centerx > block.rect.centerx:
-#                         self.rect.left += 3
-#                         Rhand.rect.left += 3
-#                         Lhand.rect.left += 3
-#                         espada.rect.left += 3
-#                         
-#                     elif self.movey < 0 and self.rect.centerx < block.rect.centerx:
-#                         self.rect.left += -3  
-#                         Rhand.rect.left += -3
-#                         Lhand.rect.left += -3
-#                         espada.rect.left += -3
-#                         
-#                     else:
-#                         pass
-#                     
-# =============================================================================
+                if self.movey > 0 and self.rect.centerx > block.rect.centerx:
+                    self.rect.right += 4
+                    Rhand.rect.right += 4
+                    Lhand.rect.right += 4
+                    espada.rect.right += 4
+                    
+                elif self.movey > 0 and self.rect.centerx < block.rect.centerx:
+                    self.rect.right += -4 
+                    Rhand.rect.right += -4
+                    Lhand.rect.right += -4
+                    espada.rect.right += -4
+                    
+                elif self.movey < 0 and self.rect.centerx > block.rect.centerx:
+                    self.rect.left += 4
+                    Rhand.rect.left += 4
+                    Lhand.rect.left += 4
+                    espada.rect.left += 4
+                    
+                elif self.movey < 0 and self.rect.centerx < block.rect.centerx:
+                    self.rect.left += -4  
+                    Rhand.rect.left += -4
+                    Lhand.rect.left += -4
+                    espada.rect.left += -4
+                    
+                elif self.movey < 0 and self.rect.centerx == block.rect.centerx:
+                    self.rect.bottom += -3   
+                    Rhand.rect.bottom += -3
+                    Lhand.rect.bottom += -3
+                    espada.rect.bottom += -3
+                    
+                elif self.movey > 0 and self.rect.centerx == block.rect.centerx:
+                    self.rect.bottom += 3   
+                    Rhand.rect.bottom += 3
+                    Lhand.rect.bottom += 3
+                    espada.rect.bottom += 3
+                    
 ##################################################################
 # CLASE MANOS 
 ##################################################################
