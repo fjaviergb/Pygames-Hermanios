@@ -32,6 +32,9 @@ class hand(pg.sprite.Sprite):
         self.image = pg.Surface((50,50))
         self.image.set_colorkey(BLACK)
         self.image_orig = self.image
+        self.hittin = False
+        self.dis_max = 0
+        
         if ori == 1:
             pg.draw.circle(self.image, (BLUE), (10,10), self.radio)
             self.rect = self.image.get_rect(center = player.rect.center)
@@ -43,6 +46,18 @@ class hand(pg.sprite.Sprite):
         self.image = pg.transform.rotate(self.image_orig, self.angle)
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect(center=self.rect.center)
+
+        if self.hittin:
+            self.dis = math.sqrt((self.xthrow - player.rect.centerx) ** 2 + (self.ythrow - player.rect.centery) ** 2)
+            if self.dis_max < 15:
+                self.ratio = self.dis_max / self.dis
+                self.rect.centerx = player.rect.centerx + self.ratio * (self.xthrow - player.rect.centerx)
+                self.rect.centery = player.rect.centery + self.ratio * (self.ythrow - player.rect.centery) 
+                self.dis_max += 2
+            else:
+                self.dis_max = 0
+                self.rect.center = player.rect.center  
+                self.hittin = False
 
 
 class sword(pg.sprite.Sprite):
@@ -65,10 +80,24 @@ class sword(pg.sprite.Sprite):
         self.cursorcount = 0
         self.cursor_dir = 0
         self.leftbut = 2
+        self.hittin = False
+        self.dis_max = 0
 
     def update(self):
         self.image = pg.transform.rotate(self.image_orig, self.angle)
         self.rect = self.image.get_rect(center = player.rect.center)
+
+        if self.hittin:
+            self.dis = math.sqrt((self.xthrow - player.rect.centerx) ** 2 + (self.ythrow - player.rect.centery) ** 2)
+            if self.dis_max < 15:
+                self.ratio = self.dis_max / self.dis
+                self.rect.centerx = player.rect.centerx + self.ratio * (self.xthrow - player.rect.centerx)
+                self.rect.centery = player.rect.centery + self.ratio * (self.ythrow - player.rect.centery) 
+                self.dis_max += 2
+            else:
+                self.dis_max = 0
+                self.rect.center = player.rect.center  
+                self.hittin = False
 
 
 CBASE = (255,255,255)
@@ -117,66 +146,97 @@ while run:
             if cos > 0:
                 player.angle = 270 - angle_grad
                 Rhand.angle = 270 - angle_grad
-                if button[0] != 0 and espada.cursor_dir > 40:
+                if button[0] != 0 and espada.cursor_dir > 50:
                     espada.leftbut = 1                                        
                     espada.swingright = True
                     Lhand.angle = 270 - angle_grad - 90
                     espada.angle = 270 - angle_grad - 90  
-                elif button[0] != 0 and espada.cursor_dir < -40:
+                elif button[0] != 0 and espada.cursor_dir < -50:
                     espada.leftbut = 0           
                     espada.swingleft = True
                     Lhand.angle = 270 - angle_grad + 90
-                    espada.angle = 270 - angle_grad + 90               
+                    espada.angle = 270 - angle_grad + 90                    
                 else:
                     espada.swingright = False 
                     espada.swingleft = False
                     Lhand.angle = 270 - angle_grad
-                    espada.angle = 270 - angle_grad                                 
+                    espada.angle = 270 - angle_grad   
+                    if button[0] != 0 and espada.cursor_dir < 50 and espada.cursor_dir > -50:
+                        if event.type == pg.MOUSEBUTTONDOWN:                 
+                            Lhand.hittin = True
+                            espada.hittin = True
+                            Lhand.xthrow = xcursor
+                            espada.xthrow = xcursor
+                            Lhand.ythrow = ycursor                        
+                            espada.ythrow = ycursor
                     
             elif cos < 0:
                 player.angle = 90 - angle_grad
                 Rhand.angle = 90 - angle_grad
-                if button[0] != 0 and espada.cursor_dir > 40:
+                if button[0] != 0 and espada.cursor_dir > 50:
                     espada.leftbut = 1                    
                     espada.swingright = True                
                     Lhand.angle = 90 - angle_grad - 90
                     espada.angle = 90 - angle_grad - 90  
-                elif button[0] != 0 and espada.cursor_dir < -40:
+                elif button[0] != 0 and espada.cursor_dir < -50:
                     espada.leftbut = 0           
                     espada.swingleft = True
                     Lhand.angle = 90 - angle_grad + 90
-                    espada.angle = 90 - angle_grad + 90               
-                    
+                    espada.angle = 90 - angle_grad + 90                                   
                 else:
                     espada.swingright = False
                     espada.swingleft = False
                     Lhand.angle = 90 - angle_grad
                     espada.angle = 90 - angle_grad
-        
+                    if button[0] != 0 and espada.cursor_dir < 50 and espada.cursor_dir > -50:
+                        if event.type == pg.MOUSEBUTTONDOWN:                      
+                            Lhand.hittin = True
+                            espada.hittin = True
+                            Lhand.xthrow = xcursor
+                            espada.xthrow = xcursor
+                            Lhand.ythrow = ycursor                        
+                            espada.ythrow = ycursor
+            
         elif cos == 0 and sen < 0:
             angle_grad = 0
-            if button[0] != 0 and espada.cursor_dir > 40:
+            if button[0] != 0 and espada.cursor_dir > 50:
                 espada.leftbut = 1
                 espada.swingright = True 
-            elif button[0] != 0 and espada.cursor_dir < -40:
+            elif button[0] != 0 and espada.cursor_dir < -50:
                 espada.leftbut = 0                           
                 espada.swingleft = True
             else:
                 espada.swingright = False
                 espada.swingleft = False
+                if button[0] != 0 and espada.cursor_dir < 50 and espada.cursor_dir > -50:
+                    if event.type == pg.MOUSEBUTTONDOWN:                    
+                        Lhand.hittin = True
+                        espada.hittin = True
+                        Lhand.xthrow = xcursor
+                        espada.xthrow = xcursor
+                        Lhand.ythrow = ycursor                        
+                        espada.ythrow = ycursor
         
         elif cos == 0 and sen > 0:
             angle_grad = 180
-            if button[0] != 0 and espada.cursor_dir > 40:
+            if button[0] != 0 and espada.cursor_dir > 50:
                 espada.leftbut = 1                                   
                 espada.swingright = True 
-            elif button[0] != 0 and espada.cursor_dir < -40:
+            elif button[0] != 0 and espada.cursor_dir < -50:
                 espada.leftbut = 0                          
                 espada.swingleft = True                
             else:
                 espada.swingright = False
                 espada.swingleft = False
-     
+                if button[0] != 0 and espada.cursor_dir < 50 and espada.cursor_dir > -50:
+                    if event.type == pg.MOUSEBUTTONDOWN:
+                        Lhand.hittin = True
+                        espada.hittin = True
+                        Lhand.xthrow = xcursor
+                        espada.xthrow = xcursor
+                        Lhand.ythrow = ycursor                        
+                        espada.ythrow = ycursor
+         
         # SOLTAR EL RATON COMIENZA EL SLASH
         if event.type == pg.MOUSEBUTTONUP:
             if espada.leftbut == 1:
