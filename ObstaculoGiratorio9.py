@@ -879,7 +879,6 @@ while run:
     ###########################################################              
     # ACTUALIZACION DEL DISPLAY
     ###########################################################
-    print(espada.chargecount, espada.cdcount)
     all_sprites.update()
     bg.fill(BLACK)
     all_sprites.draw(bg)
