@@ -20,22 +20,6 @@ class char(pg.sprite.Sprite):
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect(center=self.rect.center)
 
-class sword(pg.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.image = pg.Surface((50,50))
-        self.image.set_colorkey(BLACK)
-        pg.draw.arc(self.image, RED, (0,0,50,50), 0, math.pi, 20)
-        self.rect = self.image.get_rect(center = (150,150))
-        self.image_orig = self.image
-        self.angle = 0
-        self.angle_change = 45
-
-    def update(self):
-        self.image = pg.transform.rotate(self.image_orig, self.angle)
-        self.rect = self.image.get_rect(center = player.rect.center)
-
-
 class hand(pg.sprite.Sprite):
     def __init__(self, ori):
         super().__init__()
@@ -55,10 +39,27 @@ class hand(pg.sprite.Sprite):
            pg.draw.circle(self.image, (GREEN), (40,10), self.radio)
            self.rect = self.image.get_rect(center = player.rect.center)
 
-    def update(self):                 
+    def update(self):           
         self.image = pg.transform.rotate(self.image_orig, self.angle)
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect(center=self.rect.center)
+
+
+class sword(pg.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pg.Surface((50,120))
+        self.image.set_colorkey(BLACK)
+        pg.draw.line(self.image, RED, (43,35), (50,0), 5)
+        self.rect = self.image.get_rect(center = (150,150))
+        self.image_orig = self.image
+        self.angle = 0
+        self.angle_change = 45
+
+    def update(self):
+        self.image = pg.transform.rotate(self.image_orig, self.angle)
+        self.rect = self.image.get_rect(center = player.rect.center)
+
 
 CBASE = (255,255,255)
 CPLAYER = (255,228,181)
@@ -74,10 +75,14 @@ bg = pg.display.set_mode(screen_size)
 pg.display.set_caption('Espadas')
 
 player = char()
+Rhand = hand(1)
+Lhand = hand(0)
 espada = sword()
 
 all_sprites = pg.sprite.Group()
 all_sprites.add(player)
+all_sprites.add(Rhand)
+all_sprites.add(Lhand)
 all_sprites.add(espada)
 
 clock = pg.time.Clock()
@@ -92,47 +97,61 @@ while run:
         button = pg.mouse.get_pressed()
 
         (xcursor, ycursor) = pg.mouse.get_pos()
-        sword.swordend = (xcursor, ycursor)
         sen = ycursor - player.rect.centery
         cos = xcursor - player.rect.centerx
         if cos > 0 and sen > 0:
             angle_rad = math.atan(sen / cos)
             angle_grad = angle_rad * 360 / (2 * math.pi)
             player.angle = 270 - angle_grad
+            Rhand.angle = 270 - angle_grad
             if button[0] != 0:
-                espada.angle = 270 - angle_grad - 120
+                Lhand.angle = 270 - angle_grad - 90
+                espada.angle = 270 - angle_grad - 90          
             else:
+                Lhand.angle = 270 - angle_grad
                 espada.angle = 270 - angle_grad
+                    
+                    
                 
         elif cos < 0 and sen > 0:
             angle_rad = math.atan(sen / cos)
             angle_grad = angle_rad * 360 / (2 * math.pi)
             player.angle = 90 - angle_grad
+            Rhand.angle = 90 - angle_grad
             if button[0] != 0:
-                espada.angle = 90 - angle_grad - 120
+                Lhand.angle = 90 - angle_grad - 90
+                espada.angle = 90 - angle_grad - 90          
             else:
+                Lhand.angle = 90 - angle_grad
                 espada.angle = 90 - angle_grad
 
         elif cos < 0 and sen < 0:
             angle_rad = math.atan(sen / cos)
             angle_grad = angle_rad * 360 / (2 * math.pi)
             player.angle = 90 - angle_grad
+            Rhand.angle = 90 - angle_grad
             if button[0] != 0:
-                espada.angle = 90 - angle_grad - 120
+                Lhand.angle = 90 - angle_grad - 90
+                espada.angle = 90 - angle_grad - 90 
+                
             else:
+                Lhand.angle = 90 - angle_grad
                 espada.angle = 90 - angle_grad
 
         elif cos > 0 and sen < 0:
             angle_rad = math.atan(sen / cos)
             angle_grad = angle_rad * 360 / (2 * math.pi)
             player.angle = 180 + (90 - angle_grad)
+            Rhand.angle = 180 + (90 - angle_grad)
             if button[0] != 0:
-                espada.angle = 270 - angle_grad - 120
+                Lhand.angle = 270 - angle_grad - 90
+                espada.angle = 270 - angle_grad - 90 
+                
             else:
+                Lhand.angle = 270 - angle_grad
                 espada.angle = 270 - angle_grad
 
         
-
     all_sprites.update()
     bg.fill(BLACK)
     all_sprites.draw(bg)
