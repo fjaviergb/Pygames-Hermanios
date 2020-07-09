@@ -59,6 +59,7 @@ class sword(pg.sprite.Sprite):
         self.swing = False
         self.slash = False
         self.side = 0
+        self.back= False
 
     def update(self):
         self.image = pg.transform.rotate(self.image_orig, self.angle)
@@ -169,14 +170,21 @@ while run:
                 Lhand.angle = 90 - angle_grad - espada.chargecount * 90 / 30
                 espada.angle = 90 - angle_grad - espada.chargecount * 90 / 30
                 espada.chargecount += 1
-        elif espada.slash and not espada.swing:
+        elif espada.slash and not espada.swing and not espada.back:
             if espada.chargecount >= -20:
                 Lhand.angle = 90 - angle_grad - espada.chargecount * 90 / 30
                 espada.angle = 90 - angle_grad - espada.chargecount * 90 / 30
                 espada.chargecount -= 3  
-            else: 
-                espada.slash = False
-        else:
+            else:
+                espada.slash = False                
+                espada.back = True
+        elif espada.back:
+            if espada.chargecount <= 1:
+                Lhand.angle = 90 - angle_grad - espada.chargecount * 90 / 30
+                espada.angle = 90 - angle_grad - espada.chargecount * 90 / 30
+                espada.chargecount += 1    
+            else:                 
+                espada.back = False
                 espada.chargecount = 1
                 
     if cos > 0:
@@ -185,17 +193,24 @@ while run:
                 Lhand.angle = 270 - angle_grad - espada.chargecount * 90 / 30
                 espada.angle = 270 - angle_grad - espada.chargecount * 90 / 30
                 espada.chargecount += 1
-        elif espada.slash and not espada.swing:
+        elif espada.slash and not espada.swing and not espada.back:
             if espada.chargecount >= -20:
                 Lhand.angle = 270 - angle_grad - espada.chargecount * 90 / 30
                 espada.angle = 270 - angle_grad - espada.chargecount * 90 / 30
-                espada.chargecount -= 3    
+                espada.chargecount -= 8    
             else:
-                espada.slash = False
-        else:
+                espada.slash = False                
+                espada.back = True
+        elif espada.back:
+            if espada.chargecount <= 1:
+                Lhand.angle = 270 - angle_grad - espada.chargecount * 90 / 30
+                espada.angle = 270 - angle_grad - espada.chargecount * 90 / 30
+                espada.chargecount += 1    
+            else: 
+                espada.back = False
                 espada.chargecount = 1
-    print(espada.slash, espada.swing)
 
+    print(espada.swing, espada.slash, espada.back)
     all_sprites.update()
     bg.fill(BLACK)
     all_sprites.draw(bg)
