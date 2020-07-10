@@ -19,7 +19,7 @@ def main():
     n = Network()
     
     clock = pg.time.Clock()
-    print(all_sprites)
+    print(type(all_sprites))
     while run:
         clock.tick(60)
 
@@ -31,11 +31,12 @@ def main():
                 pg.quit()
 
         all_sprites.update(p)
-        pothers = n.send(p) 
-                        
-    win.fill((255,255,255))
-    for p in pothers:
-        p.draw()
-    pg.display.update()
+        pothers = n.send(p.rect) 
+        print(pothers)                  
+        win.fill((255,255,255))
+        for i in pothers:
+            i.draw(win)
+        all_sprites.draw(win)
+        pg.display.update()
 
 main()
