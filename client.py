@@ -1,43 +1,41 @@
-import pygame
+import pygame as pg
 from network import Network
-from player2 import Player, hand
+from SuperPlayer import body
 
 width = 500
 height = 500
-win = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Client")
-
-
-def redrawWindow(win, pothers):
-    win.fill((255,255,255))
-    for p in pothers:
-        for i in p:
-            i.draw(win)
-    pygame.display.update()
+win = pg.display.set_mode((width, height))
+pg.display.set_caption("Client")
 
 
 def main():
     run = True
-    p = Player(0,0,50,50,(255,0,0))
-    h = hand(0)
-    all_sprites = (p,h)
+    p = body()
+    all_sprites = pg.sprite.Group()
+    all_sprites.add(p)
+    all_sprites.add(p.Rhand())
+    all_sprites.add(p.Lhand())
+    all_sprites.add(p.sword())
     n = Network()
     
-    clock = pygame.time.Clock()
-
+    clock = pg.time.Clock()
+    print(all_sprites)
     while run:
         clock.tick(60)
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
                 n.send(False)  
                 n.client.close()
                 run = False
-                pygame.quit()
+                pg.quit()
 
-        for i in all_sprites:
-            i.update()
-        pothers = n.send(all_sprites)        
-        redrawWindow(win, pothers)
+        all_sprites.update(p)
+        pothers = n.send(p) 
+                        
+    win.fill((255,255,255))
+    for p in pothers:
+        p.draw()
+    pg.display.update()
 
 main()
