@@ -82,10 +82,12 @@ class body(pg.sprite.Sprite):
                     if self.chargecount <= 30:
                         self.anglehit = 270 - angle_grad - self.chargecount * 90 / 30
                         self.chargecount += 1
-                    elif button[2] == 0:
+                    if button[2] == 0:
                         self.countlimit = self.chargecount                        
                         self.slashright = True
-                        self.swingright = False                        
+                        self.swingright = False
+                    else:
+                        self.anglehit = 270 - angle_grad - self.chargecount * 90 / 30                        
                 elif self.slashright and not self.swingright and not self.backright:
                     if self.chargecount >= self.countlimit * -20 / 30:
                             self.anglehit = 270 - angle_grad - self.chargecount * 90 / 30
@@ -108,10 +110,12 @@ class body(pg.sprite.Sprite):
                     if self.chargecount <= 30:
                         self.anglehit = 270 - angle_grad + self.chargecount * 90 / 30
                         self.chargecount += 1
-                    elif button[0] == 0:
+                    if button[0] == 0:
                         self.countlimit = self.chargecount
                         self.slashleft = True
-                        self.swingleft = False                        
+                        self.swingleft = False   
+                    else:
+                        self.anglehit = 270 - angle_grad + self.chargecount * 90 / 30                        
                 elif self.slashleft and not self.swingleft and not self.backleft:
                     if self.chargecount >= self.countlimit * -20 / 30:
                             self.anglehit = 270 - angle_grad + self.chargecount * 90 / 30
@@ -150,10 +154,12 @@ class body(pg.sprite.Sprite):
                     if self.chargecount <= 30:
                         self.anglehit = 90 - angle_grad - self.chargecount * 90 / 30
                         self.chargecount += 1
-                    elif button[2] == 0:
+                    if button[2] == 0:
                         self.countlimit = self.chargecount                        
                         self.slashright = True
-                        self.swingright = False                        
+                        self.swingright = False   
+                    else:
+                        self.anglehit = 90 - angle_grad - self.chargecount * 90 / 30
                 elif self.slashright and not self.swingright and not self.backright:
                     if self.chargecount >= self.countlimit * -20 / 30:
                             self.anglehit = 90 - angle_grad - self.chargecount * 90 / 30
@@ -176,10 +182,12 @@ class body(pg.sprite.Sprite):
                     if self.chargecount <= 30:
                         self.anglehit = 90 - angle_grad + self.chargecount * 90 / 30
                         self.chargecount += 1
-                    elif button[0] == 0:
+                    if button[0] == 0:
                         self.countlimit = self.chargecount                        
                         self.slashleft = True
-                        self.swingleft = False                        
+                        self.swingleft = False    
+                    else:
+                        self.anglehit = 90 - angle_grad + self.chargecount * 90 / 30                        
                 elif self.slashleft and not self.swingleft and not self.backleft:
                     if self.chargecount >= self.countlimit * -20 / 30:
                             self.anglehit = 90 - angle_grad + self.chargecount * 90 / 30
@@ -214,10 +222,12 @@ class body(pg.sprite.Sprite):
                 if self.chargecount <= 30:
                     self.anglehit = 0 - self.chargecount * 90 / 30
                     self.chargecount += 1
-                elif button[2] == 0:
+                if button[2] == 0:
                     self.countlimit = self.chargecount                    
                     self.slashright = True
-                    self.swingright = False                        
+                    self.swingright = False     
+                else:
+                    self.anglehit = 0 - self.chargecount * 90 / 30                    
             elif self.slashright and not self.swingright and not self.backright:
                 if self.chargecount >= self.countlimit * -20 / 30:
                         self.anglehit = 0 - self.chargecount * 90 / 30
@@ -240,10 +250,12 @@ class body(pg.sprite.Sprite):
                 if self.chargecount <= 30:
                     self.anglehit = 0 + self.chargecount * 90 / 30
                     self.chargecount += 1
-                elif button[0] == 0:
+                if button[0] == 0:
                     self.countlimit = self.chargecount                                        
                     self.slashleft = True
-                    self.swingleft = False                        
+                    self.swingleft = False       
+                else:
+                    self.anglehit = 0 + self.chargecount * 90 / 30                    
             elif self.slashleft and not self.swingleft and not self.backleft:
                 if self.chargecount >= self.countlimit * -20 / 30:
                         self.anglehit = 0 + self.chargecount * 90 / 30
@@ -278,10 +290,12 @@ class body(pg.sprite.Sprite):
                 if self.chargecount <= 30:
                     self.anglehit = 180 - self.chargecount * 90 / 30
                     self.chargecount += 1
-                elif button[2] == 0:
+                if button[2] == 0:
                     self.countlimit = self.chargecount                                                         
                     self.slashright = True
-                    self.swingright = False                        
+                    self.swingright = False  
+                else:
+                    self.anglehit = 180 - self.chargecount * 90 / 30                      
             elif self.slashright and not self.swingright and not self.backright:
                 if self.chargecount >= self.countlimit * -20 / 30:
                         self.anglehit = 180 - self.chargecount * 90 / 30
@@ -304,10 +318,12 @@ class body(pg.sprite.Sprite):
                 if self.chargecount <= 30:
                     self.anglehit = 180 + self.chargecount * 90 / 30
                     self.chargecount += 1
-                elif button[0] == 0:
+                if button[0] == 0:
                     self.countlimit = self.chargecount                    
                     self.slashleft = True
-                    self.swingleft = False                        
+                    self.swingleft = False  
+                else:
+                    self.anglehit = 180 + self.chargecount * 90 / 30                                            
             elif self.slashleft and not self.swingleft and not self.backleft:
                 if self.chargecount >= self.countlimit * -20 / 30:
                         self.anglehit = 180 + self.chargecount * 90 / 30
@@ -323,13 +339,19 @@ class body(pg.sprite.Sprite):
                     self.backleft = False
                     self.chargecount = 1
 
-        print(button, self.chargecount, self.swingright, self.slashright, self.backright)
+        print(button, self.chargecount, self.countlimit, self.swingright, self.slashright, self.backright)
 #        print(button, self.chargecount, self.swingleft, self.slashleft, self.backleft)
         
         self.image = pg.transform.rotate(self.image_orig, self.angle)
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect(center = (self.x, self.y))
- 
+    
+    def send(self):
+        all_sprites = pg.sprite.Group()
+        all_sprites.add(self.rect)
+        all_sprites.add(self.Rhand.rect)
+        all_sprites.add(self.Lhand.rect)
+        all_sprites.add(self.sword.rect)
         
     class Rhand(pg.sprite.Sprite):
         def __init__(self):
