@@ -1,6 +1,6 @@
 import socket
 from _thread import *
-from player2 import Player
+from SuperPlayer import body
 import pickle
 
 server = "192.168.1.42"
