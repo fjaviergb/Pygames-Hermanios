@@ -37,8 +37,6 @@ def threaded_client(conn, player):
 
               else:
                 reply = players
-#                print("Received: ", data)
-#                print("Sending : ", reply)
                 
             conn.sendall(pickle.dumps(reply))
         except:
