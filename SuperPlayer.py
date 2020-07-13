@@ -16,7 +16,8 @@ class body(pg.sprite.Sprite):
         pg.draw.circle(self.image, (RED), (25,25), self.radio)
         self.rect = self.image.get_rect(center = (self.x,self.y))
         self.vel = 3
-        self.image.set_colorkey(BLACK)                
+        self.image.set_colorkey(BLACK)    
+        pg.image.save(self.image, 'image.png')            
         self.image_orig = self.image
         self.movex = 0
         self.movey = 0
@@ -91,7 +92,7 @@ class body(pg.sprite.Sprite):
                 elif self.slashright and not self.swingright and not self.backright:
                     if self.chargecount >= self.countlimit * -20 / 30:
                             self.anglehit = 270 - angle_grad - self.chargecount * 90 / 30
-                            self.chargecount -= 1
+                            self.chargecount -= 4
                     else:
                         self.slashright = False                
                         self.backright = True
@@ -119,7 +120,7 @@ class body(pg.sprite.Sprite):
                 elif self.slashleft and not self.swingleft and not self.backleft:
                     if self.chargecount >= self.countlimit * -20 / 30:
                             self.anglehit = 270 - angle_grad + self.chargecount * 90 / 30
-                            self.chargecount -=  1                
+                            self.chargecount -=  4                
                     else:
                         self.slashleft = False                
                         self.backleft = True
@@ -163,7 +164,7 @@ class body(pg.sprite.Sprite):
                 elif self.slashright and not self.swingright and not self.backright:
                     if self.chargecount >= self.countlimit * -20 / 30:
                             self.anglehit = 90 - angle_grad - self.chargecount * 90 / 30
-                            self.chargecount -= 1
+                            self.chargecount -= 4
                     else:
                         self.slashright = False                
                         self.backright = True
@@ -191,7 +192,7 @@ class body(pg.sprite.Sprite):
                 elif self.slashleft and not self.swingleft and not self.backleft:
                     if self.chargecount >= self.countlimit * -20 / 30:
                             self.anglehit = 90 - angle_grad + self.chargecount * 90 / 30
-                            self.chargecount -=  1               
+                            self.chargecount -=  4               
                     else:
                         self.slashleft = False                
                         self.backleft = True
@@ -231,7 +232,7 @@ class body(pg.sprite.Sprite):
             elif self.slashright and not self.swingright and not self.backright:
                 if self.chargecount >= self.countlimit * -20 / 30:
                         self.anglehit = 0 - self.chargecount * 90 / 30
-                        self.chargecount -= 1
+                        self.chargecount -= 4
                 else:
                     self.slashright = False                
                     self.backright = True
@@ -259,7 +260,7 @@ class body(pg.sprite.Sprite):
             elif self.slashleft and not self.swingleft and not self.backleft:
                 if self.chargecount >= self.countlimit * -20 / 30:
                         self.anglehit = 0 + self.chargecount * 90 / 30
-                        self.chargecount -=  1                
+                        self.chargecount -=  4                
                 else:
                     self.slashleft = False                
                     self.backleft = True
@@ -299,7 +300,7 @@ class body(pg.sprite.Sprite):
             elif self.slashright and not self.swingright and not self.backright:
                 if self.chargecount >= self.countlimit * -20 / 30:
                         self.anglehit = 180 - self.chargecount * 90 / 30
-                        self.chargecount -= 1
+                        self.chargecount -= 4
                 else:
                     self.slashright = False                
                     self.backright = True
@@ -327,7 +328,7 @@ class body(pg.sprite.Sprite):
             elif self.slashleft and not self.swingleft and not self.backleft:
                 if self.chargecount >= self.countlimit * -20 / 30:
                         self.anglehit = 180 + self.chargecount * 90 / 30
-                        self.chargecount -=  8                
+                        self.chargecount -=  4                
                 else:
                     self.slashleft = False                
                     self.backleft = True
