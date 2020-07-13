@@ -36,14 +36,15 @@ def main():
         win.fill((255,255,255))
         
         for i in pothers:
-            po = otherbody(i[0],i[1],i[2],i[3])
-            other_sprites = pg.sprite.Group()
-            other_sprites.add(po)
-            other_sprites.add(po.otherRhand())
-            other_sprites.add(po.otherLhand())
-            other_sprites.add(po.othersword()) 
-            other_sprites.update(po)
-            other_sprites.draw(win)
+            if (p.x,p.y,p.angle,p.anglehit) != (i[0],i[1],i[2],i[3]):
+                po = otherbody(i[0],i[1],i[2],i[3])
+                other_sprites = pg.sprite.Group()
+                other_sprites.add(po)
+                other_sprites.add(po.otherRhand())
+                other_sprites.add(po.otherLhand())
+                other_sprites.add(po.othersword()) 
+                other_sprites.update(po)
+                other_sprites.draw(win)
             
         all_sprites.update(p)
         all_sprites.draw(win)
