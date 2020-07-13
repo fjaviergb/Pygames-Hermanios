@@ -1,6 +1,7 @@
 import pygame as pg
 from network import Network
 from SuperPlayer import body
+from otherplayer import otherbody
 
 width = 500
 height = 500
@@ -30,12 +31,21 @@ def main():
                 run = False
                 pg.quit()
 
-        all_sprites.update(p)
-        pothers = n.send(p.rect) 
-        print(pothers)                  
+        pothers = n.send((p.x,p.y,p.angle,p.anglehit))
+
         win.fill((255,255,255))
+        
         for i in pothers:
-            i.draw(win)
+            po = otherbody(i[0],i[1],i[2],i[3])
+            other_sprites = pg.sprite.Group()
+            other_sprites.add(po)
+            other_sprites.add(po.otherRhand())
+            other_sprites.add(po.otherLhand())
+            other_sprites.add(po.othersword()) 
+            other_sprites.update(po)
+            other_sprites.draw(win)
+            
+        all_sprites.update(p)
         all_sprites.draw(win)
         pg.display.update()
 
