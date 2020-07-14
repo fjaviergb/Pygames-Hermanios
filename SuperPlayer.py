@@ -15,9 +15,9 @@ class body(pg.sprite.Sprite):
         self.image = pg.Surface((50,50))
         pg.draw.circle(self.image, (RED), (25,25), self.radio)
         self.rect = self.image.get_rect(center = (self.x,self.y))
+        self.mask = pg.mask.from_surface(self.image)                  
         self.vel = 3
         self.image.set_colorkey(BLACK)    
-        pg.image.save(self.image, 'image.png')            
         self.image_orig = self.image
         self.movex = 0
         self.movey = 0
@@ -29,10 +29,17 @@ class body(pg.sprite.Sprite):
         self.slashleft = False
         self.backleft = False
         self.backright = False
+        self.clashright = False
+        self.clashleft = False
         self.hitorient = 2
         self.hittin = False
         self.chargecount = 1
         self.countlimit = 0
+        self.clash_count = 0
+        self.other_sprites = pg.sprite.Group()
+        self.col_sprites = pg.sprite.Group()
+        self.enem_sword = pg.sprite.Group()        
+        self.live = 5
         
     def update(self, player):
         keys = pg.key.get_pressed()
@@ -103,6 +110,14 @@ class body(pg.sprite.Sprite):
                     else:                 
                         self.backright = False
                         self.chargecount = 1
+                elif self.clashright:
+                    if self.chargecount <= self.clash_count + 10:
+                        self.anglehit = 270 - angle_grad - self.chargecount * 90 / 30
+                        self.chargecount += 1
+                    else:                
+                        self.clash_count = 0
+                        self.chargecount = 1
+                        self.clashright = False
                     
                 ###########################################################              
                 # ESPADAZO DESDE LA IZQUIERDA
@@ -131,6 +146,14 @@ class body(pg.sprite.Sprite):
                     else:                 
                         self.backleft = False
                         self.chargecount = 1
+                elif self.clashleft:
+                    if self.chargecount <= self.clash_count + 10:
+                        self.anglehit = 270 - angle_grad + self.chargecount * 90 / 30
+                        self.chargecount += 1
+                    else:                
+                        self.clash_count = 0
+                        self.chargecount = 1
+                        self.clashleft = False
                 
         ######################################################################
         # CUADRANTE IZQUIERDA
@@ -175,6 +198,14 @@ class body(pg.sprite.Sprite):
                     else:                 
                         self.backright = False
                         self.chargecount = 1
+                elif self.clashright:
+                    if self.chargecount <= self.clash_count + 10:
+                        self.anglehit = 90 - angle_grad - self.chargecount * 90 / 30
+                        self.chargecount += 1
+                    else:                
+                        self.clash_count = 0
+                        self.chargecount = 1
+                        self.clashright = False
                     
                 ###########################################################              
                 # ESPADAZO DESDE LA IZQUIERDA
@@ -203,6 +234,14 @@ class body(pg.sprite.Sprite):
                     else:                 
                         self.backleft = False
                         self.chargecount = 1
+                elif self.clashleft:
+                    if self.chargecount <= self.clash_count + 10:
+                        self.anglehit = 90 - angle_grad + self.chargecount * 90 / 30
+                        self.chargecount += 1
+                    else:                
+                        self.clash_count = 0
+                        self.chargecount = 1
+                        self.clashleft = False
                 
         ######################################################################
         # HITO CON DIVISION INFINITO, CUADRANTE SUPERIOR
@@ -339,21 +378,13 @@ class body(pg.sprite.Sprite):
                 else:                 
                     self.backleft = False
                     self.chargecount = 1
-
-        print(button, self.chargecount, self.countlimit, self.swingright, self.slashright, self.backright)
-#        print(button, self.chargecount, self.swingleft, self.slashleft, self.backleft)
         
         self.image = pg.transform.rotate(self.image_orig, self.angle)
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect(center = (self.x, self.y))
-    
-    def send(self):
-        all_sprites = pg.sprite.Group()
-        all_sprites.add(self.rect)
-        all_sprites.add(self.Rhand.rect)
-        all_sprites.add(self.Lhand.rect)
-        all_sprites.add(self.sword.rect)
-        
+        self.mask = pg.mask.from_surface(self.image)                  
+
+            
     class Rhand(pg.sprite.Sprite):
         def __init__(self):
             super().__init__()
@@ -365,11 +396,13 @@ class body(pg.sprite.Sprite):
             pg.draw.circle(self.image, (GREEN), (40,10), self.radio)
             self.rect = self.image.get_rect(center = (150,150))
             self.image_orig = self.image
+            self.mask = pg.mask.from_surface(self.image)                  
             
         def update(self, player):
             self.image = pg.transform.rotate(self.image_orig, player.anglehit)
             self.image.set_colorkey(BLACK)
             self.rect = self.image.get_rect(center = player.rect.center)
+            self.mask = pg.mask.from_surface(self.image)                  
     
     class Lhand(pg.sprite.Sprite):
         def __init__(self):
@@ -382,12 +415,13 @@ class body(pg.sprite.Sprite):
             pg.draw.circle(self.image, (BLUE), (10,10), self.radio)
             self.rect = self.image.get_rect(center = (150,150))
             self.image_orig = self.image            
-            
+            self.mask = pg.mask.from_surface(self.image)                  
             
         def update(self, player):
             self.image = pg.transform.rotate(self.image_orig, player.angle)
             self.image.set_colorkey(BLACK)            
             self.rect = self.image.get_rect(center = player.rect.center)
+            self.mask = pg.mask.from_surface(self.image)                  
     
     class sword(pg.sprite.Sprite):
         def __init__(self):
@@ -397,11 +431,13 @@ class body(pg.sprite.Sprite):
             self.rect = self.image.get_rect(center = (150,150))
             self.image.set_colorkey(BLACK)        
             self.image_orig = self.image
+            self.mask = pg.mask.from_surface(self.image)                  
 
         def update(self, player):
             self.image = pg.transform.rotate(self.image_orig, player.anglehit)
             self.image.set_colorkey(BLACK)            
             self.rect = self.image.get_rect(center = player.rect.center)
+            self.mask = pg.mask.from_surface(self.image)                  
 
             
 CBASE = (255,255,255)
