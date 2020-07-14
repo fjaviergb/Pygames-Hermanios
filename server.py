@@ -25,20 +25,20 @@ def threaded_client(conn, player):
     while True:
         try:
             data = pickle.loads(conn.recv(2048))
-            try:
-                players[player] = data
-            except IndexError:
-                players.append(data)
-
-            for p in players:
-              if not p:
-                players.remove(p)
-                reply = players
-
-              else:
-                reply = players
-                
+            if type(data) != int:
+                try:
+                    players[player] = data
+                except IndexError:
+                    players.append(data)
+                for p in players:
+                  if not p:
+                    players.remove(p)
+                    reply = players
+                  else:
+                    reply = players
+                    
             conn.sendall(pickle.dumps(reply))
+                                    
         except:
             break
         
