@@ -73,7 +73,7 @@ def main():
 
                 p.col_sprites.add(po)                
 
-                if i[7] == 31 and i[5] and i[4]:
+                if i[7] == 31 or i[5] or i[4]:
                     p.col_sprites.add(po.espada)                
                 
                 if i[4] or i[5]:
