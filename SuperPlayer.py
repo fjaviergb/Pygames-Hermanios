@@ -111,7 +111,7 @@ class body(pg.sprite.Sprite):
                         self.backright = False
                         self.chargecount = 1
                 elif self.clashright:
-                    if self.chargecount <= self.clash_count + 10:
+                    if self.chargecount <= self.clash_count + 20:
                         self.anglehit = 270 - angle_grad - self.chargecount * 90 / 30
                         self.chargecount += 1
                     else:                
@@ -147,7 +147,7 @@ class body(pg.sprite.Sprite):
                         self.backleft = False
                         self.chargecount = 1
                 elif self.clashleft:
-                    if self.chargecount <= self.clash_count + 10:
+                    if self.chargecount <= self.clash_count + 20:
                         self.anglehit = 270 - angle_grad + self.chargecount * 90 / 30
                         self.chargecount += 1
                     else:                
@@ -199,7 +199,7 @@ class body(pg.sprite.Sprite):
                         self.backright = False
                         self.chargecount = 1
                 elif self.clashright:
-                    if self.chargecount <= self.clash_count + 10:
+                    if self.chargecount <= self.clash_count + 20:
                         self.anglehit = 90 - angle_grad - self.chargecount * 90 / 30
                         self.chargecount += 1
                     else:                
@@ -235,7 +235,7 @@ class body(pg.sprite.Sprite):
                         self.backleft = False
                         self.chargecount = 1
                 elif self.clashleft:
-                    if self.chargecount <= self.clash_count + 10:
+                    if self.chargecount <= self.clash_count + 20:
                         self.anglehit = 90 - angle_grad + self.chargecount * 90 / 30
                         self.chargecount += 1
                     else:                
