@@ -7,7 +7,7 @@ import numpy as np
 ###########################################################
 
 class otherbody(pg.sprite.Sprite):
-    def __init__(self, x, y, angle, anglehit, slashright, slashleft):
+    def __init__(self, x, y, angle, anglehit, slashright, slashleft, live):
         super().__init__()
         self.radio = 20
         self.x = x
@@ -21,7 +21,12 @@ class otherbody(pg.sprite.Sprite):
         self.anglehit = anglehit
         self.mask = pg.mask.from_surface(self.image) 
         self.slashright = slashright
-        self.slashleft = slashleft        
+        self.slashleft = slashleft     
+        self.Rhand = self.otherRhand()
+        self.Lhand = self.otherLhand()
+        self.Rhand = self.otherRhand()
+        self.espada = self.othersword()
+        self.live = live
         
     def update(self, player):
         self.image = pg.transform.rotate(self.image_orig, self.angle)
