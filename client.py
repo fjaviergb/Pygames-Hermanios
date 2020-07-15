@@ -32,16 +32,6 @@ def colision(p, sword, po):
                 p.swingleft = False
                 p.swingright = False
 
-def damage(p,po):
-    if po.slashleft or po.slashright:
-        block_hit_list = pg.sprite.spritecollide(p, p.enem_sword, False)
-        block_hit_list_masked = pg.sprite.spritecollide(p, block_hit_list, False, pg.sprite.collide_mask)
-        print(block_hit_list_masked)
-        for block in block_hit_list_masked:
-            p.live -= 1    
-    else:
-       pass
-
 def main():
     run = True
     p = body()
@@ -68,32 +58,41 @@ def main():
                 run = False
                 pg.quit()
 
-        pothers = n.send((p.x,p.y,p.angle,p.anglehit,p.slashright,p.slashleft))
+        pothers = n.send((p.x,p.y,p.angle,p.anglehit,p.slashright,p.slashleft, p.live))
+            
         win.fill((255,255,255))
         
-        for i in pothers:                
-            if (p.x,p.y,p.angle,p.anglehit,p.slashright,p.slashleft) != (i[0],i[1],i[2],i[3],i[4],i[5]):
-                po = otherbody(i[0],i[1],i[2],i[3],i[4],i[5])
-                
+        for i in pothers:        
+            if (p.x,p.y) != (i[0],i[1]) and i[6] > 0:
+                po = otherbody(i[0],i[1],i[2],i[3],i[4],i[5],i[6])
+
                 p.other_sprites.add(po)
-                p.col_sprites.add(po)
-                p.enem_sword.add(po.othersword())
-                p.other_sprites.add(po.otherRhand())
-                p.other_sprites.add(po.otherLhand())
-                p.other_sprites.add(po.othersword()) 
+                p.other_sprites.add(po.Rhand)
+                p.other_sprites.add(po.Lhand)
+                p.other_sprites.add(po.espada) 
                 p.other_sprites.update(po)
                 p.other_sprites.draw(win)
+                
+                p.col_sprites.add(po)                
+                p.enem_sword.add(po.espada)
+                
+                if i[4] or i[5]:
+                    block_hit_list = pg.sprite.spritecollide(p, p.enem_sword, False)
+                    block_hit_list_masked = pg.sprite.spritecollide(p, block_hit_list, False, pg.sprite.collide_mask)
+                    if len(block_hit_list_masked) != 0:
+                        p.live -= 1
+                    p.enem_sword = pg.sprite.Group()
+                
                 colision(p, sword, po)
-                damage(p,po)
+
+                p.enem_sword = pg.sprite.Group()              
                 p.other_sprites = pg.sprite.Group()   
                 p.col_sprites = pg.sprite.Group()  
-                p.enem_sword = pg.sprite.Group()
-                       
-                
-        if p.live > 0:
+        
+        if p.live > 0:           
             all_sprites.update(p)
             all_sprites.draw(win)
-        print(p.live)  
+
         pg.display.update()
 
 main()
