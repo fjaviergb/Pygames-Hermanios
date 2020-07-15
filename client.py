@@ -35,15 +35,12 @@ def colision(p, sword, po):
 def main():
     run = True
     p = body()
-    Rhand = p.Rhand()
-    Lhand = p.Lhand()
-    sword = p.sword()
     all_sprites = pg.sprite.Group()
     
     all_sprites.add(p)
-    all_sprites.add(Rhand)
-    all_sprites.add(Lhand)
-    all_sprites.add(sword)
+    all_sprites.add(p.rightH)
+    all_sprites.add(p.leftH)
+    all_sprites.add(p.espada)
     n = Network()
     
     clock = pg.time.Clock()
@@ -58,13 +55,13 @@ def main():
                 run = False
                 pg.quit()
 
-        pothers = n.send((p.x,p.y,p.angle,p.anglehit,p.slashright,p.slashleft, p.live))
+        pothers = n.send((p.x,p.y,p.angle,p.anglehit,p.slashright,p.slashleft, p.live, p.chargecount))
             
         win.fill((255,255,255))
         
         for i in pothers:        
             if (p.x,p.y) != (i[0],i[1]) and i[6] > 0:
-                po = otherbody(i[0],i[1],i[2],i[3],i[4],i[5],i[6])
+                po = otherbody(i[0],i[1],i[2],i[3],i[4],i[5],i[6],i[7])
 
                 p.other_sprites.add(po)
                 p.other_sprites.add(po.Rhand)
@@ -72,9 +69,12 @@ def main():
                 p.other_sprites.add(po.espada) 
                 p.other_sprites.update(po)
                 p.other_sprites.draw(win)
-                
-                p.col_sprites.add(po)                
                 p.enem_sword.add(po.espada)
+
+                p.col_sprites.add(po)                
+
+                if i[7] == 31 and i[5] and i[4]:
+                    p.col_sprites.add(po.espada)                
                 
                 if i[4] or i[5]:
                     block_hit_list = pg.sprite.spritecollide(p, p.enem_sword, False)
@@ -83,14 +83,14 @@ def main():
                         p.live -= 1
                     p.enem_sword = pg.sprite.Group()
                 
-                colision(p, sword, po)
+                colision(p, p.espada, po)
 
-                p.enem_sword = pg.sprite.Group()              
                 p.other_sprites = pg.sprite.Group()   
-                p.col_sprites = pg.sprite.Group()  
         
         if p.live > 0:           
             all_sprites.update(p)
+            p.col_sprites = pg.sprite.Group()  
+            p.enem_sword = pg.sprite.Group()                          
             all_sprites.draw(win)
 
         pg.display.update()
