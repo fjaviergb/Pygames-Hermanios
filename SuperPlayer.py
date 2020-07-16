@@ -1,6 +1,7 @@
 import pygame as pg
 import math
 import numpy as np
+from otherplayer import otherbody
 
 ###########################################################
 # CLASE
@@ -16,7 +17,7 @@ class body(pg.sprite.Sprite):
         pg.draw.circle(self.image, (RED), (25,25), self.radio)
         self.rect = self.image.get_rect(center = (self.x,self.y))
         self.mask = pg.mask.from_surface(self.image)                  
-        self.vel = 3
+        self.vel = 2
         self.image.set_colorkey(BLACK)    
         self.image_orig = self.image
         self.movex = 0
@@ -68,19 +69,63 @@ class body(pg.sprite.Sprite):
                 pass
         return i
 
+    ###########################################################
+    # FUNCION COLISION CUERPO
+    ###########################################################
+    def isBlockX(self, signo):
+        #  Metodo para depurar la colision en movimiento.
+        #  Como dos objetos en "movimiento" pueden superponerse sin llegar a colisionar
+        #  hacemos un pequenno barrido de los angulos para ver si se encuentran.
+        for i in np.arange(0, self.vel, 0.5):
+            #  TODO si el objeto es pequenno puede fallar.
+            self.x += i * signo
+            self.rect = self.image.get_rect(center = (self.x, self.y))
+            self.mask = pg.mask.from_surface(self.image)            
+            
+            block_hit_list = pg.sprite.spritecollide(self, self.col_sprites, False)         
+            block_hit_list_masked = pg.sprite.spritecollide(self, block_hit_list, False, pg.sprite.collide_mask)        
+            if len(block_hit_list_masked) == 0:
+                pass
+            else:
+                return (i-0.5) * signo
+                break
+        return i * signo
+
+    ###########################################################
+    # FUNCION COLISION CUERPO
+    ###########################################################
+    def isBlockY(self, signo):
+        #  Metodo para depurar la colision en movimiento.
+        #  Como dos objetos en "movimiento" pueden superponerse sin llegar a colisionar
+        #  hacemos un pequenno barrido de los angulos para ver si se encuentran.
+        for i in np.arange(0, self.vel, 0.5):
+            #  TODO si el objeto es pequenno puede fallar.
+            self.y += i * signo
+            self.rect = self.image.get_rect(center = (self.x, self.y))
+            self.mask = pg.mask.from_surface(self.image)            
+            
+            block_hit_list = pg.sprite.spritecollide(self, self.col_sprites, False)         
+            block_hit_list_masked = pg.sprite.spritecollide(self, block_hit_list, False, pg.sprite.collide_mask)        
+            if len(block_hit_list_masked) == 0:
+                pass
+            else:
+                return (i-0.5) * signo
+                break
+        return i * signo
+
         
     def update(self, player):
         keys = pg.key.get_pressed()
 
         if keys[pg.K_LEFT]:
-            self.x -= self.vel
+            self.x += self.isBlockX(-1)
         if keys[pg.K_RIGHT]:
-            self.x += self.vel
+            self.x += self.isBlockX(1)
         if keys[pg.K_UP]:
-            self.y -= self.vel
+            self.y += self.isBlockY(-1)
         if keys[pg.K_DOWN]:
-            self.y += self.vel
-
+            self.y += self.isBlockY(1)
+        
         button = pg.mouse.get_pressed()
         (xcursor, ycursor) = pg.mouse.get_pos()
         sen = ycursor - player.rect.centery
