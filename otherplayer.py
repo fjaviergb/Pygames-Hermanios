@@ -7,7 +7,7 @@ import numpy as np
 ###########################################################
 
 class otherbody(pg.sprite.Sprite):
-    def __init__(self, x, y, angle, anglehit, slashright, slashleft, live, chargecount):
+    def __init__(self, tipo, x, y, angle, anglehit, slashright, slashleft, live, chargecount):
         super().__init__()
         self.radio = 20
         self.x = x
@@ -28,6 +28,7 @@ class otherbody(pg.sprite.Sprite):
         self.espada = self.othersword()
         self.live = live
         self.chargecount = chargecount
+        self.tipo = tipo
         
     def update(self, player):
         self.image = pg.transform.rotate(self.image_orig, self.angle)
