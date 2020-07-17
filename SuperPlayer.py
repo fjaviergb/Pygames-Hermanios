@@ -44,6 +44,8 @@ class body(pg.sprite.Sprite):
         self.rightH = self.Rhand()
         self.leftH = self.Lhand()
         self.espada = self.sword()
+        self.tipo = 1
+        self.env_sprites = pg.sprite.Group()
 
     ###########################################################
     # FUNCION COLISION ESPADA
