@@ -115,9 +115,42 @@ class body(pg.sprite.Sprite):
                 break
         return i * signo
 
+    ###########################################################
+    # FUNCION COLISION EN PARADO
+    ###########################################################
+    def isWall(self, xorig, yorig):
+        shortestX = 0
+        shortestY = 0
+        shortestPath = 5
         
+        block_hit_list = pg.sprite.spritecollide(self, self.col_sprites, False)         
+        block_hit_list_masked = pg.sprite.spritecollide(self, block_hit_list, False, pg.sprite.collide_mask)        
+        if len(block_hit_list_masked) != 0:
+        
+            for i in range(-5,5):
+                for j in range(-5,5):       
+                    self.x = xorig + i
+                    self.y = yorig + j
+                    self.rect = self.image.get_rect(center = (self.x, self.y))
+                    self.mask = pg.mask.from_surface(self.image)            
+                    block_hit_list = pg.sprite.spritecollide(self, self.col_sprites, False)         
+                    block_hit_list_masked = pg.sprite.spritecollide(self, block_hit_list, False, pg.sprite.collide_mask)        
+                    if len(block_hit_list_masked) == 0:
+                        if shortestPath > math.sqrt(i**2 + j**2):
+                            shortestPath = math.sqrt(i**2 + j**2)
+                            shortestX = i
+                            shortestY = j
+        return shortestX + xorig, shortestY + yorig
+
+    ###########################################################
+    # FUNCION UPDATE
+    ###########################################################        
     def update(self, player):
         keys = pg.key.get_pressed()
+
+        newX, newY = self.isWall(self.x, self.y)
+        self.x =  newX        
+        self.y = newY
 
         if keys[pg.K_LEFT]:
             self.x += self.isBlockX(-1)
