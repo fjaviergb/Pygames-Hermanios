@@ -168,8 +168,7 @@ class body(pg.sprite.Sprite):
         sen = ycursor - player.rect.centery
         cos = xcursor - player.rect.centerx
 
-
-        if keys[pg.K_LSHIFT]:
+        if keys[pg.K_LSHIFT] and not self.slashleft  and not self.backleft and not self.slashright and not self.backright:
             self.anglehit = 0
             self.blocking = True
             self.swingleft = False
