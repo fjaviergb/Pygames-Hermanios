@@ -10,7 +10,7 @@ win = pg.display.set_mode((width, height))
 pg.display.set_caption("Client")
 
 def colision(p, sword):
-    if ((p.slashleft and not p.swingleft and not p.backleft) or (p.slashright and not p.swingright and not p.backright) or (p.chargecount == 31 and p.swingleft)):
+    if ((p.slashleft and not p.swingleft and not p.backleft) or (p.slashright and not p.swingright and not p.backright)):
         block_hit_list = pg.sprite.spritecollide(sword, p.col_sprites, False)
         block_hit_list_masked = pg.sprite.spritecollide(sword, block_hit_list, False, pg.sprite.collide_mask)
         for block in block_hit_list_masked:
@@ -56,14 +56,14 @@ def main():
                 run = False
                 pg.quit()
 
-        pothers = n.send((p.tipo,p.x,p.y,p.angle,p.anglehit,p.slashright,p.slashleft, p.live, p.chargecount))
+        pothers = n.send((p.tipo,p.x,p.y,p.angle,p.anglehit,p.slashright,p.slashleft, p.live, p.chargecount, p.blocking))
 
         win.fill((255,255,255))
         
         for i in pothers:        
             if type(i) != list:
                 if (p.x,p.y) != (i[1],i[2]) and i[7] > 0:
-                    po = otherbody(i[0],i[1],i[2],i[3],i[4],i[5],i[6],i[7],i[8])
+                    po = otherbody(i[0],i[1],i[2],i[3],i[4],i[5],i[6],i[7],i[8],i[9])
     
                     p.other_sprites.add(po)
                     p.other_sprites.add(po.Rhand)
@@ -75,7 +75,7 @@ def main():
     
                     p.col_sprites.add(po)                
     
-                    if i[8] == 31 or i[6] or i[5]:
+                    if i[8] == True or i[6] or i[5]:
                         p.col_sprites.add(po.espada)                
                     
                     if i[5] or i[6]:
