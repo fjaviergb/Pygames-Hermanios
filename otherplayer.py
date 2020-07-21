@@ -89,7 +89,7 @@ class otherbody(pg.sprite.Sprite):
                 self.image = pg.transform.rotate(self.image2_orig, player.angle)
                 self.image.set_colorkey(BLACK)            
                 self.rect = self.image.get_rect(center = player.rect.center)
-                self.mask = pg.mask.from_surface(self.image2)                  
+                self.mask = pg.mask.from_surface(self.image)                  
                 
             else:
                 self.image = pg.transform.rotate(self.image_orig, player.anglehit)
