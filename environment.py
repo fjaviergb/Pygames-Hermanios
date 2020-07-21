@@ -22,7 +22,7 @@ class gir_obstacle(pg.sprite.Sprite):
     def update(self):        
         if not self.crash:
             if self.counter <= 360:
-                self.image = pg.transform.rotate(self.image_orig, 2 * self.counter)
+                self.image = pg.transform.rotate(self.image_orig, 6 * self.counter)
                 self.image.set_colorkey(BLACK)
                 self.rect = self.image.get_rect(center=self.rect.center)
                 self.mask = pg.mask.from_surface(self.image)                          
