@@ -97,14 +97,13 @@ def main():
                     elif j[0] == 3:
                         envir = env.rect_obstacle(j[1],j[2])   
                         p.env_sprites.add(envir)
+                        
                     elif j[0] == 2: 
-                        envir = env.gir_obstacle(j[1],j[2])   
+                        envir = env.gir_obstacle(j[1],j[2])                           
                         p.env_sprites.add(envir)
         
-                    p.env_sprites.update()
                     p.env_sprites.draw(win)
                     p.col_sprites.add(envir)                
-                    
                     colision(p, p.espada)
 
                 p.env_sprites = pg.sprite.Group()
