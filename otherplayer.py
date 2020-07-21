@@ -7,7 +7,7 @@ import numpy as np
 ###########################################################
 
 class otherbody(pg.sprite.Sprite):
-    def __init__(self, tipo, x, y, angle, anglehit, slashright, slashleft, live, chargecount):
+    def __init__(self, tipo, x, y, angle, anglehit, slashright, slashleft, live, chargecount, blocking):
         super().__init__()
         self.radio = 20
         self.x = x
@@ -29,6 +29,7 @@ class otherbody(pg.sprite.Sprite):
         self.live = live
         self.chargecount = chargecount
         self.tipo = tipo
+        self.blocking = blocking
         
     def update(self, player):
         self.image = pg.transform.rotate(self.image_orig, self.angle)
@@ -81,10 +82,20 @@ class otherbody(pg.sprite.Sprite):
             self.mask = pg.mask.from_surface(self.image)                  
 
         def update(self, player):
-            self.image = pg.transform.rotate(self.image_orig, player.anglehit)
-            self.image.set_colorkey(BLACK)            
-            self.rect = self.image.get_rect(center = player.rect.center)
-            self.mask = pg.mask.from_surface(self.image)                  
+            if player.blocking:
+                self.image2 = pg.Surface((120,50))
+                pg.draw.rect(self.image2, RED, (30,0,50,5))
+                self.image2_orig = self.image2
+                self.image = pg.transform.rotate(self.image2_orig, player.angle)
+                self.image.set_colorkey(BLACK)            
+                self.rect = self.image.get_rect(center = player.rect.center)
+                self.mask = pg.mask.from_surface(self.image2)                  
+                
+            else:
+                self.image = pg.transform.rotate(self.image_orig, player.anglehit)
+                self.image.set_colorkey(BLACK)            
+                self.rect = self.image.get_rect(center = player.rect.center)
+                self.mask = pg.mask.from_surface(self.image)                  
 
             
 CBASE = (255,255,255)
