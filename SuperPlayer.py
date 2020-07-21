@@ -46,6 +46,7 @@ class body(pg.sprite.Sprite):
         self.espada = self.sword()
         self.tipo = 1
         self.env_sprites = pg.sprite.Group()
+        self.blocking = False
 
     ###########################################################
     # FUNCION COLISION ESPADA
@@ -122,24 +123,25 @@ class body(pg.sprite.Sprite):
         shortestX = 0
         shortestY = 0
         shortestPath = 5
-        
+
         block_hit_list = pg.sprite.spritecollide(self, self.col_sprites, False)         
         block_hit_list_masked = pg.sprite.spritecollide(self, block_hit_list, False, pg.sprite.collide_mask)        
         if len(block_hit_list_masked) != 0:
         
             for i in range(-5,5):
-                for j in range(-5,5):       
-                    self.x = xorig + i
-                    self.y = yorig + j
-                    self.rect = self.image.get_rect(center = (self.x, self.y))
+                for j in range(-5,5):
+                    xorigprima = xorig + i
+                    yorigprima = yorig + j
+                    self.rect = self.image.get_rect(center = (xorigprima, yorigprima))
                     self.mask = pg.mask.from_surface(self.image)            
                     block_hit_list = pg.sprite.spritecollide(self, self.col_sprites, False)         
                     block_hit_list_masked = pg.sprite.spritecollide(self, block_hit_list, False, pg.sprite.collide_mask)        
                     if len(block_hit_list_masked) == 0:
                         if shortestPath > math.sqrt(i**2 + j**2):
                             shortestPath = math.sqrt(i**2 + j**2)
-                            shortestX = i
-                            shortestY = j
+                            shortestX = i * 2
+                            shortestY = j * 2
+                        
         return shortestX + xorig, shortestY + yorig
 
     ###########################################################
@@ -152,13 +154,13 @@ class body(pg.sprite.Sprite):
         self.x =  newX        
         self.y = newY
 
-        if keys[pg.K_LEFT]:
+        if keys[pg.K_a]:
             self.x += self.isBlockX(-1)
-        if keys[pg.K_RIGHT]:
+        if keys[pg.K_d]:
             self.x += self.isBlockX(1)
-        if keys[pg.K_UP]:
+        if keys[pg.K_w]:
             self.y += self.isBlockY(-1)
-        if keys[pg.K_DOWN]:
+        if keys[pg.K_s]:
             self.y += self.isBlockY(1)
         
         button = pg.mouse.get_pressed()
@@ -166,6 +168,26 @@ class body(pg.sprite.Sprite):
         sen = ycursor - player.rect.centery
         cos = xcursor - player.rect.centerx
 
+
+        if keys[pg.K_LSHIFT]:
+            self.anglehit = 0
+            self.blocking = True
+            self.swingleft = False
+            self.swingright = False
+            self.slashright = False
+            self.slashleft = False
+            self.backleft = False
+            self.backright = False
+            self.clashright = False
+            self.clashleft = False
+            self.hitorient = 2
+            self.chargecount = 1
+            self.countlimit = 0
+            self.clash_count = 0
+            
+        else:
+            self.blocking = False
+            
 ######################################################################
 # ROTACIÓN + COMIENZO ESPADAZO 
 ######################################################################
@@ -546,12 +568,24 @@ class body(pg.sprite.Sprite):
             self.mask = pg.mask.from_surface(self.image)                  
 
         def update(self, player):
-            self.image = pg.transform.rotate(self.image_orig, player.anglehit)
-            self.image.set_colorkey(BLACK)            
-            self.rect = self.image.get_rect(center = player.rect.center)
-            self.mask = pg.mask.from_surface(self.image)                  
-
+            if player.blocking:
+                self.image2 = pg.Surface((120,50))
+                pg.draw.rect(self.image2, RED, (30,0,50,5))
+                self.image2_orig = self.image2
+                self.image = pg.transform.rotate(self.image2_orig, player.angle)
+                self.image.set_colorkey(BLACK)            
+                self.rect = self.image.get_rect(center = player.rect.center)
+                self.mask = pg.mask.from_surface(self.image2)                  
+                
             
+            else:
+                self.image = pg.transform.rotate(self.image_orig, player.anglehit)
+                self.image.set_colorkey(BLACK)            
+                self.rect = self.image.get_rect(center = player.rect.center)
+                self.mask = pg.mask.from_surface(self.image)                  
+
+        
+           
 CBASE = (255,255,255)
 CPLAYER = (255,228,181)
 BLACK = (0,0,0)
