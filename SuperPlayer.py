@@ -44,6 +44,7 @@ class body(pg.sprite.Sprite):
         self.rightH = self.Rhand()
         self.leftH = self.Lhand()
         self.espada = self.sword()
+        self.livebar = self.livebar()
         self.tipo = 1
         self.env_sprites = pg.sprite.Group()
         self.blocking = False
@@ -76,11 +77,7 @@ class body(pg.sprite.Sprite):
     # FUNCION COLISION CUERPO
     ###########################################################
     def isBlockX(self, signo):
-        #  Metodo para depurar la colision en movimiento.
-        #  Como dos objetos en "movimiento" pueden superponerse sin llegar a colisionar
-        #  hacemos un pequenno barrido de los angulos para ver si se encuentran.
         for i in np.arange(0, self.vel, 0.5):
-            #  TODO si el objeto es pequenno puede fallar.
             self.x += i * signo
             self.rect = self.image.get_rect(center = (self.x, self.y))
             self.mask = pg.mask.from_surface(self.image)            
@@ -98,11 +95,7 @@ class body(pg.sprite.Sprite):
     # FUNCION COLISION CUERPO
     ###########################################################
     def isBlockY(self, signo):
-        #  Metodo para depurar la colision en movimiento.
-        #  Como dos objetos en "movimiento" pueden superponerse sin llegar a colisionar
-        #  hacemos un pequenno barrido de los angulos para ver si se encuentran.
         for i in np.arange(0, self.vel, 0.5):
-            #  TODO si el objeto es pequenno puede fallar.
             self.y += i * signo
             self.rect = self.image.get_rect(center = (self.x, self.y))
             self.mask = pg.mask.from_surface(self.image)            
@@ -168,7 +161,7 @@ class body(pg.sprite.Sprite):
         sen = ycursor - player.rect.centery
         cos = xcursor - player.rect.centerx
 
-        if keys[pg.K_LSHIFT] and not self.slashleft  and not self.backleft and not self.slashright and not self.backright:
+        if keys[pg.K_LSHIFT] and not self.slashleft and not self.backleft and not self.slashright and not self.backright:
             self.anglehit = 0
             self.blocking = True
             self.swingleft = False
@@ -574,7 +567,7 @@ class body(pg.sprite.Sprite):
                 self.image = pg.transform.rotate(self.image2_orig, player.angle)
                 self.image.set_colorkey(BLACK)            
                 self.rect = self.image.get_rect(center = player.rect.center)
-                self.mask = pg.mask.from_surface(self.image2)                  
+                self.mask = pg.mask.from_surface(self.image)                  
                 
             
             else:
@@ -583,6 +576,17 @@ class body(pg.sprite.Sprite):
                 self.rect = self.image.get_rect(center = player.rect.center)
                 self.mask = pg.mask.from_surface(self.image)                  
 
+    class livebar(pg.sprite.Sprite):
+        def __init__(self):
+            super().__init__()
+            self.image = pg.Surface((100,5))
+            pg.draw.rect(self.image, RED, (0,0,100,5))
+            self.rect = self.image.get_rect(topleft = (50,490))
+            
+        def update(self, player):
+            pg.draw.rect(self.image, RED, (0,0,100,5))            
+            pg.draw.rect(self.image, GREEN, (0,0,player.live / 5 * 100,5))
+            self.rect = self.image.get_rect(topleft = (50,490))
         
            
 CBASE = (255,255,255)
