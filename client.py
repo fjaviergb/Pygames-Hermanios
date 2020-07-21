@@ -42,6 +42,7 @@ def main():
     all_sprites.add(p.rightH)
     all_sprites.add(p.leftH)
     all_sprites.add(p.espada)
+    all_sprites.add(p.livebar)
     n = Network()
     
     clock = pg.time.Clock()
@@ -73,9 +74,9 @@ def main():
                     p.other_sprites.draw(win)
                     p.enem_sword.add(po.espada)
     
-                    p.col_sprites.add(po)                
-    
-                    if i[8] == True or i[6] or i[5]:
+                    p.col_sprites.add(po)    
+                    
+                    if i[9] or i[6] or i[5]:
                         p.col_sprites.add(po.espada)                
                     
                     if i[5] or i[6]:
@@ -107,7 +108,7 @@ def main():
                     colision(p, p.espada)
 
                 p.env_sprites = pg.sprite.Group()
-        
+
         if p.live > 0:           
             all_sprites.update(p)
             p.col_sprites = pg.sprite.Group()  
