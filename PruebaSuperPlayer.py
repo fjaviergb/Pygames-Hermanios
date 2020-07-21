@@ -20,9 +20,9 @@ WHITE = (255,255,255)
 p = body()
 all_sprites = pg.sprite.Group()
 all_sprites.add(p)
-all_sprites.add(p.Rhand())
-all_sprites.add(p.Lhand())
-all_sprites.add(p.sword())
+all_sprites.add(p.rightH)
+all_sprites.add(p.leftH)
+all_sprites.add(p.espada)
 
 clock = pg.time.Clock()
 run = True
