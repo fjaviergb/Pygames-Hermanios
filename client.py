@@ -43,6 +43,7 @@ def main():
     all_sprites.add(p.leftH)
     all_sprites.add(p.espada)
     all_sprites.add(p.livebar)
+    all_sprites.add(p.energybar)    
     n = Network()
     
     clock = pg.time.Clock()
