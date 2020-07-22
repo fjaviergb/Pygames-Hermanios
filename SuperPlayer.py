@@ -45,6 +45,7 @@ class body(pg.sprite.Sprite):
         self.leftH = self.Lhand()
         self.espada = self.sword()
         self.livebar = self.livebar()
+        self.energybar = self.energybar()
         self.tipo = 1
         self.env_sprites = pg.sprite.Group()
         self.blocking = False
@@ -57,6 +58,7 @@ class body(pg.sprite.Sprite):
         self.dashCDcounter = 0
         self.xorigdash = 0
         self.yorigdash = 0
+        self.energy = 100
         
     ###########################################################
     # FUNCION AVANCE DASH
@@ -104,8 +106,8 @@ class body(pg.sprite.Sprite):
     ###########################################################
     # FUNCION COLISION CUERPO
     ###########################################################
-    def isBlockX(self, signo):
-        for i in np.arange(0, self.vel, 0.5):
+    def isBlockX(self, mult, signo):
+        for i in np.arange(0, mult * self.vel, 0.5):
             self.x += i * signo
             self.rect = self.image.get_rect(center = (self.x, self.y))
             self.mask = pg.mask.from_surface(self.image)            
@@ -122,8 +124,8 @@ class body(pg.sprite.Sprite):
     ###########################################################
     # FUNCION COLISION CUERPO
     ###########################################################
-    def isBlockY(self, signo):
-        for i in np.arange(0, self.vel, 0.5):
+    def isBlockY(self, mult, signo):
+        for i in np.arange(0, mult * self.vel, 0.5):
             self.y += i * signo
             self.rect = self.image.get_rect(center = (self.x, self.y))
             self.mask = pg.mask.from_surface(self.image)            
@@ -205,13 +207,25 @@ class body(pg.sprite.Sprite):
         
         else:   
             if keys[pg.K_a]:
-               self.x += self.isBlockX(-1)
+                if keys[pg.K_LCTRL] and self.energy > 0:
+                    self.x += self.isBlockX(2,-1)
+                else:
+                   self.x += self.isBlockX(1,-1)
             if keys[pg.K_d]:
-               self.x += self.isBlockX(1)
+                if keys[pg.K_LCTRL] and self.energy > 0:
+                    self.x += self.isBlockX(2,1)
+                else:
+                   self.x += self.isBlockX(1,1)
             if keys[pg.K_w]:
-               self.y += self.isBlockY(-1)
+                if keys[pg.K_LCTRL] and self.energy > 0:
+                    self.y += self.isBlockY(2,-1)
+                else:
+                   self.y += self.isBlockY(1,-1)
             if keys[pg.K_s]:
-               self.y += self.isBlockY(1)
+                if keys[pg.K_LCTRL] and self.energy > 0:
+                    self.y += self.isBlockY(2,1)
+                else:
+                   self.y += self.isBlockY(1,1)
             
             if self.dashCD:
                 if self.dashCDcounter < 500:
@@ -565,7 +579,10 @@ class body(pg.sprite.Sprite):
                 else:                 
                     self.backleft = False
                     self.chargecount = 1
-        
+        if keys[pg.K_LCTRL] and self.energy > 0:
+            self.energy -= 2
+        if self.energy < 100:
+            self.energy += 1
         self.image = pg.transform.rotate(self.image_orig, self.angle)
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect(center = (self.x, self.y))
@@ -648,6 +665,19 @@ class body(pg.sprite.Sprite):
             pg.draw.rect(self.image, RED, (0,0,100,5))            
             pg.draw.rect(self.image, GREEN, (0,0,player.live / 5 * 100,5))
             self.rect = self.image.get_rect(topleft = (50,490))
+
+    class energybar(pg.sprite.Sprite):
+        def __init__(self):
+            super().__init__()
+            self.image = pg.Surface((100,5))
+            pg.draw.rect(self.image, GOLD, (1,1,98,3))
+            self.rect = self.image.get_rect(topleft = (50,490))
+            
+        def update(self, player):
+            pg.draw.rect(self.image, BLACK, (0,0,100,5))            
+            pg.draw.rect(self.image, GOLD, (1,1,player.energy / 100 * 98,3))
+            self.rect = self.image.get_rect(topleft = (50,480))
+
         
            
 CBASE = (255,255,255)
