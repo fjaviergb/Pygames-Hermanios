@@ -55,21 +55,24 @@ class body(pg.sprite.Sprite):
         self.dashCD = False
         self.ratio = 0
         self.dashCDcounter = 0
+        self.xorigdash = 0
+        self.yorigdash = 0
         
     ###########################################################
     # FUNCION AVANCE DASH
     ###########################################################
-    def isDash(self, x, y,ratio):
-        for i in np.arange(0, 4, 0.5):
+    def isDash(self):
+        for i in np.arange(0, 8, 1):
             ratio = (self.dashcount + i) / self.dis
-            x += ratio * (self.xdash - self.x)
-            y += ratio * (self.ydash - self.y)
+            x = self.xorigdash + ratio * (self.xdash - self.xorigdash)
+            y = self.yorigdash + ratio * (self.ydash - self.yorigdash)
             self.rect = self.image.get_rect(center = (x,y))
             block_hit_list = pg.sprite.spritecollide(self, self.col_sprites, False)         
             block_hit_list_masked = pg.sprite.spritecollide(self, block_hit_list, False, pg.sprite.collide_mask)        
             if len(block_hit_list_masked) == 0:
                 pass
             else:
+                self.dashCD = True
                 return (i - 1)
                 break
         return i
@@ -180,18 +183,17 @@ class body(pg.sprite.Sprite):
             self.dashing = True
             self.xdash = abs(xcursor)
             self.ydash = abs(ycursor)
+            self.xorigdash = self.x
+            self.yorigdash = self.y
             self.dis = math.sqrt((self.xdash - self.x) ** 2 + (self.ydash - self.y) ** 2)                        
 
         if self.dashing:
-            if self.dashcount < 24 and self.dashcount < self.dis:
-                self.dashcount += self.isDash(self.x,self.y, self.ratio)                                                
+            if self.dashcount < 80 and self.dashcount < self.dis:
+                self.dashcount += self.isDash()                                                
                 self.ratio = self.dashcount / self.dis
-                self.x += self.ratio * (self.xdash - self.x)
-                self.y += self.ratio * (self.ydash - self.y)
-                self.rect = self.image.get_rect(center = (self.x,self.y))                
-                block_hit_list = pg.sprite.spritecollide(self, self.col_sprites, False)         
-                block_hit_list_masked = pg.sprite.spritecollide(self, block_hit_list, False, pg.sprite.collide_mask)        
-                if len(block_hit_list_masked) != 0:
+                self.x = self.xorigdash + self.ratio * (self.xdash - self.xorigdash)
+                self.y = self.yorigdash + self.ratio * (self.ydash - self.yorigdash)
+                if self.dashCD:
                     self.dashCD = True
                     self.dashcount = 0
                     self.dashing = False
