@@ -48,6 +48,31 @@ class body(pg.sprite.Sprite):
         self.tipo = 1
         self.env_sprites = pg.sprite.Group()
         self.blocking = False
+        self.dashing = False
+        self.xdash = 0
+        self.ydash = 0
+        self.dashcount = 0
+        self.dashCD = False
+        self.ratio = 0
+        self.dashCDcounter = 0
+        
+    ###########################################################
+    # FUNCION AVANCE DASH
+    ###########################################################
+    def isDash(self, x, y,ratio):
+        for i in np.arange(0, 4, 0.5):
+            ratio = (self.dashcount + i) / self.dis
+            x += ratio * (self.xdash - self.x)
+            y += ratio * (self.ydash - self.y)
+            self.rect = self.image.get_rect(center = (x,y))
+            block_hit_list = pg.sprite.spritecollide(self, self.col_sprites, False)         
+            block_hit_list_masked = pg.sprite.spritecollide(self, block_hit_list, False, pg.sprite.collide_mask)        
+            if len(block_hit_list_masked) == 0:
+                pass
+            else:
+                return (i - 1)
+                break
+        return i
 
     ###########################################################
     # FUNCION COLISION ESPADA
@@ -142,24 +167,58 @@ class body(pg.sprite.Sprite):
     ###########################################################        
     def update(self, player):
         keys = pg.key.get_pressed()
+        button = pg.mouse.get_pressed()
+        (xcursor, ycursor) = pg.mouse.get_pos()
+        sen = ycursor - player.rect.centery
+        cos = xcursor - player.rect.centerx
 
         newX, newY = self.isWall(self.x, self.y)
         self.x =  newX        
         self.y = newY
 
-        if keys[pg.K_a]:
-            self.x += self.isBlockX(-1)
-        if keys[pg.K_d]:
-            self.x += self.isBlockX(1)
-        if keys[pg.K_w]:
-            self.y += self.isBlockY(-1)
-        if keys[pg.K_s]:
-            self.y += self.isBlockY(1)
+        if keys[pg.K_SPACE] and not self.dashing and not self.dashCD:
+            self.dashing = True
+            self.xdash = abs(xcursor)
+            self.ydash = abs(ycursor)
+            self.dis = math.sqrt((self.xdash - self.x) ** 2 + (self.ydash - self.y) ** 2)                        
+
+        if self.dashing:
+            if self.dashcount < 24 and self.dashcount < self.dis:
+                self.dashcount += self.isDash(self.x,self.y, self.ratio)                                                
+                self.ratio = self.dashcount / self.dis
+                self.x += self.ratio * (self.xdash - self.x)
+                self.y += self.ratio * (self.ydash - self.y)
+                self.rect = self.image.get_rect(center = (self.x,self.y))                
+                block_hit_list = pg.sprite.spritecollide(self, self.col_sprites, False)         
+                block_hit_list_masked = pg.sprite.spritecollide(self, block_hit_list, False, pg.sprite.collide_mask)        
+                if len(block_hit_list_masked) != 0:
+                    self.dashCD = True
+                    self.dashcount = 0
+                    self.dashing = False
+                
+            else:
+                self.dashCD = True
+                self.dashcount = 0
+                self.dashing = False
         
-        button = pg.mouse.get_pressed()
-        (xcursor, ycursor) = pg.mouse.get_pos()
-        sen = ycursor - player.rect.centery
-        cos = xcursor - player.rect.centerx
+        else:   
+            if keys[pg.K_a]:
+               self.x += self.isBlockX(-1)
+            if keys[pg.K_d]:
+               self.x += self.isBlockX(1)
+            if keys[pg.K_w]:
+               self.y += self.isBlockY(-1)
+            if keys[pg.K_s]:
+               self.y += self.isBlockY(1)
+            
+            if self.dashCD:
+                if self.dashCDcounter < 500:
+                    self.dashCDcounter += 1
+                else:
+                    self.dashcount = 0
+                    self.dashCDcounter = 0
+                    self.dashCD = False
+            
 
         if keys[pg.K_LSHIFT] and not self.slashleft and not self.backleft and not self.slashright and not self.backright:
             self.anglehit = 0
@@ -179,7 +238,7 @@ class body(pg.sprite.Sprite):
             
         else:
             self.blocking = False
-            
+
 ######################################################################
 # ROTACIÓN + COMIENZO ESPADAZO 
 ######################################################################
@@ -598,3 +657,7 @@ BLUE = (0,0,255)
 GOLD = (255,215,0)
 WHITE = (255,255,255)
        
+
+
+
+
