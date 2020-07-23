@@ -177,10 +177,17 @@ class body(pg.sprite.Sprite):
         sen = ycursor - player.rect.centery
         cos = xcursor - player.rect.centerx
 
+######################################################################
+# MOVIMIENTO POR COLISIÓN CON OBJETOS
+######################################################################
         newX, newY = self.isWall(self.x, self.y)
         self.x =  newX        
         self.y = newY
 
+
+######################################################################
+# DASH CON SPACE
+######################################################################
         if keys[pg.K_SPACE] and not self.dashing and not self.dashCD:
             self.dashing = True
             self.xdash = abs(xcursor)
@@ -199,12 +206,14 @@ class body(pg.sprite.Sprite):
                     self.dashCD = True
                     self.dashcount = 0
                     self.dashing = False
-                
             else:
                 self.dashCD = True
                 self.dashcount = 0
                 self.dashing = False
-        
+
+######################################################################
+# MOVIMIENTO A-S-D-W; CORRIENDO CON CTRL
+######################################################################
         else:   
             if keys[pg.K_a]:
                 if keys[pg.K_LCTRL] and self.energy > 0:

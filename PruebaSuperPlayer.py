@@ -23,6 +23,7 @@ all_sprites.add(p)
 all_sprites.add(p.rightH)
 all_sprites.add(p.leftH)
 all_sprites.add(p.espada)
+all_sprites.add(p.energybar)
 
 clock = pg.time.Clock()
 run = True
