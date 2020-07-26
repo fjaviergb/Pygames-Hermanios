@@ -99,26 +99,21 @@ def main():
                         if j[3] > p.x - 550 and j[3] < p.x + 550 and j[4] > p.y - 550 and j[4] < p.y + 550:
                             envir = env.circle_obstacle(j[1],j[2],j[3],j[4],p.x,p.y)   
                             p.env_sprites.add(envir)
-                        else:
-                            envir = False
+                            p.col_sprites.add(envir)                
                             
                     elif j[0] == 3:
                         if j[3] > p.x - 550 and j[3] < p.x + 550 and j[4] > p.y - 550 and j[4] < p.y + 550:
                             envir = env.rect_obstacle(j[1],j[2],j[3],j[4],p.x,p.y)   
                             p.env_sprites.add(envir)
-                        else:
-                            envir = False
+                            p.col_sprites.add(envir)                
                         
                     elif j[0] == 2: 
                         if j[3] > p.x - 550 and j[3] < p.x + 550 and j[4] > p.y - 550 and j[4] < p.y + 550:
                             envir = env.gir_obstacle(j[1],j[2],j[3],j[4],p.x,p.y)                           
                             p.env_sprites.add(envir)
-                        else:
-                            envir = False
-        
+                            p.col_sprites.add(envir)                
+                                    
                     p.env_sprites.draw(win)
-                    if envir:
-                        p.col_sprites.add(envir)                
                     colision(p, p.espada)
 
                 p.env_sprites = pg.sprite.Group()
