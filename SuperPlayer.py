@@ -68,14 +68,14 @@ class body(pg.sprite.Sprite):
             ratio = (self.dashcount + i) / self.dis
             x = self.xorigdash + ratio * (self.xdash - self.xorigdash)
             y = self.yorigdash + ratio * (self.ydash - self.yorigdash)
-            self.rect = self.image.get_rect(center = (x,y))
+            self.rect = self.image.get_rect(center = (x - self.x + 250, y - self.y + 250))
             block_hit_list = pg.sprite.spritecollide(self, self.col_sprites, False)         
             block_hit_list_masked = pg.sprite.spritecollide(self, block_hit_list, False, pg.sprite.collide_mask)        
             if len(block_hit_list_masked) == 0:
                 pass
             else:
                 self.dashCD = True
-                return (i - 1)
+                return (i - 2)
                 break
         return i
 
@@ -106,10 +106,10 @@ class body(pg.sprite.Sprite):
     ###########################################################
     # FUNCION COLISION CUERPO
     ###########################################################
-    def isBlockX(self, mult, signo):
+    def isBlockX(self, mult, signo, xorig, yorig):
         for i in np.arange(0, mult * self.vel, 0.5):
-            self.x += i * signo
-            self.rect = self.image.get_rect(center = (self.x, self.y))
+            self.x = xorig + i * signo
+            self.rect = self.image.get_rect(center = (self.x - xorig + 250, self.y - yorig + 250))
             self.mask = pg.mask.from_surface(self.image)            
             
             block_hit_list = pg.sprite.spritecollide(self, self.col_sprites, False)         
@@ -117,17 +117,16 @@ class body(pg.sprite.Sprite):
             if len(block_hit_list_masked) == 0:
                 pass
             else:
-                return (i-0.5) * signo
+                self.x = xorig + (i-1) * signo
                 break
-        return i * signo
 
     ###########################################################
     # FUNCION COLISION CUERPO
     ###########################################################
-    def isBlockY(self, mult, signo):
+    def isBlockY(self, mult, signo, xorig, yorig):
         for i in np.arange(0, mult * self.vel, 0.5):
-            self.y += i * signo
-            self.rect = self.image.get_rect(center = (self.x, self.y))
+            self.y = yorig + i * signo
+            self.rect = self.image.get_rect(center = (self.x - xorig + 250, self.y - yorig + 250))
             self.mask = pg.mask.from_surface(self.image)            
             
             block_hit_list = pg.sprite.spritecollide(self, self.col_sprites, False)         
@@ -135,10 +134,9 @@ class body(pg.sprite.Sprite):
             if len(block_hit_list_masked) == 0:
                 pass
             else:
-                return (i-0.5) * signo
+                self.y = yorig + (i-1) * signo
                 break
-        return i * signo
-
+    
     ###########################################################
     # FUNCION COLISION EN PARADO
     ###########################################################
@@ -190,8 +188,8 @@ class body(pg.sprite.Sprite):
 ######################################################################
         if keys[pg.K_SPACE] and not self.dashing and not self.dashCD:
             self.dashing = True
-            self.xdash = abs(xcursor)
-            self.ydash = abs(ycursor)
+            self.xdash = xcursor + self.x - 250
+            self.ydash = ycursor + self.y - 250
             self.xorigdash = self.x
             self.yorigdash = self.y
             self.dis = math.sqrt((self.xdash - self.x) ** 2 + (self.ydash - self.y) ** 2)                        
@@ -217,24 +215,24 @@ class body(pg.sprite.Sprite):
         else:   
             if keys[pg.K_a]:
                 if keys[pg.K_LCTRL] and self.energy > 0:
-                    self.x += self.isBlockX(2,-1)
+                    self.isBlockX(2,-1, self.x, self.y)
                 else:
-                   self.x += self.isBlockX(1,-1)
+                    self.isBlockX(1,-1, self.x, self.y)
             if keys[pg.K_d]:
                 if keys[pg.K_LCTRL] and self.energy > 0:
-                    self.x += self.isBlockX(2,1)
+                    self.isBlockX(2,1, self.x, self.y)
                 else:
-                   self.x += self.isBlockX(1,1)
+                   self.isBlockX(1,1, self.x, self.y)
             if keys[pg.K_w]:
                 if keys[pg.K_LCTRL] and self.energy > 0:
-                    self.y += self.isBlockY(2,-1)
+                    self.isBlockY(2,-1, self.x, self.y)
                 else:
-                   self.y += self.isBlockY(1,-1)
+                   self.isBlockY(1,-1, self.x, self.y)
             if keys[pg.K_s]:
                 if keys[pg.K_LCTRL] and self.energy > 0:
-                    self.y += self.isBlockY(2,1)
+                    self.isBlockY(2,1, self.x, self.y)
                 else:
-                   self.y += self.isBlockY(1,1)
+                    self.isBlockY(1,1, self.x, self.y)
             
             if self.dashCD:
                 if self.dashCDcounter < 500:
