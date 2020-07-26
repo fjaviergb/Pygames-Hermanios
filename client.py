@@ -3,6 +3,7 @@ from network import Network
 from SuperPlayer import body
 from otherplayer import otherbody
 import otherenvironment as env
+from random import randrange
 
 width = 500
 height = 500
@@ -35,7 +36,7 @@ def colision(p, sword):
 
 def main():
     run = True
-    p = body()
+    p = body(randrange(3000),randrange(3000))
     all_sprites = pg.sprite.Group()
     
     all_sprites.add(p)
@@ -65,47 +66,59 @@ def main():
         for i in pothers:        
             if type(i) != list:
                 if (p.x,p.y) != (i[1],i[2]) and i[7] > 0:
-                    po = otherbody(i[0],i[1],i[2],i[3],i[4],i[5],i[6],i[7],i[8],i[9])
+                    po = otherbody(i[0],i[1],i[2],i[3],i[4],i[5],i[6],i[7],i[8],i[9],p.x,p.y)
+                    if i[1] > p.x - 550 and i[1] < p.x + 550 and i[2] > p.y - 550 and i[2] < p.y + 550:
     
-                    p.other_sprites.add(po)
-                    p.other_sprites.add(po.Rhand)
-                    p.other_sprites.add(po.Lhand)
-                    p.other_sprites.add(po.espada) 
-                    p.other_sprites.update(po)
-                    p.other_sprites.draw(win)
-                    p.enem_sword.add(po.espada)
-    
-                    p.col_sprites.add(po)    
-                    
-                    if i[9] or i[6] or i[5]:
-                        p.col_sprites.add(po.espada)                
-                    
-                    if i[5] or i[6]:
-                        block_hit_list = pg.sprite.spritecollide(p, p.enem_sword, False)
-                        block_hit_list_masked = pg.sprite.spritecollide(p, block_hit_list, False, pg.sprite.collide_mask)
-                        if len(block_hit_list_masked) != 0:
-                            p.live -= 1
-                        p.enem_sword = pg.sprite.Group()
-                    
-                    colision(p, p.espada)
-    
-                    p.other_sprites = pg.sprite.Group()   
+                        p.other_sprites.add(po)
+                        p.other_sprites.add(po.Rhand)
+                        p.other_sprites.add(po.Lhand)
+                        p.other_sprites.add(po.espada) 
+                        p.other_sprites.update(po)
+                        p.other_sprites.draw(win)
+                        p.enem_sword.add(po.espada)
+        
+                        p.col_sprites.add(po)    
+                        
+                        if i[9] or i[6] or i[5]:
+                            p.col_sprites.add(po.espada)                
+                        
+                        if i[5] or i[6]:
+                            block_hit_list = pg.sprite.spritecollide(p, p.enem_sword, False)
+                            block_hit_list_masked = pg.sprite.spritecollide(p, block_hit_list, False, pg.sprite.collide_mask)
+                            if len(block_hit_list_masked) != 0:
+                                p.live -= 1
+                            p.enem_sword = pg.sprite.Group()
+                        
+                        colision(p, p.espada)
+        
+                        p.other_sprites = pg.sprite.Group()   
         
             else:
                 for j in i:
                     if j[0] == 4:
-                        envir = env.circle_obstacle(j[1],j[2])   
-                        p.env_sprites.add(envir)
+                        if j[3] > p.x - 550 and j[3] < p.x + 550 and j[4] > p.y - 550 and j[4] < p.y + 550:
+                            envir = env.circle_obstacle(j[1],j[2],j[3],j[4],p.x,p.y)   
+                            p.env_sprites.add(envir)
+                        else:
+                            envir = False
+                            
                     elif j[0] == 3:
-                        envir = env.rect_obstacle(j[1],j[2])   
-                        p.env_sprites.add(envir)
+                        if j[3] > p.x - 550 and j[3] < p.x + 550 and j[4] > p.y - 550 and j[4] < p.y + 550:
+                            envir = env.rect_obstacle(j[1],j[2],j[3],j[4],p.x,p.y)   
+                            p.env_sprites.add(envir)
+                        else:
+                            envir = False
                         
                     elif j[0] == 2: 
-                        envir = env.gir_obstacle(j[1],j[2])                           
-                        p.env_sprites.add(envir)
+                        if j[3] > p.x - 550 and j[3] < p.x + 550 and j[4] > p.y - 550 and j[4] < p.y + 550:
+                            envir = env.gir_obstacle(j[1],j[2],j[3],j[4],p.x,p.y)                           
+                            p.env_sprites.add(envir)
+                        else:
+                            envir = False
         
                     p.env_sprites.draw(win)
-                    p.col_sprites.add(envir)                
+                    if envir:
+                        p.col_sprites.add(envir)                
                     colision(p, p.espada)
 
                 p.env_sprites = pg.sprite.Group()

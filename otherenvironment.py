@@ -6,7 +6,7 @@ import numpy as np
 # CLASE OBSTÁCULO 
 ##################################################################
 class gir_obstacle(pg.sprite.Sprite):
-    def __init__(self,counter,live):
+    def __init__(self,counter,live,x,y,playerx,playery):
         super().__init__()
         self.live = live        
         self.image = pg.Surface((50, 150))
@@ -15,7 +15,7 @@ class gir_obstacle(pg.sprite.Sprite):
         self.image_orig = self.image
         self.counter = counter        
         self.image = pg.transform.rotate(self.image_orig, 6 * self.counter)       
-        self.rect = self.image.get_rect(center=(80, 300))
+        self.rect = self.image.get_rect(center=(x - playerx + 250, y - playery + 250))
         self.mask = pg.mask.from_surface(self.image)
         self.image_orig = self.image
         self.counter = counter
@@ -26,12 +26,12 @@ class gir_obstacle(pg.sprite.Sprite):
 # CLASE OBSTÁCULO RECTANGULAR
 ##################################################################
 class rect_obstacle(pg.sprite.Sprite):
-    def __init__(self,counter,live):
+    def __init__(self,counter,live,x,y,playerx,playery):
         super().__init__()
         self.image = pg.Surface((100,50))
         pg.draw.rect(self.image, BLUE, (5,5,90,40))
         self.image.set_colorkey(BLACK)
-        self.rect = self.image.get_rect(center = (75,50))
+        self.rect = self.image.get_rect(center = (x - playerx + 250, y - playery + 250))
         self.mask = pg.mask.from_surface(self.image)
         self.live = 3
 
@@ -39,12 +39,12 @@ class rect_obstacle(pg.sprite.Sprite):
 # CLASE OBSTÁCULO CIRCULAR
 ##################################################################
 class circle_obstacle(pg.sprite.Sprite):
-    def __init__(self,counter,live):
+    def __init__(self,counter,live,x,y,playerx,playery):
         super().__init__()
         self.image = pg.Surface((150,150))
         pg.draw.circle(self.image,BLUE,(75,75),75)
         self.image.set_colorkey(BLACK)
-        self.rect = self.image.get_rect(center = (350,150))
+        self.rect = self.image.get_rect(center = (x - playerx + 250, y - playery + 250))
         self.mask = pg.mask.from_surface(self.image)
         self.live = 3
        

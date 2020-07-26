@@ -8,14 +8,14 @@ from otherplayer import otherbody
 ###########################################################
 
 class body(pg.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, xinit, yinit):
         super().__init__()
         self.radio = 20
-        self.x = 150
-        self.y = 150
+        self.x = xinit
+        self.y = yinit
         self.image = pg.Surface((50,50))
         pg.draw.circle(self.image, (RED), (25,25), self.radio)
-        self.rect = self.image.get_rect(center = (self.x,self.y))
+        self.rect = self.image.get_rect(center = (250,250))
         self.mask = pg.mask.from_surface(self.image)                  
         self.vel = 2
         self.image.set_colorkey(BLACK)    
@@ -41,9 +41,9 @@ class body(pg.sprite.Sprite):
         self.col_sprites = pg.sprite.Group()
         self.enem_sword = pg.sprite.Group()        
         self.live = 5
-        self.rightH = self.Rhand()
-        self.leftH = self.Lhand()
-        self.espada = self.sword()
+        self.rightH = self.Rhand(xinit, yinit)
+        self.leftH = self.Lhand(xinit, yinit)
+        self.espada = self.sword(xinit, yinit)
         self.livebar = self.livebar()
         self.energybar = self.energybar()
         self.tipo = 1
@@ -594,12 +594,12 @@ class body(pg.sprite.Sprite):
             self.energy += 1
         self.image = pg.transform.rotate(self.image_orig, self.angle)
         self.image.set_colorkey(BLACK)
-        self.rect = self.image.get_rect(center = (self.x, self.y))
+        self.rect = self.image.get_rect(center = (250, 250))
         self.mask = pg.mask.from_surface(self.image)                  
-
+        print(self.x,self.y)
             
     class Rhand(pg.sprite.Sprite):
-        def __init__(self):
+        def __init__(self, xinit, yinit):
             super().__init__()
             self.radio = 10
             self.handspeed = 1
@@ -607,7 +607,7 @@ class body(pg.sprite.Sprite):
             self.image = pg.Surface((50,50))
             self.image.set_colorkey(BLACK)
             pg.draw.circle(self.image, (GREEN), (40,10), self.radio)
-            self.rect = self.image.get_rect(center = (150,150))
+            self.rect = self.image.get_rect(center = (xinit,yinit))
             self.image_orig = self.image
             self.mask = pg.mask.from_surface(self.image)                  
             
@@ -618,7 +618,7 @@ class body(pg.sprite.Sprite):
             self.mask = pg.mask.from_surface(self.image)                  
     
     class Lhand(pg.sprite.Sprite):
-        def __init__(self):
+        def __init__(self, xinit, yinit):
             super().__init__()
             self.radio = 10
             self.handspeed = 1
@@ -626,7 +626,7 @@ class body(pg.sprite.Sprite):
             self.image = pg.Surface((50,50))
             self.image.set_colorkey(BLACK)            
             pg.draw.circle(self.image, (BLUE), (10,10), self.radio)
-            self.rect = self.image.get_rect(center = (150,150))
+            self.rect = self.image.get_rect(center = (xinit,yinit))
             self.image_orig = self.image            
             self.mask = pg.mask.from_surface(self.image)                  
             
@@ -637,11 +637,11 @@ class body(pg.sprite.Sprite):
             self.mask = pg.mask.from_surface(self.image)                  
     
     class sword(pg.sprite.Sprite):
-        def __init__(self):
+        def __init__(self, xinit, yinit):
             super().__init__()
             self.image = pg.Surface((50,120))
             pg.draw.rect(self.image, RED, (40,0,5,50))
-            self.rect = self.image.get_rect(center = (150,150))
+            self.rect = self.image.get_rect(center = (xinit,yinit))
             self.image.set_colorkey(BLACK)        
             self.image_orig = self.image
             self.mask = pg.mask.from_surface(self.image)                  
@@ -656,7 +656,6 @@ class body(pg.sprite.Sprite):
                 self.rect = self.image.get_rect(center = player.rect.center)
                 self.mask = pg.mask.from_surface(self.image)                  
                 
-            
             else:
                 self.image = pg.transform.rotate(self.image_orig, player.anglehit)
                 self.image.set_colorkey(BLACK)            

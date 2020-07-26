@@ -17,7 +17,7 @@ pg.display.set_caption('Cuerpo Básico')
  
 WHITE = (255,255,255)
 
-p = body()
+p = body(250,250)
 all_sprites = pg.sprite.Group()
 all_sprites.add(p)
 all_sprites.add(p.rightH)
