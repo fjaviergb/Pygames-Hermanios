@@ -59,6 +59,43 @@ class body(pg.sprite.Sprite):
         self.xorigdash = 0
         self.yorigdash = 0
         self.energy = 100
+
+    ###########################################################
+    # FUNCION RECEPCION DAÑO
+    ###########################################################
+    def ouch(self):
+        block_hit_list = pg.sprite.spritecollide(self, self.enem_sword, False)
+        block_hit_list_masked = pg.sprite.spritecollide(self, block_hit_list, False, pg.sprite.collide_mask)
+        for block in block_hit_list_masked:
+            self.live -= 1
+
+    ###########################################################
+    # FUNCION RECEPCION DAÑO
+    ###########################################################
+    def toma(self):
+        if ((self.slashleft and not self.swingleft and not self.backleft) or (self.slashright and not self.swingright and not self.backright)):
+            block_hit_list = pg.sprite.spritecollide(self.espada, self.col_sprites, False)
+            block_hit_list_masked = pg.sprite.spritecollide(self.espada, block_hit_list, False, pg.sprite.collide_mask)
+            for block in block_hit_list_masked:
+                if self.slashleft:
+                    self.clashleft = True
+                    self.clash_count = self.chargecount                    
+                    self.slashleft = False                
+                    self.backleft = False
+                    self.slashright = False                
+                    self.backright = False
+                    self.swingleft = False
+                    self.swingright = False
+                elif self.slashright:
+                    self.clashright = True
+                    self.clash_count = self.chargecount
+                    self.slashleft = False                
+                    self.backleft = False
+                    self.slashright = False                
+                    self.backright = False
+                    self.swingleft = False
+                    self.swingright = False
+
         
     ###########################################################
     # FUNCION AVANCE DASH
@@ -82,13 +119,14 @@ class body(pg.sprite.Sprite):
     ###########################################################
     # FUNCION COLISION ESPADA
     ###########################################################
-    def isClash(self, angle_grad, signo, angle):
+    def isClash(self, angle_grad, signo, angle, counter):
         #  Metodo para depurar la colision en movimiento.
         #  Como dos objetos en "movimiento" pueden superponerse sin llegar a colisionar
         #  hacemos un pequenno barrido de los angulos para ver si se encuentran.
-        for i in np.arange(0, 4, 0.5):
+        for i in np.arange(1, 5, 0.5):
             #  TODO si el objeto es pequenno puede fallar.
-            self.anglehit = angle - angle_grad + signo * (self.chargecount - i) * 3
+            self.chargecount = counter - i
+            self.anglehit = angle - angle_grad + signo * (self.chargecount) * 3
             self.espada.image = pg.transform.rotate(self.espada.image_orig, self.anglehit)
             self.espada.rect = self.espada.image.get_rect(center = self.rect.center)
             self.espada.mask = pg.mask.from_surface(self.espada.image)                  
@@ -98,10 +136,10 @@ class body(pg.sprite.Sprite):
                 if len(block_hit_list_masked) == 0:
                     pass
                 else:
+                    print(i)
                     break
             else:
                 pass
-        return i
 
     ###########################################################
     # FUNCION COLISION CUERPO
@@ -168,12 +206,15 @@ class body(pg.sprite.Sprite):
     ###########################################################
     # FUNCION UPDATE
     ###########################################################        
-    def update(self, player):
+    def update(self,player):
+        self.ouch()
+        self.toma()
+        
         keys = pg.key.get_pressed()
         button = pg.mouse.get_pressed()
         (xcursor, ycursor) = pg.mouse.get_pos()
-        sen = ycursor - player.rect.centery
-        cos = xcursor - player.rect.centerx
+        sen = ycursor - self.rect.centery
+        cos = xcursor - self.rect.centerx
 
 ######################################################################
 # MOVIMIENTO POR COLISIÓN CON OBJETOS
@@ -181,7 +222,6 @@ class body(pg.sprite.Sprite):
         newX, newY = self.isWall(self.x, self.y)
         self.x =  newX        
         self.y = newY
-
 
 ######################################################################
 # DASH CON SPACE
@@ -302,8 +342,7 @@ class body(pg.sprite.Sprite):
                         self.anglehit = 270 - angle_grad - self.chargecount * 3                        
                 elif self.slashright and not self.swingright and not self.backright:
                     if self.chargecount >= self.countlimit * -20 / 30:
-                            self.anglehit = 270 - angle_grad - self.chargecount * 3
-                            self.chargecount -= self.isClash(angle_grad, -1, 270)
+                            self.isClash(angle_grad, -1, 270, self.chargecount)                        
                     else:
                         self.slashright = False                
                         self.backright = True
@@ -338,8 +377,7 @@ class body(pg.sprite.Sprite):
                         self.anglehit = 270 - angle_grad + self.chargecount * 3                        
                 elif self.slashleft and not self.swingleft and not self.backleft:
                     if self.chargecount >= self.countlimit * -20 / 30:
-                            self.anglehit = 270 - angle_grad + self.chargecount * 3
-                            self.chargecount -= self.isClash(angle_grad, 1, 270)                
+                            self.isClash(angle_grad, 1, 270, self.chargecount)                
                     else:
                         self.slashleft = False                
                         self.backleft = True
@@ -390,8 +428,7 @@ class body(pg.sprite.Sprite):
                         self.anglehit = 90 - angle_grad - self.chargecount * 3
                 elif self.slashright and not self.swingright and not self.backright:
                     if self.chargecount >= self.countlimit * -20 / 30:
-                            self.anglehit = 90 - angle_grad - self.chargecount * 3
-                            self.chargecount -= self.isClash(angle_grad, -1, 90)
+                            self.isClash(angle_grad, -1, 90, self.chargecount)
                     else:
                         self.slashright = False                
                         self.backright = True
@@ -426,8 +463,7 @@ class body(pg.sprite.Sprite):
                         self.anglehit = 90 - angle_grad + self.chargecount * 3                        
                 elif self.slashleft and not self.swingleft and not self.backleft:
                     if self.chargecount >= self.countlimit * -20 / 30:
-                            self.anglehit = 90 - angle_grad + self.chargecount * 3
-                            self.chargecount -= self.isClash(angle_grad, 1, 90)               
+                            self.isClash(angle_grad, 1, 90, self.chargecount)               
                     else:
                         self.slashleft = False                
                         self.backleft = True
@@ -476,8 +512,7 @@ class body(pg.sprite.Sprite):
                     self.anglehit = 0 - self.chargecount * 3                    
             elif self.slashright and not self.swingright and not self.backright:
                 if self.chargecount >= self.countlimit * -20 / 30:
-                        self.anglehit = 0 - self.chargecount * 3
-                        self.chargecount -= self.isClash(angle_grad, -1, 0) 
+                        self.isClash(angle_grad, -1, 0, self.chargecount) 
                 else:
                     self.slashright = False                
                     self.backright = True
@@ -504,8 +539,7 @@ class body(pg.sprite.Sprite):
                     self.anglehit = 0 + self.chargecount * 3                    
             elif self.slashleft and not self.swingleft and not self.backleft:
                 if self.chargecount >= self.countlimit * -20 / 30:
-                        self.anglehit = 0 + self.chargecount * 3
-                        self.chargecount -= self.isClash(angle_grad, 1, 0)                
+                        self.isClash(angle_grad, 1, 0, self.chargecount)                
                 else:
                     self.slashleft = False                
                     self.backleft = True
@@ -546,8 +580,7 @@ class body(pg.sprite.Sprite):
                     self.anglehit = 180 - self.chargecount * 3                      
             elif self.slashright and not self.swingright and not self.backright:
                 if self.chargecount >= self.countlimit * -20 / 30:
-                        self.anglehit = 180 - self.chargecount * 3
-                        self.chargecount -= self.isClash(angle_grad, -1, 180)
+                        self.isClash(angle_grad, -1, 180, self.chargecount)
                 else:
                     self.slashright = False                
                     self.backright = True
@@ -574,8 +607,7 @@ class body(pg.sprite.Sprite):
                     self.anglehit = 180 + self.chargecount * 3                                            
             elif self.slashleft and not self.swingleft and not self.backleft:
                 if self.chargecount >= self.countlimit * -20 / 30:
-                        self.anglehit = 180 + self.chargecount * 3
-                        self.chargecount -= self.isClash(angle_grad, 1, 180)                
+                        self.isClash(angle_grad, 1, 180, self.chargecount)                
                 else:
                     self.slashleft = False                
                     self.backleft = True
@@ -586,16 +618,18 @@ class body(pg.sprite.Sprite):
                 else:                 
                     self.backleft = False
                     self.chargecount = 1
+        
+                    
         if keys[pg.K_LCTRL] and self.energy > 0:
             self.energy -= 2
         if self.energy < 100:
             self.energy += 1
+            
         self.image = pg.transform.rotate(self.image_orig, self.angle)
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect(center = (250, 250))
-        self.mask = pg.mask.from_surface(self.image)                  
-        print(self.x,self.y)
-            
+        self.mask = pg.mask.from_surface(self.image)                
+        
     class Rhand(pg.sprite.Sprite):
         def __init__(self, xinit, yinit):
             super().__init__()
