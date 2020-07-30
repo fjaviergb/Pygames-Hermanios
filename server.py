@@ -18,6 +18,7 @@ print("Waiting for a connection, Server Started")
 
 players = []
 
+
 def threaded_client(conn, player):
     global currentPlayer
     reply = ""
@@ -29,27 +30,26 @@ def threaded_client(conn, player):
             except IndexError:
                 players.append(data)
             for p in players:
-              if not p:
-                players.remove(p)
-                reply = players
-              else:
-                reply = players
+                if not p:
+                    players.remove(p)
+                    reply = players
+                else:
+                    reply = players
 
             conn.sendall(pickle.dumps(reply))
-                                    
+
         except:
             break
-        
-    currentPlayer -=  1               
+
+    currentPlayer -= 1
     print("Lost connection")
     conn.close()
 
-global currentPlayer 
+
+global currentPlayer
 currentPlayer = 0
 while True:
     conn, addr = s.accept()
     print("Connected to:", addr)
     start_new_thread(threaded_client, (conn, currentPlayer))
     currentPlayer += 1
-    
-    
