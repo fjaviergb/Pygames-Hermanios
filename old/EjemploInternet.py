@@ -8,13 +8,14 @@ pg.init()
 
 class Wall(pg.sprite.Sprite):
     """Wall a player can run into."""
+
     def __init__(self, x, y, width, height, colour):
         super().__init__()
         self.image = pg.Surface([width, height])
         self.image.fill(colour)
         self.image.set_colorkey(BLACK)
         # Make the "passed-in" location the top left corner.
-        self.mask = pg.mask.from_surface(self.image)        
+        self.mask = pg.mask.from_surface(self.image)
         self.rect = self.image.get_rect(topleft=(x, y))
 
 
@@ -29,17 +30,16 @@ class Collectable(pg.sprite.Sprite):
 
 
 class Player(pg.sprite.Sprite):
-
     def __init__(self):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.Surface((30, 30))
-#        pg.gfxdraw.aacircle(self.image,15,15,15,(50, 150, 250))
-#        pg.gfxdraw.filled_circle(self.image,15,15,15,(50, 150, 250))
+        #        pg.gfxdraw.aacircle(self.image,15,15,15,(50, 150, 250))
+        #        pg.gfxdraw.filled_circle(self.image,15,15,15,(50, 150, 250))
         self.image.set_colorkey(BLACK)
-        pg.draw.circle(self.image,(50, 150, 250),(15,15),15)
-        self.mask = pg.mask.from_surface(self.image)        
+        pg.draw.circle(self.image, (50, 150, 250), (15, 15), 15)
+        self.mask = pg.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        #SET THE INITIAL SPEED TO ZERO
+        # SET THE INITIAL SPEED TO ZERO
         self.change_x = 0
         self.change_y = 0
         self.health = 100
@@ -49,7 +49,9 @@ class Player(pg.sprite.Sprite):
         self.rect.x += self.change_x
 
         # Did this update cause us to hit a wall?
-        block_hit_list = pg.sprite.spritecollide(self, self.walls, False, pg.sprite.collide_mask)
+        block_hit_list = pg.sprite.spritecollide(
+            self, self.walls, False, pg.sprite.collide_mask
+        )
         for block in block_hit_list:
             # If we are moving right, set our right side to the left side of
             # the item we hit
@@ -61,9 +63,11 @@ class Player(pg.sprite.Sprite):
 
         # Move up/down.
         self.rect.y += self.change_y
-        
+
         # Check and see if we hit anything.
-        block_hit_list = pg.sprite.spritecollide(self, self.walls, False, pg.sprite.collide_mask)
+        block_hit_list = pg.sprite.spritecollide(
+            self, self.walls, False, pg.sprite.collide_mask
+        )
         for block in block_hit_list:
             # Reset our position based on the top/bottom of the object.
             if self.change_y > 0:
@@ -72,12 +76,12 @@ class Player(pg.sprite.Sprite):
                 self.rect.top = block.rect.bottom
 
 
-BLACK = (0,0,0)
-WHITE = (255,255,255)
-GREEN = (0,255,0)
-RED = (255,0,0)
-BLUE = (0,0,255)
-GOLD = (255,215,0)
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
+GOLD = (255, 215, 0)
 
 size = (500, 500)
 screen = pg.display.set_mode(size)
@@ -92,7 +96,7 @@ player = Player()
 player.walls = wall_list
 all_sprites.add(player)
 
-for i in range(random.randrange(100,200)):
+for i in range(random.randrange(100, 200)):
     x = random.randrange(size[0])
     y = random.randrange(size[1])
     whiteStar = Collectable(WHITE, x, y, "White Star", "Rect")
@@ -101,18 +105,21 @@ for i in range(random.randrange(100,200)):
 for i in range(50):
     x = random.randrange(size[0])
     y = random.randrange(size[1])
-    enemy = Collectable(RED, x, y, "Enemy","Ellipse")
+    enemy = Collectable(RED, x, y, "Enemy", "Ellipse")
     enemy_list.add(enemy)
     all_sprites.add(enemy)
 
-coin1 = Collectable(GOLD,240,200,"Coin","Ellipse")
-coin2 = Collectable(GOLD,100,340,"Coin","Ellipse")
+coin1 = Collectable(GOLD, 240, 200, "Coin", "Ellipse")
+coin2 = Collectable(GOLD, 100, 340, "Coin", "Ellipse")
 all_sprites.add(coin1, coin2)
 coins.add(coin1, coin2)
 
 # Make the walls.
-walls = [Wall(0,0,10,600,RED), Wall(50, 300, 400, 10,RED),
-         Wall(10, 200, 100, 10,RED)]
+walls = [
+    Wall(0, 0, 10, 600, RED),
+    Wall(50, 300, 400, 10, RED),
+    Wall(10, 200, 100, 10, RED),
+]
 wall_list.add(walls)
 all_sprites.add(walls)
 
@@ -121,8 +128,8 @@ def main():
     clock = pg.time.Clock()
     done = False
     score = 0
-    font_score = pg.font.SysFont('Calibri',20,True,False)
-    font_health = pg.font.SysFont('Calibri',20,True,False)
+    font_score = pg.font.SysFont("Calibri", 20, True, False)
+    font_health = pg.font.SysFont("Calibri", 20, True, False)
     while not done:
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -167,15 +174,16 @@ def main():
         screen.fill(BLACK)
         all_sprites.draw(screen)
 
-        health_label = font_health.render("Health: "+str(player.health),True,WHITE)
-        score_label = font_score.render("Score: " + str(score),True, WHITE)
-        screen.blit(score_label,[100,480])
-        screen.blit(health_label,[190,480])
+        health_label = font_health.render("Health: " + str(player.health), True, WHITE)
+        score_label = font_score.render("Score: " + str(score), True, WHITE)
+        screen.blit(score_label, [100, 480])
+        screen.blit(health_label, [190, 480])
 
         pg.display.flip()
         clock.tick(60)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
     pg.quit()
     sys.exit()

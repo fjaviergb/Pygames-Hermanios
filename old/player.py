@@ -1,13 +1,14 @@
 import pygame
 
-class Player():
+
+class Player:
     def __init__(self, x, y, width, height, color):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
         self.color = color
-        self.rect = (x,y,width,height)
+        self.rect = (x, y, width, height)
         self.vel = 3
 
     def draw(self, win):
@@ -29,26 +30,27 @@ class Player():
             self.y += self.vel
 
         self.rect = (self.x, self.y, self.width, self.height)
-        
-class hand():
+
+
+class hand:
     def __init__(self, ori):
         self.radio = 10
         self.handspeed = 1
         self.ori = ori
-        self.image = pygame.Surface((50,50))
-        self.image.set_colorkey((0,0,0))
+        self.image = pygame.Surface((50, 50))
+        self.image.set_colorkey((0, 0, 0))
         self.x = 0
         self.y = 0
         self.vel = 3
-        
-        if ori == 1:
-            pygame.draw.circle(self.image, ((255,0,0)), (10,10), self.radio)
-            self.rect = self.image.get_rect(topleft = (0,0))
-        else:
-           pygame.draw.circle(self.image, ((0,255,0)), (40,10), self.radio)
-           self.rect = self.image.get_rect(topleft = (0,0))
 
-    def update(self):           
+        if ori == 1:
+            pygame.draw.circle(self.image, ((255, 0, 0)), (10, 10), self.radio)
+            self.rect = self.image.get_rect(topleft=(0, 0))
+        else:
+            pygame.draw.circle(self.image, ((0, 255, 0)), (40, 10), self.radio)
+            self.rect = self.image.get_rect(topleft=(0, 0))
+
+    def update(self):
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_LEFT]:
@@ -64,5 +66,3 @@ class hand():
             self.y += self.vel
 
         self.rect.topleft = (self.x, self.y)
-        
-        
