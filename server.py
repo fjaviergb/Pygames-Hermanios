@@ -2,7 +2,9 @@ import socket
 from _thread import *
 import pickle
 
-server = "192.168.1.33"
+server_ip = input("Introduce tu ip:")
+
+server = server_ip
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
