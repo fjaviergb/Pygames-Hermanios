@@ -1,9 +1,6 @@
 import pygame as pg
 from network import Network
-from SuperPlayer import body
-from otherplayer import otherbody
 import environment
-
 
 width = 500
 height = 500
@@ -13,12 +10,12 @@ pg.display.set_caption("Client")
 def main():
     run = True
     gir = environment.gir_obstacle(80, 300)
-    rect = environment.rect_obstacle(75,50)
-    cir = environment.circle_obstacle(350,150)
-    rect2 = environment.rect_obstacle(1500,1550)
-    rect3 = environment.rect_obstacle(500,2500)
-    rect4 = environment.rect_obstacle(2500,500)
-    rect5 = environment.rect_obstacle(2500,2500)
+    rect = environment.rect_obstacle(75, 50)
+    cir = environment.circle_obstacle(350, 150)
+    rect2 = environment.rect_obstacle(1500, 1550)
+    rect3 = environment.rect_obstacle(500, 2500)
+    rect4 = environment.rect_obstacle(2500, 500)
+    rect5 = environment.rect_obstacle(2500, 2500)
     
     all_sprites = pg.sprite.Group()
     all_sprites.add(gir)
