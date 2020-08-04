@@ -29,7 +29,7 @@ class otherbody(pg.sprite.Sprite):
         self.y = y
         self.playerx = playerx
         self.playery = playery
-        self.image = pg.Surface((50, 50))
+        self.image = pg.Surface((25, 25))
         pg.draw.circle(self.image, (RED), (25, 25), self.radio)
         self.rect = self.image.get_rect(
             center=(self.x - playerx + 250, self.y - playery + 250)
@@ -101,6 +101,7 @@ class otherbody(pg.sprite.Sprite):
             self.image.set_colorkey(BLACK)
             self.image_orig = self.image
             self.mask = pg.mask.from_surface(self.image)
+            self.anglehit = body.anglehit
 
         def update(self, player):
             if player.blocking:

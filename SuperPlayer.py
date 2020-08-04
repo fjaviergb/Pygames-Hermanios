@@ -11,10 +11,10 @@ from otherplayer import otherbody
 class body(pg.sprite.Sprite):
     def __init__(self, xinit, yinit):
         super().__init__()
-        self.radio = 20
+        self.radio = 25
         self.x = xinit
         self.y = yinit
-        self.image = pg.Surface((50, 50))
+        self.image = pg.Surface((25, 25))
         pg.draw.circle(self.image, (RED), (25, 25), self.radio)
         self.rect = self.image.get_rect(center=(250, 250))
         self.mask = pg.mask.from_surface(self.image)
@@ -71,7 +71,9 @@ class body(pg.sprite.Sprite):
         )
         for block in block_hit_list_masked:
             self.live -= 1
-
+            xclash, yclash = pg.sprite.collide_mask(self, block)
+            # print(xclash, self.x, self.rect.width / 2)
+            print(xclash + self.x - self.rect.width / 2, yclash + self.y - self.rect.height / 2, block.anglehit)
     ###########################################################
     # FUNCION RECEPCION DAÑO
     ###########################################################
@@ -86,6 +88,9 @@ class body(pg.sprite.Sprite):
                 self.espada, block_hit_list, False, pg.sprite.collide_mask
             )
             for block in block_hit_list_masked:
+                xclash, yclash = pg.sprite.collide_mask(self.espada, block)
+                print(xclash + self.x - self.espada.rect.width / 2, yclash + self.y - self.espada.rect.height / 2,
+                      self.anglehit)
                 if self.slashleft:
                     self.clashleft = True
                     self.clash_count = self.chargecount
@@ -123,7 +128,6 @@ class body(pg.sprite.Sprite):
             else:
                 self.dashCD = True
                 return i - 2
-                break
         return i
 
     ###########################################################
@@ -155,7 +159,6 @@ class body(pg.sprite.Sprite):
                 if len(block_hit_list_masked) == 0:
                     pass
                 else:
-                    print(i)
                     break
             else:
                 pass
@@ -214,8 +217,7 @@ class body(pg.sprite.Sprite):
         block_hit_list_masked = pg.sprite.spritecollide(
             self, block_hit_list, False, pg.sprite.collide_mask
         )
-        if len(block_hit_list_masked) != 0:
-
+        if block_hit_list_masked:
             for i in range(-5, 5):
                 for j in range(-5, 5):
                     xorigprima = xorig + i
@@ -228,7 +230,7 @@ class body(pg.sprite.Sprite):
                     block_hit_list_masked = pg.sprite.spritecollide(
                         self, block_hit_list, False, pg.sprite.collide_mask
                     )
-                    if len(block_hit_list_masked) == 0:
+                    if not block_hit_list_masked:
                         if shortestPath > math.sqrt(i ** 2 + j ** 2):
                             shortestPath = math.sqrt(i ** 2 + j ** 2)
                             shortestX = i * 2

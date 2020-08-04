@@ -54,28 +54,25 @@ def main():
         win.fill((255, 255, 255))
 
         for i in pothers:
+            # Dibujamos los contrincantes
             if type(i) != list:
                 if (p.x, p.y) != (i[1], i[2]) and i[7] > 0:
+                    # Si no eres tu y tiene vida
                     po = otherbody(
-                        i[0],
-                        i[1],
-                        i[2],
-                        i[3],
-                        i[4],
-                        i[5],
-                        i[6],
-                        i[7],
-                        i[8],
-                        i[9],
-                        p.x,
-                        p.y,
+                        i[0],  # Tipo de objeto
+                        i[1],  # Coordenada x
+                        i[2],  # Coordenada y
+                        i[3],  # Angle body
+                        i[4],  # Anglehit sword
+                        i[5],  # Slashright
+                        i[6],  # Slashleft
+                        i[7],  # Live
+                        i[8],  # Chargecount
+                        i[9],  # Blocking
+                        p.x,   # Posicion cliente x
+                        p.y,   # Posicion cliente y
                     )
-                    if (
-                        i[1] > p.x - 550
-                        and i[1] < p.x + 550
-                        and i[2] > p.y - 550
-                        and i[2] < p.y + 550
-                    ):
+                    if p.x - 550 < i[1] < p.x + 550 and p.y - 550 < i[2] < p.y + 550:
 
                         p.other_sprites.add(po)
                         p.other_sprites.add(po.Rhand)
@@ -94,14 +91,14 @@ def main():
                         p.other_sprites = pg.sprite.Group()
 
             else:
+                #  Colision con el medio ambiente
                 for j in i:
                     if j[0] == 4:
                         if (
-                            j[3] > p.x - 550
-                            and j[3] < p.x + 550
-                            and j[4] > p.y - 550
-                            and j[4] < p.y + 550
+                            p.x - 550 < j[3] < p.x + 550
+                            and p.y - 550 < j[4] < p.y + 550
                         ):
+
                             envir = env.circle_obstacle(
                                 j[1], j[2], j[3], j[4], p.x, p.y
                             )
@@ -110,10 +107,8 @@ def main():
 
                     elif j[0] == 3:
                         if (
-                            j[3] > p.x - 550
-                            and j[3] < p.x + 550
-                            and j[4] > p.y - 550
-                            and j[4] < p.y + 550
+                            p.x - 550 < j[3] < p.x + 550
+                            and p.y - 550 < j[4] < p.y + 550
                         ):
                             envir = env.rect_obstacle(j[1], j[2], j[3], j[4], p.x, p.y)
                             p.env_sprites.add(envir)
@@ -121,10 +116,8 @@ def main():
 
                     elif j[0] == 2:
                         if (
-                            j[3] > p.x - 550
-                            and j[3] < p.x + 550
-                            and j[4] > p.y - 550
-                            and j[4] < p.y + 550
+                            p.x - 550 < j[3] < p.x + 550
+                            and p.y - 550 < j[4] < p.y + 550
                         ):
                             envir = env.gir_obstacle(j[1], j[2], j[3], j[4], p.x, p.y)
                             p.env_sprites.add(envir)
