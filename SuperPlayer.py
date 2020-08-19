@@ -11,10 +11,10 @@ from otherplayer import otherbody
 class body(pg.sprite.Sprite):
     def __init__(self, xinit, yinit):
         super().__init__()
-        self.radio = 25
+        self.radio = 20
         self.x = xinit
         self.y = yinit
-        self.image = pg.Surface((25, 25))
+        self.image = pg.Surface((50, 50))
         pg.draw.circle(self.image, (RED), (25, 25), self.radio)
         self.rect = self.image.get_rect(center=(250, 250))
         self.mask = pg.mask.from_surface(self.image)

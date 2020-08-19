@@ -29,7 +29,7 @@ class otherbody(pg.sprite.Sprite):
         self.y = y
         self.playerx = playerx
         self.playery = playery
-        self.image = pg.Surface((25, 25))
+        self.image = pg.Surface((50, 50))
         pg.draw.circle(self.image, (RED), (25, 25), self.radio)
         self.rect = self.image.get_rect(
             center=(self.x - playerx + 250, self.y - playery + 250)
