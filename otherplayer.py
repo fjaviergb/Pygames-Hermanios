@@ -101,6 +101,7 @@ class otherbody(pg.sprite.Sprite):
             self.image.set_colorkey(BLACK)
             self.image_orig = self.image
             self.mask = pg.mask.from_surface(self.image)
+            self.anglehit = body.anglehit
 
         def update(self, player):
             if player.blocking:
