@@ -313,7 +313,7 @@ class body(pg.sprite.Sprite):
                     self.isBlockY(1, 1, self.x, self.y)
 
             if self.dashCD:
-                if self.dash_timer - pg.time.get_ticks() > 5000:
+                if pg.time.get_ticks() - self.dash_timer > 5000:
                     self.dashcount = 0
                     self.dashCD = False
 
