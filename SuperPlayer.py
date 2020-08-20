@@ -114,7 +114,8 @@ class body(pg.sprite.Sprite):
     # FUNCION AVANCE DASH
     ###########################################################
     def isDash(self):
-        for i in np.arange(0, 8, 1):
+        """Avoids that the character might enter into objects."""
+        for i in range(8):
             ratio = (self.dashcount + i) / self.dis
             x = self.xorigdash + ratio * (self.xdash - self.xorigdash)
             y = self.yorigdash + ratio * (self.ydash - self.yorigdash)
@@ -123,11 +124,10 @@ class body(pg.sprite.Sprite):
             block_hit_list_masked = pg.sprite.spritecollide(
                 self, block_hit_list, False, pg.sprite.collide_mask
             )
-            if len(block_hit_list_masked) == 0:
-                pass
-            else:
+            if len(block_hit_list_masked) != 0:
                 self.dashCD = True
                 return i - 2
+
         return i
 
     ###########################################################
@@ -263,7 +263,7 @@ class body(pg.sprite.Sprite):
         ######################################################################
         if keys[pg.K_SPACE] and not self.dashing and not self.dashCD:
             self.dashing = True
-            self.xdash = xcursor + self.x - 250
+            self.xdash = xcursor + self.x - 250  # TODO make 250 variable middle of the screen
             self.ydash = ycursor + self.y - 250
             self.xorigdash = self.x
             self.yorigdash = self.y
@@ -278,7 +278,6 @@ class body(pg.sprite.Sprite):
                 self.x = self.xorigdash + self.ratio * (self.xdash - self.xorigdash)
                 self.y = self.yorigdash + self.ratio * (self.ydash - self.yorigdash)
                 if self.dashCD:
-                    self.dashCD = True
                     self.dashcount = 0
                     self.dashing = False
             else:
@@ -313,6 +312,7 @@ class body(pg.sprite.Sprite):
 
             if self.dashCD:
                 if self.dashCDcounter < 500:
+                    #  TODO create a CD function which inputs time
                     self.dashCDcounter += 1
                 else:
                     self.dashcount = 0
