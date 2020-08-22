@@ -60,6 +60,7 @@ class body(pg.sprite.Sprite):
         self.xorigdash = 0
         self.yorigdash = 0
         self.energy = 100
+        self.dash_timer = pg.time.get_ticks()
 
     ###########################################################
     # FUNCION RECEPCION DAÑO
@@ -281,6 +282,7 @@ class body(pg.sprite.Sprite):
                     self.dashcount = 0
                     self.dashing = False
             else:
+                self.dash_timer = pg.time.get_ticks()
                 self.dashCD = True
                 self.dashcount = 0
                 self.dashing = False
@@ -311,12 +313,8 @@ class body(pg.sprite.Sprite):
                     self.isBlockY(1, 1, self.x, self.y)
 
             if self.dashCD:
-                if self.dashCDcounter < 500:
-                    #  TODO create a CD function which inputs time
-                    self.dashCDcounter += 1
-                else:
+                if pg.time.get_ticks() - self.dash_timer > 5000:
                     self.dashcount = 0
-                    self.dashCDcounter = 0
                     self.dashCD = False
 
         if (
