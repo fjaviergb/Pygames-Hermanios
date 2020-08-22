@@ -114,7 +114,7 @@ class body(pg.sprite.Sprite):
     ###########################################################
     # FUNCION AVANCE DASH
     ###########################################################
-    def isDash(self):
+    def dis_tic(self):
         """Avoids that the character might enter into objects."""
         for i in range(8):
             ratio = (self.dashcount + i) / self.dis
@@ -252,8 +252,11 @@ class body(pg.sprite.Sprite):
             )
 
         if self.dashing:
+            # Avanza 8 / dis por tic y lo hace 10 veces
+            # y comprueba a cada 1 /dis comprueba si choca y de ser asi
+            # el objeto queda a una distancia de 2/dis del choque.
             if self.dashcount < 80 and self.dashcount < self.dis:
-                self.dashcount += self.isDash()
+                self.dashcount += self.dis_tic()
                 self.ratio = self.dashcount / self.dis
                 self.x = self.xorigdash + self.ratio * (self.xdash - self.xorigdash)
                 self.y = self.yorigdash + self.ratio * (self.ydash - self.yorigdash)
