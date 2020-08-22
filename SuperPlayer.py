@@ -157,19 +157,18 @@ class body(pg.sprite.Sprite):
                 block_hit_list_masked = pg.sprite.spritecollide(
                     self.espada, block_hit_list, False, pg.sprite.collide_mask
                 )
-                if len(block_hit_list_masked) == 0:
-                    pass
-                else:
+                if len(block_hit_list_masked) != 0:
                     break
-            else:
-                pass
 
     ###########################################################
     # FUNCION COLISION CUERPO
     ###########################################################
-    def isBlockX(self, mult, signo, xorig, yorig):
+    def body_collision(self, mult, signo, xorig, yorig, is_block_x: bool, is_block_y: bool):
         for i in np.arange(0, mult * self.vel, 0.5):
-            self.x = xorig + i * signo
+            if is_block_x:
+                self.x = xorig + i * signo
+            elif is_block_y:
+                self.y = yorig + i * signo
             self.rect = self.image.get_rect(
                 center=(self.x - xorig + 250, self.y - yorig + 250)
             )
@@ -179,31 +178,11 @@ class body(pg.sprite.Sprite):
             block_hit_list_masked = pg.sprite.spritecollide(
                 self, block_hit_list, False, pg.sprite.collide_mask
             )
-            if len(block_hit_list_masked) == 0:
-                pass
-            else:
-                self.x = xorig + (i - 1) * signo
-                break
-
-    ###########################################################
-    # FUNCION COLISION CUERPO
-    ###########################################################
-    def isBlockY(self, mult, signo, xorig, yorig):
-        for i in np.arange(0, mult * self.vel, 0.5):
-            self.y = yorig + i * signo
-            self.rect = self.image.get_rect(
-                center=(self.x - xorig + 250, self.y - yorig + 250)
-            )
-            self.mask = pg.mask.from_surface(self.image)
-
-            block_hit_list = pg.sprite.spritecollide(self, self.col_sprites, False)
-            block_hit_list_masked = pg.sprite.spritecollide(
-                self, block_hit_list, False, pg.sprite.collide_mask
-            )
-            if len(block_hit_list_masked) == 0:
-                pass
-            else:
-                self.y = yorig + (i - 1) * signo
+            if len(block_hit_list_masked) != 0:
+                if is_block_x:
+                    self.x = xorig + (i - 1) * signo
+                elif is_block_y:
+                    self.y = yorig + (i - 1) * signo
                 break
 
     ###########################################################
@@ -293,24 +272,24 @@ class body(pg.sprite.Sprite):
         else:
             if keys[pg.K_a]:
                 if keys[pg.K_LCTRL] and self.energy > 0:
-                    self.isBlockX(2, -1, self.x, self.y)
+                    self.body_collision(2, -1, self.x, self.y, True, False)
                 else:
-                    self.isBlockX(1, -1, self.x, self.y)
+                    self.body_collision(1, -1, self.x, self.y, True, False)
             if keys[pg.K_d]:
                 if keys[pg.K_LCTRL] and self.energy > 0:
-                    self.isBlockX(2, 1, self.x, self.y)
+                    self.body_collision(2, 1, self.x, self.y, True, False)
                 else:
-                    self.isBlockX(1, 1, self.x, self.y)
+                    self.body_collision(1, 1, self.x, self.y, True, False)
             if keys[pg.K_w]:
                 if keys[pg.K_LCTRL] and self.energy > 0:
-                    self.isBlockY(2, -1, self.x, self.y)
+                    self.body_collision(2, -1, self.x, self.y, False, True)
                 else:
-                    self.isBlockY(1, -1, self.x, self.y)
+                    self.body_collision(1, -1, self.x, self.y, False, True)
             if keys[pg.K_s]:
                 if keys[pg.K_LCTRL] and self.energy > 0:
-                    self.isBlockY(2, 1, self.x, self.y)
+                    self.body_collision(2, 1, self.x, self.y, False, True)
                 else:
-                    self.isBlockY(1, 1, self.x, self.y)
+                    self.body_collision(1, 1, self.x, self.y, False, True)
 
             if self.dashCD:
                 if pg.time.get_ticks() - self.dash_timer > 5000:
