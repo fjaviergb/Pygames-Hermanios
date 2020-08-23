@@ -529,24 +529,12 @@ class body(pg.sprite.Sprite):
 
             if (
                 button[2] != 0
-                and not self.swingleft
-                and not self.swingright
-                and not self.slashleft
-                and not self.slashright
-                and not self.backleft
-                and not self.backright
-            ):
+                and not is_swinging(self)):
                 self.hitorient = 1
                 self.swingright = True
             elif (
                 button[0] != 0
-                and not self.swingleft
-                and not self.swingright
-                and not self.slashleft
-                and not self.slashright
-                and not self.backleft
-                and not self.backright
-            ):
+                and not is_swinging(self)):
                 self.hitorient = 0
                 self.swingleft = True
 
@@ -613,24 +601,12 @@ class body(pg.sprite.Sprite):
 
             if (
                 button[2] != 0
-                and not self.swingleft
-                and not self.swingright
-                and not self.slashleft
-                and not self.slashright
-                and not self.backleft
-                and not self.backright
-            ):
+                and not is_swinging(self)):
                 self.hitorient = 1
                 self.swingright = True
             elif (
                 button[0] != 0
-                and not self.swingleft
-                and not self.swingright
-                and not self.slashleft
-                and not self.slashright
-                and not self.backleft
-                and not self.backright
-            ):
+                and not is_swinging(self)):
                 self.hitorient = 0
                 self.swingleft = True
 
