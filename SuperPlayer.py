@@ -2,12 +2,11 @@ import pygame as pg
 import math
 import numpy as np
 from otherplayer import otherbody
+from utils import is_swinging
 
 ###########################################################
 # CLASE
 ###########################################################
-
-
 class body(pg.sprite.Sprite):
     def __init__(self, xinit, yinit):
         super().__init__()
@@ -340,38 +339,20 @@ class body(pg.sprite.Sprite):
                 self.angle = 270 - angle_grad
                 if (
                     button[2] != 0
-                    and not self.swingleft
-                    and not self.swingright
-                    and not self.slashleft
-                    and not self.slashright
-                    and not self.backleft
-                    and not self.backright
-                ):
+                    and not is_swinging(self)):
                     self.hitorient = 1
                     self.swingright = True
                     self.anglehit = 270 - angle_grad - 90
                 elif (
                     button[0] != 0
-                    and not self.swingleft
-                    and not self.swingright
-                    and not self.slashleft
-                    and not self.slashright
-                    and not self.backleft
-                    and not self.backright
-                ):
+                    and not is_swinging(self)):
                     self.hitorient = 0
                     self.swingleft = True
                     self.anglehit = 270 - angle_grad + 90
                 elif (
                     button[2] == 0
                     and button[0] == 0
-                    and not self.swingleft
-                    and not self.swingright
-                    and not self.slashleft
-                    and not self.slashright
-                    and not self.backleft
-                    and not self.backright
-                ):
+                    and not is_swinging(self)):
                     self.anglehit = 270 - angle_grad
 
                 ###########################################################
@@ -453,38 +434,20 @@ class body(pg.sprite.Sprite):
                 self.angle = 90 - angle_grad
                 if (
                     button[2] != 0
-                    and not self.swingleft
-                    and not self.swingright
-                    and not self.slashleft
-                    and not self.slashright
-                    and not self.backleft
-                    and not self.backright
-                ):
+                    and not is_swinging(self)):
                     self.hitorient = 1
                     self.swingright = True
                     self.anglehit = 90 - angle_grad - 90
                 elif (
                     button[0] != 0
-                    and not self.swingleft
-                    and not self.swingright
-                    and not self.slashleft
-                    and not self.slashright
-                    and not self.backleft
-                    and not self.backright
-                ):
+                    and not is_swinging(self)):
                     self.hitorient = 0
                     self.swingleft = True
                     self.anglehit = 90 - angle_grad + 90
                 elif (
                     button[2] == 0
                     and button[0] == 0
-                    and not self.swingleft
-                    and not self.swingright
-                    and not self.slashleft
-                    and not self.slashright
-                    and not self.backleft
-                    and not self.backright
-                ):
+                    and not is_swinging(self)):
                     self.anglehit = 90 - angle_grad
 
                 ###########################################################
