@@ -133,7 +133,7 @@ class body(pg.sprite.Sprite):
     ###########################################################
     # FUNCION COLISION ESPADA
     ###########################################################
-    def isClash(self, angle_grad, signo, angle, counter):
+    def sword_collision(self, angle_grad, signo, angle, counter):
         #  Metodo para depurar la colision en movimiento.
         #  Como dos objetos en "movimiento" pueden superponerse sin llegar a colisionar
         #  hacemos un pequenno barrido de los angulos para ver si se encuentran.
@@ -342,18 +342,18 @@ class body(pg.sprite.Sprite):
                     and not is_swinging(self)):
                     self.hitorient = 1
                     self.swingright = True
-                    self.anglehit = 270 - angle_grad - 90
+                    self.anglehit = self.angle - 90
                 elif (
                     button[0] != 0
                     and not is_swinging(self)):
                     self.hitorient = 0
                     self.swingleft = True
-                    self.anglehit = 270 - angle_grad + 90
+                    self.anglehit = self.angle + 90
                 elif (
                     button[2] == 0
                     and button[0] == 0
                     and not is_swinging(self)):
-                    self.anglehit = 270 - angle_grad
+                    self.anglehit = self.angle
 
                 ###########################################################
                 # ESPADAZO DESDE LA DERECHA
@@ -361,31 +361,31 @@ class body(pg.sprite.Sprite):
                 if self.swingright:
                     if self.chargecount <= 30:
                         self.anglehit = (
-                            270 - angle_grad - self.chargecount * 3
+                            self.angle - self.chargecount * 3
                         )  # 3 grados tick
-                        self.chargecount += 1
+                        self.chargecount += 1 #Hardcoded; velocidad de carga espada
                     if button[2] == 0:
                         self.countlimit = self.chargecount
                         self.slashright = True
                         self.swingright = False
                     else:
-                        self.anglehit = 270 - angle_grad - self.chargecount * 3
+                        self.anglehit = self.angle - self.chargecount * 3
                 elif self.slashright and not self.swingright and not self.backright:
-                    if self.chargecount >= self.countlimit * -20 / 30:
-                        self.isClash(angle_grad, -1, 270, self.chargecount)
+                    if self.chargecount >= self.countlimit * -2 / 3: #Contador proporcional a la carga de chargecount
+                        self.sword_collision(angle_grad, -1, 270, self.chargecount)
                     else:
                         self.slashright = False
                         self.backright = True
                 elif self.backright:
                     if self.chargecount <= 1:
-                        self.anglehit = 270 - angle_grad - self.chargecount * 3
+                        self.anglehit = self.angle - self.chargecount * 3
                         self.chargecount += 1
                     else:
                         self.backright = False
                         self.chargecount = 1
                 elif self.clashright:
                     if self.chargecount <= self.clash_count + 20:
-                        self.anglehit = 270 - angle_grad - self.chargecount * 3
+                        self.anglehit = self.angle - self.chargecount * 3
                         self.chargecount += 1
                     else:
                         self.clash_count = 0
@@ -397,30 +397,30 @@ class body(pg.sprite.Sprite):
                 ###########################################################
                 if self.swingleft:
                     if self.chargecount <= 30:
-                        self.anglehit = 270 - angle_grad + self.chargecount * 3
+                        self.anglehit = self.angle + self.chargecount * 3
                         self.chargecount += 1
                     if button[0] == 0:
                         self.countlimit = self.chargecount
                         self.slashleft = True
                         self.swingleft = False
                     else:
-                        self.anglehit = 270 - angle_grad + self.chargecount * 3
+                        self.anglehit = self.angle + self.chargecount * 3
                 elif self.slashleft and not self.swingleft and not self.backleft:
                     if self.chargecount >= self.countlimit * -20 / 30:
-                        self.isClash(angle_grad, 1, 270, self.chargecount)
+                        self.sword_collision(angle_grad, 1, 270, self.chargecount)
                     else:
                         self.slashleft = False
                         self.backleft = True
                 elif self.backleft:
                     if self.chargecount <= 1:
-                        self.anglehit = 270 - angle_grad + self.chargecount * 3
+                        self.anglehit = self.angle + self.chargecount * 3
                         self.chargecount += 1
                     else:
                         self.backleft = False
                         self.chargecount = 1
                 elif self.clashleft:
                     if self.chargecount <= self.clash_count + 20:
-                        self.anglehit = 270 - angle_grad + self.chargecount * 3
+                        self.anglehit = self.angle + self.chargecount * 3
                         self.chargecount += 1
                     else:
                         self.clash_count = 0
@@ -437,48 +437,48 @@ class body(pg.sprite.Sprite):
                     and not is_swinging(self)):
                     self.hitorient = 1
                     self.swingright = True
-                    self.anglehit = 90 - angle_grad - 90
+                    self.anglehit = self.angle - 90
                 elif (
                     button[0] != 0
                     and not is_swinging(self)):
                     self.hitorient = 0
                     self.swingleft = True
-                    self.anglehit = 90 - angle_grad + 90
+                    self.anglehit = self.angle + 90
                 elif (
                     button[2] == 0
                     and button[0] == 0
                     and not is_swinging(self)):
-                    self.anglehit = 90 - angle_grad
+                    self.anglehit = self.angle
 
                 ###########################################################
                 # ESPADAZO DESDE LA DERECHA
                 ###########################################################
                 if self.swingright:
                     if self.chargecount <= 30:
-                        self.anglehit = 90 - angle_grad - self.chargecount * 3
+                        self.anglehit = self.angle - self.chargecount * 3
                         self.chargecount += 1
                     if button[2] == 0:
                         self.countlimit = self.chargecount
                         self.slashright = True
                         self.swingright = False
                     else:
-                        self.anglehit = 90 - angle_grad - self.chargecount * 3
+                        self.anglehit = self.angle - self.chargecount * 3
                 elif self.slashright and not self.swingright and not self.backright:
                     if self.chargecount >= self.countlimit * -20 / 30:
-                        self.isClash(angle_grad, -1, 90, self.chargecount)
+                        self.sword_collision(angle_grad, -1, 90, self.chargecount)
                     else:
                         self.slashright = False
                         self.backright = True
                 elif self.backright:
                     if self.chargecount <= 1:
-                        self.anglehit = 90 - angle_grad - self.chargecount * 3
+                        self.anglehit = self.angle - self.chargecount * 3
                         self.chargecount += 1
                     else:
                         self.backright = False
                         self.chargecount = 1
                 elif self.clashright:
                     if self.chargecount <= self.clash_count + 20:
-                        self.anglehit = 90 - angle_grad - self.chargecount * 3
+                        self.anglehit = self.angle - self.chargecount * 3
                         self.chargecount += 1
                     else:
                         self.clash_count = 0
@@ -490,30 +490,30 @@ class body(pg.sprite.Sprite):
                 ###########################################################
                 if self.swingleft:
                     if self.chargecount <= 30:
-                        self.anglehit = 90 - angle_grad + self.chargecount * 3
+                        self.anglehit = self.angle + self.chargecount * 3
                         self.chargecount += 1
                     if button[0] == 0:
                         self.countlimit = self.chargecount
                         self.slashleft = True
                         self.swingleft = False
                     else:
-                        self.anglehit = 90 - angle_grad + self.chargecount * 3
+                        self.anglehit = self.angle + self.chargecount * 3
                 elif self.slashleft and not self.swingleft and not self.backleft:
                     if self.chargecount >= self.countlimit * -20 / 30:
-                        self.isClash(angle_grad, 1, 90, self.chargecount)
+                        self.sword_collision(angle_grad, 1, 90, self.chargecount)
                     else:
                         self.slashleft = False
                         self.backleft = True
                 elif self.backleft:
                     if self.chargecount <= 1:
-                        self.anglehit = 90 - angle_grad + self.chargecount * 3
+                        self.anglehit = self.angle + self.chargecount * 3
                         self.chargecount += 1
                     else:
                         self.backleft = False
                         self.chargecount = 1
                 elif self.clashleft:
                     if self.chargecount <= self.clash_count + 20:
-                        self.anglehit = 90 - angle_grad + self.chargecount * 3
+                        self.anglehit = self.angle + self.chargecount * 3
                         self.chargecount += 1
                     else:
                         self.clash_count = 0
@@ -553,7 +553,7 @@ class body(pg.sprite.Sprite):
                     self.anglehit = 0 - self.chargecount * 3
             elif self.slashright and not self.swingright and not self.backright:
                 if self.chargecount >= self.countlimit * -20 / 30:
-                    self.isClash(angle_grad, -1, 0, self.chargecount)
+                    self.sword_collision(angle_grad, -1, 0, self.chargecount)
                 else:
                     self.slashright = False
                     self.backright = True
@@ -580,7 +580,7 @@ class body(pg.sprite.Sprite):
                     self.anglehit = 0 + self.chargecount * 3
             elif self.slashleft and not self.swingleft and not self.backleft:
                 if self.chargecount >= self.countlimit * -20 / 30:
-                    self.isClash(angle_grad, 1, 0, self.chargecount)
+                    self.sword_collision(angle_grad, 1, 0, self.chargecount)
                 else:
                     self.slashleft = False
                     self.backleft = True
@@ -625,7 +625,7 @@ class body(pg.sprite.Sprite):
                     self.anglehit = 180 - self.chargecount * 3
             elif self.slashright and not self.swingright and not self.backright:
                 if self.chargecount >= self.countlimit * -20 / 30:
-                    self.isClash(angle_grad, -1, 180, self.chargecount)
+                    self.sword_collision(angle_grad, -1, 180, self.chargecount)
                 else:
                     self.slashright = False
                     self.backright = True
@@ -652,7 +652,7 @@ class body(pg.sprite.Sprite):
                     self.anglehit = 180 + self.chargecount * 3
             elif self.slashleft and not self.swingleft and not self.backleft:
                 if self.chargecount >= self.countlimit * -20 / 30:
-                    self.isClash(angle_grad, 1, 180, self.chargecount)
+                    self.sword_collision(angle_grad, 1, 180, self.chargecount)
                 else:
                     self.slashleft = False
                     self.backleft = True
