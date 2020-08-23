@@ -568,6 +568,34 @@ class body(pg.sprite.Sprite):
             ###########################################################
             # ESPADAZO DESDE LA IZQUIERDA
             ###########################################################
+            def sword_movement(self, swing, angle_hit_orientation, button_click, slash, back, angle_grad ):
+                if getattr(self, swing):
+                    if self.chargecount <= 30:
+
+                        self.anglehit = 0 + self.chargecount * 3 * angle_hit_orientation
+                        self.chargecount += 1
+                    if button_click == 0:
+                        self.countlimit = self.chargecount
+                        setattr(self, slash, True)
+                        setattr(self, swing, False)
+                    else:
+                        self.anglehit = 0 + self.chargecount * 3 * angle_hit_orientation
+                elif getattr(self, slash) and not getattr(self, swing) and not getattr(self, back):
+                    if self.chargecount >= self.countlimit * -20 / 30:
+                        self.isClash(angle_grad, 1, 0, self.chargecount)
+                    else:
+                        setattr(self, slash, False)
+                        setattr(self, back, True)
+                elif getattr(self, back):
+                    if self.chargecount <= 1:
+                        self.anglehit = 0 + self.chargecount * 3 * angle_hit_orientation
+                        self.chargecount += 1
+                    else:
+                        setattr(self, back, False)
+                        self.chargecount = 1
+
+            sword_movement(self, "swingleft", 1, button[0], "slashleft", "backleft", angle_grad)
+
             if self.swingleft:
                 if self.chargecount <= 30:
                     self.anglehit = 0 + self.chargecount * 3
