@@ -2,7 +2,8 @@ import pygame as pg
 import math
 import numpy as np
 from otherplayer import otherbody
-from utils import is_swinging
+from utils import is_swinging, sword_movement
+
 
 ###########################################################
 # CLASE
@@ -358,74 +359,13 @@ class body(pg.sprite.Sprite):
                 ###########################################################
                 # ESPADAZO DESDE LA DERECHA
                 ###########################################################
-                if self.swingright:
-                    if self.chargecount <= 30:
-                        self.anglehit = (
-                            self.angle - self.chargecount * 3
-                        )  # 3 grados tick
-                        self.chargecount += 1 #Hardcoded; velocidad de carga espada
-                    if button[2] == 0:
-                        self.countlimit = self.chargecount
-                        self.slashright = True
-                        self.swingright = False
-                    else:
-                        self.anglehit = self.angle - self.chargecount * 3
-                elif self.slashright and not self.swingright and not self.backright:
-                    if self.chargecount >= self.countlimit * -2 / 3: #Contador proporcional a la carga de chargecount
-                        self.sword_collision(angle_grad, -1, 270, self.chargecount)
-                    else:
-                        self.slashright = False
-                        self.backright = True
-                elif self.backright:
-                    if self.chargecount <= 1:
-                        self.anglehit = self.angle - self.chargecount * 3
-                        self.chargecount += 1
-                    else:
-                        self.backright = False
-                        self.chargecount = 1
-                elif self.clashright:
-                    if self.chargecount <= self.clash_count + 20:
-                        self.anglehit = self.angle - self.chargecount * 3
-                        self.chargecount += 1
-                    else:
-                        self.clash_count = 0
-                        self.chargecount = 1
-                        self.clashright = False
+                sword_movement(self, "swingright", -1, button[2], "slashright", 270, "backright", angle_grad,
+                               "clashright")
 
                 ###########################################################
                 # ESPADAZO DESDE LA IZQUIERDA
                 ###########################################################
-                if self.swingleft:
-                    if self.chargecount <= 30:
-                        self.anglehit = self.angle + self.chargecount * 3
-                        self.chargecount += 1
-                    if button[0] == 0:
-                        self.countlimit = self.chargecount
-                        self.slashleft = True
-                        self.swingleft = False
-                    else:
-                        self.anglehit = self.angle + self.chargecount * 3
-                elif self.slashleft and not self.swingleft and not self.backleft:
-                    if self.chargecount >= self.countlimit * -20 / 30:
-                        self.sword_collision(angle_grad, 1, 270, self.chargecount)
-                    else:
-                        self.slashleft = False
-                        self.backleft = True
-                elif self.backleft:
-                    if self.chargecount <= 1:
-                        self.anglehit = self.angle + self.chargecount * 3
-                        self.chargecount += 1
-                    else:
-                        self.backleft = False
-                        self.chargecount = 1
-                elif self.clashleft:
-                    if self.chargecount <= self.clash_count + 20:
-                        self.anglehit = self.angle + self.chargecount * 3
-                        self.chargecount += 1
-                    else:
-                        self.clash_count = 0
-                        self.chargecount = 1
-                        self.clashleft = False
+                sword_movement(self, "swingleft", 1, button[0], "slashleft", 270, "backleft", angle_grad, "clashleft")
 
             ######################################################################
             # CUADRANTE IZQUIERDA
@@ -453,72 +393,13 @@ class body(pg.sprite.Sprite):
                 ###########################################################
                 # ESPADAZO DESDE LA DERECHA
                 ###########################################################
-                if self.swingright:
-                    if self.chargecount <= 30:
-                        self.anglehit = self.angle - self.chargecount * 3
-                        self.chargecount += 1
-                    if button[2] == 0:
-                        self.countlimit = self.chargecount
-                        self.slashright = True
-                        self.swingright = False
-                    else:
-                        self.anglehit = self.angle - self.chargecount * 3
-                elif self.slashright and not self.swingright and not self.backright:
-                    if self.chargecount >= self.countlimit * -20 / 30:
-                        self.sword_collision(angle_grad, -1, 90, self.chargecount)
-                    else:
-                        self.slashright = False
-                        self.backright = True
-                elif self.backright:
-                    if self.chargecount <= 1:
-                        self.anglehit = self.angle - self.chargecount * 3
-                        self.chargecount += 1
-                    else:
-                        self.backright = False
-                        self.chargecount = 1
-                elif self.clashright:
-                    if self.chargecount <= self.clash_count + 20:
-                        self.anglehit = self.angle - self.chargecount * 3
-                        self.chargecount += 1
-                    else:
-                        self.clash_count = 0
-                        self.chargecount = 1
-                        self.clashright = False
+                sword_movement(self, "swingright", -1, button[2], "slashright", 90, "backright", angle_grad,
+                               "clashright")
 
                 ###########################################################
                 # ESPADAZO DESDE LA IZQUIERDA
                 ###########################################################
-                if self.swingleft:
-                    if self.chargecount <= 30:
-                        self.anglehit = self.angle + self.chargecount * 3
-                        self.chargecount += 1
-                    if button[0] == 0:
-                        self.countlimit = self.chargecount
-                        self.slashleft = True
-                        self.swingleft = False
-                    else:
-                        self.anglehit = self.angle + self.chargecount * 3
-                elif self.slashleft and not self.swingleft and not self.backleft:
-                    if self.chargecount >= self.countlimit * -20 / 30:
-                        self.sword_collision(angle_grad, 1, 90, self.chargecount)
-                    else:
-                        self.slashleft = False
-                        self.backleft = True
-                elif self.backleft:
-                    if self.chargecount <= 1:
-                        self.anglehit = self.angle + self.chargecount * 3
-                        self.chargecount += 1
-                    else:
-                        self.backleft = False
-                        self.chargecount = 1
-                elif self.clashleft:
-                    if self.chargecount <= self.clash_count + 20:
-                        self.anglehit = self.angle + self.chargecount * 3
-                        self.chargecount += 1
-                    else:
-                        self.clash_count = 0
-                        self.chargecount = 1
-                        self.clashleft = False
+                sword_movement(self, "swingleft", 1, button[0], "slashleft", 90, "backleft", angle_grad, "clashleft")
 
         ######################################################################
         # HITO CON DIVISION INFINITO, CUADRANTE SUPERIOR
@@ -541,84 +422,13 @@ class body(pg.sprite.Sprite):
             ###########################################################
             # ESPADAZO DESDE LA DERECHA
             ###########################################################
-            if self.swingright:
-                if self.chargecount <= 30:
-                    self.anglehit = 0 - self.chargecount * 3
-                    self.chargecount += 1
-                if button[2] == 0:
-                    self.countlimit = self.chargecount
-                    self.slashright = True
-                    self.swingright = False
-                else:
-                    self.anglehit = 0 - self.chargecount * 3
-            elif self.slashright and not self.swingright and not self.backright:
-                if self.chargecount >= self.countlimit * -20 / 30:
-                    self.sword_collision(angle_grad, -1, 0, self.chargecount)
-                else:
-                    self.slashright = False
-                    self.backright = True
-            elif self.backright:
-                if self.chargecount <= 1:
-                    self.anglehit = 0 - self.chargecount * 3
-                    self.chargecount += 1
-                else:
-                    self.backright = False
-                    self.chargecount = 1
+            sword_movement(self, "swingright", -1, button[2], "slashright", 0, "backright", angle_grad, "clashright")
 
             ###########################################################
             # ESPADAZO DESDE LA IZQUIERDA
             ###########################################################
-            def sword_movement(self, swing, angle_hit_orientation, button_click, slash, back, angle_grad ):
-                if getattr(self, swing):
-                    if self.chargecount <= 30:
+            sword_movement(self, "swingleft", 1, button[0], "slashleft", 0, "backleft", angle_grad, "clashleft")
 
-                        self.anglehit = 0 + self.chargecount * 3 * angle_hit_orientation
-                        self.chargecount += 1
-                    if button_click == 0:
-                        self.countlimit = self.chargecount
-                        setattr(self, slash, True)
-                        setattr(self, swing, False)
-                    else:
-                        self.anglehit = 0 + self.chargecount * 3 * angle_hit_orientation
-                elif getattr(self, slash) and not getattr(self, swing) and not getattr(self, back):
-                    if self.chargecount >= self.countlimit * -20 / 30:
-                        self.isClash(angle_grad, 1, 0, self.chargecount)
-                    else:
-                        setattr(self, slash, False)
-                        setattr(self, back, True)
-                elif getattr(self, back):
-                    if self.chargecount <= 1:
-                        self.anglehit = 0 + self.chargecount * 3 * angle_hit_orientation
-                        self.chargecount += 1
-                    else:
-                        setattr(self, back, False)
-                        self.chargecount = 1
-
-            sword_movement(self, "swingleft", 1, button[0], "slashleft", "backleft", angle_grad)
-
-            if self.swingleft:
-                if self.chargecount <= 30:
-                    self.anglehit = 0 + self.chargecount * 3
-                    self.chargecount += 1
-                if button[0] == 0:
-                    self.countlimit = self.chargecount
-                    self.slashleft = True
-                    self.swingleft = False
-                else:
-                    self.anglehit = 0 + self.chargecount * 3
-            elif self.slashleft and not self.swingleft and not self.backleft:
-                if self.chargecount >= self.countlimit * -20 / 30:
-                    self.sword_collision(angle_grad, 1, 0, self.chargecount)
-                else:
-                    self.slashleft = False
-                    self.backleft = True
-            elif self.backleft:
-                if self.chargecount <= 1:
-                    self.anglehit = 0 + self.chargecount * 3
-                    self.chargecount += 1
-                else:
-                    self.backleft = False
-                    self.chargecount = 1
 
         ######################################################################
         # HITO CON DIVISION INFINITO, CUADRANTE INFERIOR
@@ -641,56 +451,12 @@ class body(pg.sprite.Sprite):
             ###########################################################
             # ESPADAZO DESDE LA DERECHA
             ###########################################################
-            if self.swingright:
-                if self.chargecount <= 30:
-                    self.anglehit = 180 - self.chargecount * 3
-                    self.chargecount += 1
-                if button[2] == 0:
-                    self.countlimit = self.chargecount
-                    self.slashright = True
-                    self.swingright = False
-                else:
-                    self.anglehit = 180 - self.chargecount * 3
-            elif self.slashright and not self.swingright and not self.backright:
-                if self.chargecount >= self.countlimit * -20 / 30:
-                    self.sword_collision(angle_grad, -1, 180, self.chargecount)
-                else:
-                    self.slashright = False
-                    self.backright = True
-            elif self.backright:
-                if self.chargecount <= 1:
-                    self.anglehit = 180 - self.chargecount * 3
-                    self.chargecount += 1
-                else:
-                    self.backright = False
-                    self.chargecount = 1
+            sword_movement(self, "swingright", -1, button[2], "slashright", 180, "backright", angle_grad, "clashright")
 
             ###########################################################
             # ESPADAZO DESDE LA IZQUIERDA
             ###########################################################
-            if self.swingleft:
-                if self.chargecount <= 30:
-                    self.anglehit = 180 + self.chargecount * 3
-                    self.chargecount += 1
-                if button[0] == 0:
-                    self.countlimit = self.chargecount
-                    self.slashleft = True
-                    self.swingleft = False
-                else:
-                    self.anglehit = 180 + self.chargecount * 3
-            elif self.slashleft and not self.swingleft and not self.backleft:
-                if self.chargecount >= self.countlimit * -20 / 30:
-                    self.sword_collision(angle_grad, 1, 180, self.chargecount)
-                else:
-                    self.slashleft = False
-                    self.backleft = True
-            elif self.backleft:
-                if self.chargecount <= 1:
-                    self.anglehit = 180 + self.chargecount * 3
-                    self.chargecount += 1
-                else:
-                    self.backleft = False
-                    self.chargecount = 1
+            sword_movement(self, "swingleft", 1, button[0], "slashleft", 180, "backleft", angle_grad, "clashleft")
 
         if keys[pg.K_LCTRL] and self.energy > 0:
             self.energy -= 2
