@@ -2,7 +2,7 @@ import pygame as pg
 import math
 import numpy as np
 from otherplayer import otherbody
-from utils import is_swinging, sword_movement
+from utils import is_swinging, sword_movement, sprite_collision
 
 
 ###########################################################
@@ -66,10 +66,8 @@ class body(pg.sprite.Sprite):
     # FUNCION RECEPCION DAÑO
     ###########################################################
     def ouch(self):
-        block_hit_list = pg.sprite.spritecollide(self, self.enem_sword, False)
-        block_hit_list_masked = pg.sprite.spritecollide(
-            self, block_hit_list, False, pg.sprite.collide_mask
-        )
+        block_hit_list_masked = sprite_collision(self, None, "enem_sword")
+
         for block in block_hit_list_masked:
             self.live -= 1
             xclash, yclash = pg.sprite.collide_mask(self, block)
@@ -82,12 +80,7 @@ class body(pg.sprite.Sprite):
         if (self.slashleft and not self.swingleft and not self.backleft) or (
             self.slashright and not self.swingright and not self.backright
         ):
-            block_hit_list = pg.sprite.spritecollide(
-                self.espada, self.col_sprites, False
-            )
-            block_hit_list_masked = pg.sprite.spritecollide(
-                self.espada, block_hit_list, False, pg.sprite.collide_mask
-            )
+            block_hit_list_masked = sprite_collision(self,"espada","col_sprites")
             for block in block_hit_list_masked:
                 xclash, yclash = pg.sprite.collide_mask(self.espada, block)
                 print(xclash + self.x - self.espada.rect.width / 2, yclash + self.y - self.espada.rect.height / 2,
@@ -121,10 +114,7 @@ class body(pg.sprite.Sprite):
             x = self.xorigdash + ratio * (self.xdash - self.xorigdash)
             y = self.yorigdash + ratio * (self.ydash - self.yorigdash)
             self.rect = self.image.get_rect(center=(x - self.x + 250, y - self.y + 250))
-            block_hit_list = pg.sprite.spritecollide(self, self.col_sprites, False)
-            block_hit_list_masked = pg.sprite.spritecollide(
-                self, block_hit_list, False, pg.sprite.collide_mask
-            )
+            block_hit_list_masked = sprite_collision(self, None, "col_sprites")
             if len(block_hit_list_masked) != 0:
                 self.dashCD = True
                 return i - 2
@@ -151,12 +141,7 @@ class body(pg.sprite.Sprite):
                 (self.slashleft and not self.swingleft and not self.backleft)
                 or (self.slashright and not self.swingright and not self.backright)
             ):
-                block_hit_list = pg.sprite.spritecollide(
-                    self.espada, self.col_sprites, False
-                )
-                block_hit_list_masked = pg.sprite.spritecollide(
-                    self.espada, block_hit_list, False, pg.sprite.collide_mask
-                )
+                block_hit_list_masked = sprite_collision(self, "espada", "col_sprites")
                 if len(block_hit_list_masked) != 0:
                     break
 
@@ -174,10 +159,7 @@ class body(pg.sprite.Sprite):
             )
             self.mask = pg.mask.from_surface(self.image)
 
-            block_hit_list = pg.sprite.spritecollide(self, self.col_sprites, False)
-            block_hit_list_masked = pg.sprite.spritecollide(
-                self, block_hit_list, False, pg.sprite.collide_mask
-            )
+            block_hit_list_masked = sprite_collision(self, None, "col_sprites")
             if len(block_hit_list_masked) != 0:
                 if is_block_x:
                     self.x = xorig + (i - 1) * signo
@@ -193,10 +175,7 @@ class body(pg.sprite.Sprite):
         shortestY = 0
         shortestPath = 5
 
-        block_hit_list = pg.sprite.spritecollide(self, self.col_sprites, False)
-        block_hit_list_masked = pg.sprite.spritecollide(
-            self, block_hit_list, False, pg.sprite.collide_mask
-        )
+        block_hit_list_masked = sprite_collision(self, None, "col_sprites")
         if block_hit_list_masked:
             for i in range(-5, 5):
                 for j in range(-5, 5):
@@ -204,12 +183,7 @@ class body(pg.sprite.Sprite):
                     yorigprima = yorig + j
                     self.rect = self.image.get_rect(center=(xorigprima, yorigprima))
                     self.mask = pg.mask.from_surface(self.image)
-                    block_hit_list = pg.sprite.spritecollide(
-                        self, self.col_sprites, False
-                    )
-                    block_hit_list_masked = pg.sprite.spritecollide(
-                        self, block_hit_list, False, pg.sprite.collide_mask
-                    )
+                    block_hit_list_masked = sprite_collision(self, None, "col_sprites")
                     if not block_hit_list_masked:
                         if shortestPath > math.sqrt(i ** 2 + j ** 2):
                             shortestPath = math.sqrt(i ** 2 + j ** 2)

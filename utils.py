@@ -1,3 +1,5 @@
+import pygame as pg
+
 def is_swinging(self):
     return self.swingleft or self.swingright or self.slashleft or self.slashright or self.backleft or self.backright
 
@@ -34,3 +36,16 @@ def sword_movement(self, swing, angle_hit_orientation, button_click, slash, quad
             self.clash_count = 0
             self.chargecount = 1
             setattr(self, clash, False)
+
+def sprite_collision(self, sprite, group):
+    if sprite:
+        block_hit_list = pg.sprite.spritecollide(getattr(self,sprite), getattr(self,group), False)
+        block_hit_list_masked = pg.sprite.spritecollide(
+            getattr(self,sprite), block_hit_list, False, pg.sprite.collide_mask
+        )
+    else:
+        block_hit_list = pg.sprite.spritecollide(self, getattr(self,group), False)
+        block_hit_list_masked = pg.sprite.spritecollide(
+            self, block_hit_list, False, pg.sprite.collide_mask
+        )
+    return block_hit_list_masked
