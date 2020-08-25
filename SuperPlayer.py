@@ -11,12 +11,41 @@ from utils import is_swinging, sword_movement, sprite_collision
 class body(pg.sprite.Sprite):
     def __init__(self, xinit, yinit):
         super().__init__()
+
+        #####################################
+        # VARIABLES DE CARACTERIZACION
+        #####################################
+        self.half_screen_x = 250 # Posicion media del eje X
+        self.half_screen_y = 250 # Posicion media del eje Y
+        self.energy = 100  # Cantidad de energía
+        self.live = 5  # Cantidad de vida
+        self.dis_secure = 2  # Dis en dis_tic de seguridad para no entrar
+        self.dismax_tic = 8  # Dis maxima por tick en el dasheo
+        self.apt_sword = 3  # Angle per tick, de la espada. Empleado everywhere
+        self.dismax = 80  # Dis máxima que se realiza en el dasheo
+        self.energymax = 100  # Energía completa
+        self.ept_run = 2  # Energy per tic consumido al correr
+        self.ept_recover = 1  # Energy per tic recuperado
+        self.apt_sword_swinglimit = 30 # Este parámetro, junto a apt_sword,
+        # determina el angulo que alcanza al cargar. En sword_collision().
+        # Angulo que gira = 30 * 3 = 90
+        self.apt_sword_slashlimit = -20 # Este parámtro, junto a apt_sword.
+        # determina el ángulo que alcanza en el sentido contrario del swing.
+        # En sword_collision(). Angulo que gira = -20 * 3 = -60
+        self.apt_sword_clashlimit = 20 # Este parámtro, junto a apt_sword.
+        # determina el ángulo que alcanza en el sentido del swing, al colisionar..
+        # En sword_collision().
+        self.dash_cd = 5000 # Cooldown, en milisegundos, para el dash.
+
+        #####################################
+        # VARIABLES DE BODY
+        #####################################
         self.radio = 20
         self.x = xinit
         self.y = yinit
         self.image = pg.Surface((50, 50))
         pg.draw.circle(self.image, (RED), (25, 25), self.radio)
-        self.rect = self.image.get_rect(center=(250, 250))
+        self.rect = self.image.get_rect(center=(self.half_screen_x, self.half_screen_y))
         self.mask = pg.mask.from_surface(self.image)
         self.vel = 2
         self.image.set_colorkey(BLACK)
@@ -41,7 +70,6 @@ class body(pg.sprite.Sprite):
         self.other_sprites = pg.sprite.Group()
         self.col_sprites = pg.sprite.Group()
         self.enem_sword = pg.sprite.Group()
-        self.live = 5
         self.rightH = self.Rhand(xinit, yinit)
         self.leftH = self.Lhand(xinit, yinit)
         self.espada = self.sword(xinit, yinit)
@@ -59,8 +87,8 @@ class body(pg.sprite.Sprite):
         self.dashCDcounter = 0
         self.xorigdash = 0
         self.yorigdash = 0
-        self.energy = 100
         self.dash_timer = pg.time.get_ticks()
+
 
     ###########################################################
     # FUNCION RECEPCION DAÑO
@@ -73,14 +101,15 @@ class body(pg.sprite.Sprite):
             xclash, yclash = pg.sprite.collide_mask(self, block)
             # print(xclash, self.x, self.rect.width / 2)
             print(xclash + self.x - self.rect.width / 2, yclash + self.y - self.rect.height / 2, block.anglehit)
+
     ###########################################################
     # FUNCION RECEPCION DAÑO
     ###########################################################
     def toma(self):
         if (self.slashleft and not self.swingleft and not self.backleft) or (
-            self.slashright and not self.swingright and not self.backright
+                self.slashright and not self.swingright and not self.backright
         ):
-            block_hit_list_masked = sprite_collision(self,"espada","col_sprites")
+            block_hit_list_masked = sprite_collision(self, "espada", "col_sprites")
             for block in block_hit_list_masked:
                 xclash, yclash = pg.sprite.collide_mask(self.espada, block)
                 print(xclash + self.x - self.espada.rect.width / 2, yclash + self.y - self.espada.rect.height / 2,
@@ -109,15 +138,15 @@ class body(pg.sprite.Sprite):
     ###########################################################
     def dis_tic(self):
         """Avoids that the character might enter into objects."""
-        for i in range(8):
+        for i in range(self.dismax_tic):
             ratio = (self.dashcount + i) / self.dis
             x = self.xorigdash + ratio * (self.xdash - self.xorigdash)
             y = self.yorigdash + ratio * (self.ydash - self.yorigdash)
-            self.rect = self.image.get_rect(center=(x - self.x + 250, y - self.y + 250))
+            self.rect = self.image.get_rect(center=(x - self.x + self.half_screen_x, y - self.y + self.half_screen_y))
             block_hit_list_masked = sprite_collision(self, None, "col_sprites")
             if len(block_hit_list_masked) != 0:
                 self.dashCD = True
-                return i - 2
+                return i - self.dis_secure
 
         return i
 
@@ -131,15 +160,15 @@ class body(pg.sprite.Sprite):
         for i in np.arange(1, 5, 0.5):
             #  TODO si el objeto es pequenno puede fallar.
             self.chargecount = counter - i
-            self.anglehit = angle - angle_grad + signo * (self.chargecount) * 3
+            self.anglehit = angle - angle_grad + signo * (self.chargecount) * self.apt_sword
             self.espada.image = pg.transform.rotate(
                 self.espada.image_orig, self.anglehit
             )
             self.espada.rect = self.espada.image.get_rect(center=self.rect.center)
             self.espada.mask = pg.mask.from_surface(self.espada.image)
             if self.espada.image != self.espada.image_orig and (
-                (self.slashleft and not self.swingleft and not self.backleft)
-                or (self.slashright and not self.swingright and not self.backright)
+                    (self.slashleft and not self.swingleft and not self.backleft)
+                    or (self.slashright and not self.swingright and not self.backright)
             ):
                 block_hit_list_masked = sprite_collision(self, "espada", "col_sprites")
                 if len(block_hit_list_masked) != 0:
@@ -155,7 +184,7 @@ class body(pg.sprite.Sprite):
             elif is_block_y:
                 self.y = yorig + i * signo
             self.rect = self.image.get_rect(
-                center=(self.x - xorig + 250, self.y - yorig + 250)
+                center=(self.x - xorig + self.half_screen_x, self.y - yorig + self.half_screen_y)
             )
             self.mask = pg.mask.from_surface(self.image)
 
@@ -217,8 +246,8 @@ class body(pg.sprite.Sprite):
         ######################################################################
         if keys[pg.K_SPACE] and not self.dashing and not self.dashCD:
             self.dashing = True
-            self.xdash = xcursor + self.x - 250  # TODO make 250 variable middle of the screen
-            self.ydash = ycursor + self.y - 250
+            self.xdash = xcursor + self.x - self.half_screen_x
+            self.ydash = ycursor + self.y - self.half_screen_y
             self.xorigdash = self.x
             self.yorigdash = self.y
             self.dis = math.sqrt(
@@ -229,7 +258,7 @@ class body(pg.sprite.Sprite):
             # Avanza 8 / dis por tic y lo hace 10 veces
             # y comprueba a cada 1 /dis comprueba si choca y de ser asi
             # el objeto queda a una distancia de 2/dis del choque.
-            if self.dashcount < 80 and self.dashcount < self.dis:
+            if self.dashcount < self.dismax and self.dashcount < self.dis:
                 self.dashcount += self.dis_tic()
                 self.ratio = self.dashcount / self.dis
                 self.x = self.xorigdash + self.ratio * (self.xdash - self.xorigdash)
@@ -269,16 +298,16 @@ class body(pg.sprite.Sprite):
                     self.body_collision(1, 1, self.x, self.y, False, True)
 
             if self.dashCD:
-                if pg.time.get_ticks() - self.dash_timer > 5000:
+                if pg.time.get_ticks() - self.dash_timer > self.dash_cd:
                     self.dashcount = 0
                     self.dashCD = False
 
         if (
-            keys[pg.K_LSHIFT]
-            and not self.slashleft
-            and not self.backleft
-            and not self.slashright
-            and not self.backright
+                keys[pg.K_LSHIFT]
+                and not self.slashleft
+                and not self.backleft
+                and not self.slashright
+                and not self.backright
         ):
             self.anglehit = 0
             self.blocking = True
@@ -313,21 +342,21 @@ class body(pg.sprite.Sprite):
             if cos > 0:
                 self.angle = 270 - angle_grad
                 if (
-                    button[2] != 0
-                    and not is_swinging(self)):
+                        button[2] != 0
+                        and not is_swinging(self)):
                     self.hitorient = 1
                     self.swingright = True
                     self.anglehit = self.angle - 90
                 elif (
-                    button[0] != 0
-                    and not is_swinging(self)):
+                        button[0] != 0
+                        and not is_swinging(self)):
                     self.hitorient = 0
                     self.swingleft = True
                     self.anglehit = self.angle + 90
                 elif (
-                    button[2] == 0
-                    and button[0] == 0
-                    and not is_swinging(self)):
+                        button[2] == 0
+                        and button[0] == 0
+                        and not is_swinging(self)):
                     self.anglehit = self.angle
 
                 ###########################################################
@@ -347,21 +376,21 @@ class body(pg.sprite.Sprite):
             elif cos < 0:
                 self.angle = 90 - angle_grad
                 if (
-                    button[2] != 0
-                    and not is_swinging(self)):
+                        button[2] != 0
+                        and not is_swinging(self)):
                     self.hitorient = 1
                     self.swingright = True
                     self.anglehit = self.angle - 90
                 elif (
-                    button[0] != 0
-                    and not is_swinging(self)):
+                        button[0] != 0
+                        and not is_swinging(self)):
                     self.hitorient = 0
                     self.swingleft = True
                     self.anglehit = self.angle + 90
                 elif (
-                    button[2] == 0
-                    and button[0] == 0
-                    and not is_swinging(self)):
+                        button[2] == 0
+                        and button[0] == 0
+                        and not is_swinging(self)):
                     self.anglehit = self.angle
 
                 ###########################################################
@@ -383,13 +412,13 @@ class body(pg.sprite.Sprite):
             angle_grad = 0
 
             if (
-                button[2] != 0
-                and not is_swinging(self)):
+                    button[2] != 0
+                    and not is_swinging(self)):
                 self.hitorient = 1
                 self.swingright = True
             elif (
-                button[0] != 0
-                and not is_swinging(self)):
+                    button[0] != 0
+                    and not is_swinging(self)):
                 self.hitorient = 0
                 self.swingleft = True
 
@@ -412,13 +441,13 @@ class body(pg.sprite.Sprite):
             angle_grad = 0
 
             if (
-                button[2] != 0
-                and not is_swinging(self)):
+                    button[2] != 0
+                    and not is_swinging(self)):
                 self.hitorient = 1
                 self.swingright = True
             elif (
-                button[0] != 0
-                and not is_swinging(self)):
+                    button[0] != 0
+                    and not is_swinging(self)):
                 self.hitorient = 0
                 self.swingleft = True
 
@@ -433,13 +462,13 @@ class body(pg.sprite.Sprite):
             sword_movement(self, "swingleft", 1, button[0], "slashleft", 180, "backleft", angle_grad, "clashleft")
 
         if keys[pg.K_LCTRL] and self.energy > 0:
-            self.energy -= 2
-        if self.energy < 100:
-            self.energy += 1
+            self.energy -= self.ept_run
+        if self.energy < self.energymax:
+            self.energy += self.ept_recover
 
         self.image = pg.transform.rotate(self.image_orig, self.angle)
         self.image.set_colorkey(BLACK)
-        self.rect = self.image.get_rect(center=(250, 250))
+        self.rect = self.image.get_rect(center=(self.half_screen_x, self.half_screen_y))
         self.mask = pg.mask.from_surface(self.image)
 
     class Rhand(pg.sprite.Sprite):
