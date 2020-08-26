@@ -26,7 +26,9 @@ def threaded_client(conn, player):
     reply = ""
     while True:
         try:
-            data = pickle.loads(conn.recv(2048))
+            databit = conn.recv(2048)
+            data = eval(databit.decode("utf-8"))
+
             try:
                 players[player] = data
             except IndexError:
@@ -38,7 +40,7 @@ def threaded_client(conn, player):
                 else:
                     reply = players
 
-            conn.sendall(pickle.dumps(reply))
+            conn.send(str.encode(str(reply)))
 
         except:
             break
