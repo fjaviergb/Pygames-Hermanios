@@ -4,10 +4,9 @@ from SuperPlayer import body
 from otherplayer import otherbody
 import otherenvironment as env
 from random import randrange
+from variables import *
 
-width = 500
-height = 500
-win = pg.display.set_mode((width, height))
+win = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption("Client")
 
 
