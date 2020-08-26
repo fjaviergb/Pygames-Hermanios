@@ -1,10 +1,9 @@
 import pygame as pg
 from network import Network
 import environment
+from variables import *
 
-width = 500
-height = 500
-win = pg.display.set_mode((width, height))
+win = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption("Client")
 
 
