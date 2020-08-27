@@ -7,7 +7,7 @@ HALF_SCREEN_X = WIDTH / 2  # Posicion media del eje X
 HALF_SCREEN_Y = HEIGHT / 2 # Posicion media del eje Y
 LIVEINIT = 10  # Cantidad de vida
 DIS_SECURE = 2  # Dis en dis_tic de seguridad para no entrar
-DISMAX_TIC = 8  # Dis maxima por tick en el dasheo
+DISMAX_TIC = 40  # Dis maxima por tick en el dasheo
 APT_SWORD = 3  # Angle per tick, de la espada. Empleado everywhere
 DISMAX = 80  # Dis máxima que se realiza en el dasheo
 ENERGYMAX = 100  # Energía completa
@@ -23,7 +23,7 @@ APT_SWORD_CLASHLIMIT = 20  # Este parámtro, junto a apt_sword.
 # determina el ángulo que alcanza en el sentido del swing, al colisionar..
 # En sword_collision().
 DASH_CD = 5000  # Cooldown, en milisegundos, para el dash.
-VELOCITY = 2
+VELOCITY = 10
 
 BODY_RADIO = 20
 BODY_IMG_WIDTH = 50
