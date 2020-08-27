@@ -2,7 +2,7 @@ import pygame as pg
 from variables import *
 
 def is_swinging(self):
-    return self.swingleft or self.swingright or self.slashleft or self.slashright or self.backleft or self.backright
+    return self.swingleft or self.swingright or self.slashleft or self.slashright or self.backleft or self.backright or self.clashright or self.clashleft
 
 def sword_movement(self, swing, angle_hit_orientation, button_click, slash, quadrant_angle, back, angle_grad, clash):
     if getattr(self, swing):

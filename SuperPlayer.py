@@ -15,8 +15,9 @@ class body(pg.sprite.Sprite):
         self.radio = vars.BODY_RADIO
         self.x = xinit
         self.y = yinit
+        self.body_image = pg.image.load("HELMET.png")
         self.image = pg.Surface((vars.BODY_IMG_WIDTH, vars.BODY_IMG_HEIGHT))
-        pg.draw.circle(self.image, (RED), (int(vars.BODY_IMG_WIDTH / 2), int(vars.BODY_IMG_HEIGHT / 2)), self.radio)
+        self.image.blit(self.body_image, (0,0))
         self.rect = self.image.get_rect(center=(vars.HALF_SCREEN_X, vars.HALF_SCREEN_Y))
         self.mask = pg.mask.from_surface(self.image)
         self.image.set_colorkey(BLACK)
@@ -448,7 +449,7 @@ class body(pg.sprite.Sprite):
             super().__init__()
             self.image = pg.Surface((vars.HAND_IMG_WIDTH, vars.HAND_IMG_HEIGHT))
             self.image.set_colorkey(BLACK)
-            pg.draw.circle(self.image, (GREEN), (vars.BODY_IMG_WIDTH - vars.HAND_RADIO, vars.HAND_RADIO), vars.HAND_RADIO)
+            pg.draw.circle(self.image, (GOLD), (vars.BODY_IMG_WIDTH - vars.HAND_RADIO, vars.HAND_RADIO), vars.HAND_RADIO)
             self.rect = self.image.get_rect(center=(xinit, yinit))
             self.image_orig = self.image
             self.mask = pg.mask.from_surface(self.image)
@@ -464,7 +465,7 @@ class body(pg.sprite.Sprite):
             super().__init__()
             self.image = pg.Surface((vars.HAND_IMG_WIDTH, vars.HAND_IMG_HEIGHT))
             self.image.set_colorkey(BLACK)
-            pg.draw.circle(self.image, (BLUE), (vars.HAND_RADIO, vars.HAND_RADIO), vars.HAND_RADIO)
+            pg.draw.circle(self.image, (GOLD), (vars.HAND_RADIO, vars.HAND_RADIO), vars.HAND_RADIO)
             self.rect = self.image.get_rect(center=(xinit, yinit))
             self.image_orig = self.image
             self.mask = pg.mask.from_surface(self.image)
@@ -478,8 +479,10 @@ class body(pg.sprite.Sprite):
     class sword(pg.sprite.Sprite):
         def __init__(self, xinit, yinit):
             super().__init__()
+            self.sword_image = pg.image.load("SWORD.png")
+            self.sword_image_gir = pg.image.load("SWORD_GIR.png")
             self.image = pg.Surface((vars.SWORD_IMG_WIDTH, vars.SWORD_IMG_HEIGHT))
-            pg.draw.rect(self.image, RED, (vars.BODY_IMG_WIDTH - vars.HAND_RADIO - int(vars.SWORD_WIDTH / 2), int(vars.SWORD_IMG_HEIGHT / 2) - (vars.SWORD_HEIGHT + int(vars.BODY_IMG_HEIGHT / 2) - vars.HAND_RADIO), vars.SWORD_WIDTH, vars.SWORD_HEIGHT))
+            self.image.blit(self.sword_image, (vars.BODY_IMG_WIDTH - vars.HAND_RADIO - int(vars.SWORD_WIDTH / 2), int(vars.SWORD_IMG_HEIGHT / 2) - (vars.SWORD_HEIGHT + int(vars.BODY_IMG_HEIGHT / 2) - vars.HAND_RADIO)))
             self.rect = self.image.get_rect(center=(xinit, yinit))
             self.image.set_colorkey(BLACK)
             self.image_orig = self.image
@@ -488,7 +491,7 @@ class body(pg.sprite.Sprite):
         def update(self, player):
             if player.blocking:
                 self.image2 = pg.Surface((120, 50))  # TODO: still hardcoded
-                pg.draw.rect(self.image2, RED, (30, 0, 50, 5))
+                self.image2.blit(self.sword_image_gir, (30,0))
                 self.image2_orig = self.image2
                 self.image = pg.transform.rotate(self.image2_orig, player.angle)
                 self.image.set_colorkey(BLACK)
