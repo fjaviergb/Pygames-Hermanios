@@ -6,13 +6,15 @@ import otherenvironment as env
 from random import randrange
 from variables import *
 
+coliseo = pg.image.load("COLISEO.png")
+
 win = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption("Client")
 
 
 def main():
     run = True
-    p = body(randrange(500), randrange(500))
+    p = body(randrange(151,829), randrange(151,829))
     all_sprites = pg.sprite.Group()
 
     all_sprites.add(p)
@@ -50,7 +52,7 @@ def main():
             )
         )
 
-        win.fill((255, 255, 255))
+        win.blit(coliseo,(-p.x + 250,-p.y + 250))
 
         for i in pothers:
             # Dibujamos los contrincantes
@@ -92,33 +94,8 @@ def main():
             else:
                 #  Colision con el medio ambiente
                 for j in i:
-                    if j[0] == 4:
-                        if (
-                            p.x - 550 < j[3] < p.x + 550
-                            and p.y - 550 < j[4] < p.y + 550
-                        ):
-
-                            envir = env.circle_obstacle(
-                                j[1], j[2], j[3], j[4], p.x, p.y
-                            )
-                            p.env_sprites.add(envir)
-                            p.col_sprites.add(envir)
-
-                    elif j[0] == 3:
-                        if (
-                            p.x - 550 < j[3] < p.x + 550
-                            and p.y - 550 < j[4] < p.y + 550
-                        ):
+                    if j[0] == 3:
                             envir = env.rect_obstacle(j[1], j[2], j[3], j[4], p.x, p.y)
-                            p.env_sprites.add(envir)
-                            p.col_sprites.add(envir)
-
-                    elif j[0] == 2:
-                        if (
-                            p.x - 550 < j[3] < p.x + 550
-                            and p.y - 550 < j[4] < p.y + 550
-                        ):
-                            envir = env.gir_obstacle(j[1], j[2], j[3], j[4], p.x, p.y)
                             p.env_sprites.add(envir)
                             p.col_sprites.add(envir)
 
