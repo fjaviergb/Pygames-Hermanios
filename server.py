@@ -2,7 +2,7 @@ import socket
 from _thread import *
 import pickle
 
-server_ip = "192.168.43.78"
+server_ip = ""
 
 server = server_ip
 port = 5555
@@ -39,7 +39,7 @@ def threaded_client(conn, player):
                     reply = players
                 else:
                     reply = players
-
+                    print(reply)
             conn.send(str.encode(str(reply)))
 
         except:
