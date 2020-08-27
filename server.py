@@ -2,7 +2,7 @@ import socket
 from _thread import *
 import pickle
 
-server_ip = "192.168.43.50"
+server_ip = ""
 
 server = server_ip
 port = 5555
@@ -26,7 +26,9 @@ def threaded_client(conn, player):
     reply = ""
     while True:
         try:
-            data = pickle.loads(conn.recv(2048))
+            databit = conn.recv(2048)
+            data = eval(databit.decode("utf-8"))
+
             try:
                 players[player] = data
             except IndexError:
@@ -37,8 +39,8 @@ def threaded_client(conn, player):
                     reply = players
                 else:
                     reply = players
-
-            conn.sendall(pickle.dumps(reply))
+                    print(reply)
+            conn.send(str.encode(str(reply)))
 
         except:
             break
