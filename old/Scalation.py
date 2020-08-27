@@ -3,6 +3,16 @@ from pygame import gfxdraw
 
 pg.init()
 
+class surf1000x1000(pg.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pg.image.load("crowdcir.png")
+        self.image = pg.transform.scale(self.image, (1000, 1000))
+        pg.gfxdraw.aacircle(self.image, 500, 500, 450, BLACK)
+        pg.gfxdraw.filled_circle(self.image, 500, 500, 450, BLACK)
+        self.image.set_colorkey(BLACK)
+        pg.image.save(self.image,"crowdcirfixed.png")
+
 
 class superficie(pg.sprite.Sprite):
     def __init__(self, x, y, width, height, color, colorkey, centerx, centery):
@@ -36,6 +46,8 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 GOLD = (255, 215, 0)
 
+#surf1000x1000()
+
 screen_size = (500, 500)
 bg = pg.display.set_mode(screen_size)
 pg.display.set_caption("Scalation")
@@ -60,6 +72,37 @@ pg.gfxdraw.filled_circle(circulo4, 25, 25, 20, RED)
 pg.gfxdraw.aacircle(circulo4, 25, 25, 21, BLACK)
 pg.gfxdraw.aacircle(circulo4, 25, 25, 22, BLACK)
 circulo4.set_colorkey(WHITE)
+
+'''
+espectadores = pg.Surface((1000,1000))
+espectadores.fill(WHITE)
+espectadores = pg.image.load("crowdcir.png")
+espectadores = pg.transform.scale(espectadores, (1000, 1000))
+pg.gfxdraw.aacircle(espectadores, 500, 500, 450, (62,39,35))
+pg.gfxdraw.filled_circle(espectadores, 500, 500, 450, (62,39,35))
+pg.gfxdraw.filled_circle(espectadores, 500, 500, 350, BLACK)
+espectadores.set_colorkey(WHITE)
+pg.image.save(espectadores, "ESPECTADORES.png")
+
+
+tierra = pg.image.load("sandsurface.png")
+tierra = pg.transform.scale(tierra, (500, 500))
+tierra.set_colorkey(BLACK)
+pg.image.save(tierra, "TIERRA.png")
+
+paredsurf = pg.Surface((1000,1000))
+paredsurf.fill(WHITE)
+pg.gfxdraw.aacircle(paredsurf, 500, 500, 450, (62,39,35))
+pg.gfxdraw.aacircle(paredsurf, 500, 500, 350, (62,39,35))
+pg.gfxdraw.filled_circle(paredsurf, 500, 500, 450, (62,39,35))
+pg.gfxdraw.filled_circle(paredsurf, 500, 500, 350, BLACK)
+paredsurf.set_colorkey(WHITE)
+pg.image.save(paredsurf, "MURO.png")'''
+
+coliseo = pg.image.load("ColiseoFinal.png")
+coliseo = pg.transform.scale(coliseo, (1000, 1000))
+coliseo.set_colorkey(BLACK)
+pg.image.save(coliseo, "COLISEO.png")
 
 espada = pg.image.load("espada.png")
 espada2 = pg.transform.scale(espada, (50, 50))
@@ -89,6 +132,7 @@ while run:
 
     all_sprites.update()
     all_sprites.draw(bg)
+    bg.blit(coliseo,(0,0))
     pg.display.update()
 
 pg.quit()
