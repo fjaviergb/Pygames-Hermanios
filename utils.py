@@ -8,7 +8,7 @@ def sword_movement(self, swing, angle_hit_orientation, button_click, slash, quad
     if getattr(self, swing):
         if self.chargecount <= APT_SWORD_SWINGLIMIT:
             self.anglehit = self.angle + self.chargecount * angle_hit_orientation * APT_SWORD
-            self.chargecount += 4
+            self.chargecount += 6
         if button_click == 0:
             self.countlimit = self.chargecount
             setattr(self, slash, True)
@@ -24,14 +24,14 @@ def sword_movement(self, swing, angle_hit_orientation, button_click, slash, quad
     elif getattr(self, back):
         if self.chargecount <= 1:
             self.anglehit = self.angle + self.chargecount * angle_hit_orientation * APT_SWORD
-            self.chargecount += 4
+            self.chargecount += 6
         else:
             setattr(self, back, False)
             self.chargecount = 1
     elif getattr(self, clash):
         if self.chargecount <= self.clash_count + APT_SWORD_CLASHLIMIT:
             self.anglehit = self.angle + self.chargecount * angle_hit_orientation * APT_SWORD
-            self.chargecount += 4
+            self.chargecount += 6
         else:
             self.clash_count = 0
             self.chargecount = 1
