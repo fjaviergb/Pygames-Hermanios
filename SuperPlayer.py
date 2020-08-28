@@ -69,8 +69,6 @@ class body(pg.sprite.Sprite):
         for block in block_hit_list_masked:
             self.live -= 1
             xclash, yclash = pg.sprite.collide_mask(self, block)
-            # print(xclash, self.x, self.rect.width / 2)
-            print(xclash + self.x - self.rect.width / 2, yclash + self.y - self.rect.height / 2, block.anglehit)
 
     ###########################################################
     # FUNCION RECEPCION DAÑO
@@ -82,8 +80,6 @@ class body(pg.sprite.Sprite):
             block_hit_list_masked = sprite_collision(self, "espada", "col_sprites")
             for block in block_hit_list_masked:
                 xclash, yclash = pg.sprite.collide_mask(self.espada, block)
-                print(xclash + self.x - self.espada.rect.width / 2, yclash + self.y - self.espada.rect.height / 2,
-                      self.anglehit)
                 if self.slashleft:
                     self.clashleft = True
                     self.clash_count = self.chargecount
@@ -127,7 +123,7 @@ class body(pg.sprite.Sprite):
         #  Metodo para depurar la colision en movimiento.
         #  Como dos objetos en "movimiento" pueden superponerse sin llegar a colisionar
         #  hacemos un pequenno barrido de los angulos para ver si se encuentran.
-        for i in range(1, 15):
+        for i in range(1, vars.IPT_CHARGECOUNT_SLASH):
             #  TODO si el objeto es pequenno puede fallar.
             self.chargecount = counter - i
             self.anglehit = angle - angle_grad + signo * (self.chargecount) * vars.APT_SWORD

@@ -28,10 +28,8 @@ def threaded_client(conn, player):
             players[player] = data
             for p_index in players:
                 if not players[p_index]:
-                    #players[player] = (0,0,0,0,0,0,0,0,0,0)
                     players.pop(p_index)
             reply = list(players.values())
-            print(reply)
             conn.send(str.encode(str(reply)))
 
         except:

@@ -24,6 +24,8 @@ APT_SWORD_CLASHLIMIT = 20  # Este parámtro, junto a apt_sword.
 # En sword_collision().
 DASH_CD = 5000  # Cooldown, en milisegundos, para el dash.
 VELOCITY = 10
+IPT_CHARGECOUNT_SLASH = 15 #Incremento del chargecount sin colisión en función sword_collision
+IPT_CHARGECOUNT_STANDARD = 6 #Incremento del chargecount sin colision en funcion sword_movement
 
 BODY_RADIO = 20
 BODY_IMG_WIDTH = 50
