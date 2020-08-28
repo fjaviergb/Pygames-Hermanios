@@ -1,8 +1,7 @@
 import socket
 from _thread import *
-import pickle
 
-server_ip = "192.168.43.78"
+server_ip = ""
 
 server = server_ip
 port = 5555
@@ -17,9 +16,7 @@ except socket.error as e:
 s.listen(2)
 print("Waiting for a connection, Server Started")
 
-
 players = []
-
 
 def threaded_client(conn, player):
     global currentPlayer
@@ -39,7 +36,7 @@ def threaded_client(conn, player):
                     reply = players
                 else:
                     reply = players
-                    print(reply)
+
             conn.send(str.encode(str(reply)))
 
         except:
