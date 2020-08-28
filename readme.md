@@ -2,24 +2,24 @@
 In this project we present an arena type videogame only in python, moreover pygames.
 
 ## Running the videogame [Via python].
-  - [Clone the repository]
-  - [In server.py add the desired ip for the server]
-  - [In network.py add the server ip]
-  - [In a terminal run]:
+  - Clone the repository
+  - In server.py add the desired ip for the server
+  - In network.py add the server ip
+  - In a terminal run:
   ```python
     python server.py
   ```
-  - [In a new terminal where the server is run client_enviroment.py]
+  - In a new terminal where the server is run client_enviroment.py
   ```python
     python client_enviroment.py
   ```
-  - [In a new terminal run client.py to initialize the client]:
+  - In a new terminal run client.py to initialize the client:
   ```python
     python client.py
   ```
  ## Running the videogame [Via executable].
-  - [First you need to have a server and client enviroment running as described above]
-  - [To open the client either install the .exe (only for windows) or run the exe inside the exe folder]
+  - First you need to have a server and client enviroment running as described above
+  - To open the client either install the .exe (only for windows) or run the exe inside the exe folder
   
  ## Controls.
   - W: to go up
