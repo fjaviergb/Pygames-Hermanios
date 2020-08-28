@@ -1,7 +1,7 @@
 import socket
 from _thread import *
 
-server_ip = ""
+server_ip = "192.168.1.36"
 
 server = server_ip
 port = 5555
@@ -16,7 +16,7 @@ except socket.error as e:
 s.listen(2)
 print("Waiting for a connection, Server Started")
 
-players = []
+players = {}
 
 def threaded_client(conn, player):
     global currentPlayer
@@ -25,24 +25,18 @@ def threaded_client(conn, player):
         try:
             databit = conn.recv(2048)
             data = eval(databit.decode("utf-8"))
-
-            try:
-                players[player] = data
-            except IndexError:
-                players.append(data)
-            for p in players:
-                if not p:
-                    players.remove(p)
-                    reply = players
-                else:
-                    reply = players
-
+            players[player] = data
+            for p_index in players:
+                if not players[p_index]:
+                    #players[player] = (0,0,0,0,0,0,0,0,0,0)
+                    players.pop(p_index)
+            reply = list(players.values())
+            print(reply)
             conn.send(str.encode(str(reply)))
 
         except:
             break
 
-    currentPlayer -= 1
     print("Lost connection")
     conn.close()
 
