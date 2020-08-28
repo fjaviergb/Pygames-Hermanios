@@ -1,10 +1,7 @@
 import pygame as pg
 import math
-import numpy as np
-from otherplayer import otherbody
 from utils import is_swinging, sword_movement, sprite_collision
 import variables as vars
-
 
 ###########################################################
 # CLASE
@@ -130,7 +127,7 @@ class body(pg.sprite.Sprite):
         #  Metodo para depurar la colision en movimiento.
         #  Como dos objetos en "movimiento" pueden superponerse sin llegar a colisionar
         #  hacemos un pequenno barrido de los angulos para ver si se encuentran.
-        for i in np.arange(1, 15, 1):
+        for i in range(1, 15):
             #  TODO si el objeto es pequenno puede fallar.
             self.chargecount = counter - i
             self.anglehit = angle - angle_grad + signo * (self.chargecount) * vars.APT_SWORD
@@ -151,7 +148,7 @@ class body(pg.sprite.Sprite):
     # FUNCION COLISION CUERPO
     ###########################################################
     def body_collision(self, mult, signo, xorig, yorig, is_block_x: bool, is_block_y: bool):
-        for i in np.arange(0, mult * vars.VELOCITY, 1):
+        for i in range(0, mult * vars.VELOCITY):
             if is_block_x:
                 self.x = xorig + i * signo
             elif is_block_y:
