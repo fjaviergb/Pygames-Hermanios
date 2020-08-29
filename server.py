@@ -1,7 +1,7 @@
 import socket
 from _thread import *
 
-server_ip = "192.168.1.36"
+server_ip = ""
 
 server = server_ip
 port = 5555
